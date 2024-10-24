@@ -1,4 +1,4 @@
-package com.SernityBuilders.SerenityAI;
+package com.SerenityBuilders.SerenityAI;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,6 +8,6 @@ public class SerenityAiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SerenityAiApplication.class, args);
-	}
 
+	}
 }

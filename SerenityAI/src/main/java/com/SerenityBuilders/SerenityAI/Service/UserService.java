@@ -1,12 +1,9 @@
-package com.SerenityBuilders.SerenityAI.Service;
+package com.SerenityBuilders.SerenityAI.service;
 
 
-import com.SerenityBuilders.SerenityAI.Entity.UserEntity;
-import com.SerenityBuilders.SerenityAI.Repository.UserRepository;
+import com.SerenityBuilders.SerenityAI.entity.UserEntity;
+import com.SerenityBuilders.SerenityAI.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.naming.NameNotFoundException;
@@ -20,15 +17,15 @@ public class UserService {
     private UserRepository userRepository; // Autowire the correct repository
 
 
-    @Autowired
+  /*  @Autowired
     @Lazy
-    private PasswordEncoder passwordEncoder; // Use PasswordEncoder here
+    private PasswordEncoder passwordEncoder; // Use PasswordEncoder here*/
 
 
-    @Autowired
-    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
+    /* @Autowired
+     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+         this.passwordEncoder = passwordEncoder;
+     }*/
     // Create a new user
     public UserEntity postUser(UserEntity user) {
         return userRepository.save(user); // Save the user entity
@@ -47,7 +44,7 @@ public class UserService {
         // Update user details
         user.setName(newUserDetails.getName());
         user.setEmail(newUserDetails.getEmail());
-        user.setPassword(passwordEncoder.encode(newUserDetails.getPassword())); // Ensure password is encoded
+        //   user.setPassword(passwordEncoder.encode(newUserDetails.getPassword())); // Ensure password is encoded
         user.setDateOfBirth(newUserDetails.getDateOfBirth());
         user.setGender(newUserDetails.getGender());
         user.setSignUpDate(newUserDetails.getSignUpDate());
@@ -67,12 +64,12 @@ public class UserService {
         }
     }
 
-    public void registerUser(UserEntity user) {
+  /*  public void registerUser(UserEntity user) {
         user.setPassword(passwordEncoder.encode(user.getPassword())); // Encode the password
         userRepository.save(user);
     }
 
     public UserEntity findByUsername(String name) {
         return userRepository.findByUsername(name).orElse(null); // Return user or null
-    }
+    }*/
 }

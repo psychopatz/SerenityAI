@@ -1,4 +1,4 @@
-package com.SerenityBuilders.SerenityAI.Entity;
+package com.SerenityBuilders.SerenityAI.entity;
 
 import jakarta.persistence.*;
 
@@ -11,20 +11,8 @@ public class UserEntity {
     @Column(name = "user_id")
     private int user_id;
 
-    public String getUsername() {
-        return username;
-    }
-
-    public UserEntity(int user_id) {
-        this.user_id = user_id;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    @Column(name = "username")
-    private String username;
+ //   @Column(name = "username")
+ //   private String username;
 
     @Column(name = "name")
     private String name;
@@ -32,8 +20,8 @@ public class UserEntity {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "password")
-    private String password;
+   // @Column(name = "password")
+   // private String password;
 
     @Column(name = "dateOfBirth")
     private String dateOfBirth;
@@ -59,18 +47,23 @@ public class UserEntity {
     // Constructors
     public UserEntity() {}
 
-    public UserEntity(int user_id, String username, String name, String email, String password, String dateOfBirth, String gender, String signUpDate, String lastLogin, String location) {
+    public UserEntity(int user_id, String name, String email, String dateOfBirth, String gender, String signUpDate, String lastLogin, String location) {
         this.user_id = user_id;
-        this.username = username;
         this.name = name;
         this.email = email;
-        this.password = password;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
         this.signUpDate = signUpDate;
         this.lastLogin = lastLogin;
         this.location = location;
     }
+ /*   public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }*/
 
     public int getUser_id() {
         return user_id;
@@ -96,13 +89,13 @@ public class UserEntity {
         this.email = email;
     }
 
-    public String getPassword() {
+  /*  public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
-    }
+    }*/
 
     public String getDateOfBirth() {
         return dateOfBirth;

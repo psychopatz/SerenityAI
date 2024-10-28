@@ -1,7 +1,7 @@
-package com.SerenityBuilders.SerenityAI.Controller;
+package com.SerenityBuilders.SerenityAI.controller;
 
-import com.SerenityBuilders.SerenityAI.Entity.UserEntity;
-import com.SerenityBuilders.SerenityAI.Service.UserService;
+import com.SerenityBuilders.SerenityAI.entity.UserEntity;
+import com.SerenityBuilders.SerenityAI.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,8 @@ import javax.naming.NameNotFoundException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/project")
+@RequestMapping("/user")
+@CrossOrigin(origins = "http://localhost:5173")
 public class UserController {
 
     @Autowired
@@ -46,7 +47,7 @@ public class UserController {
         return new ResponseEntity<>(responseMessage, HttpStatus.OK); // Respond with OK status and success message
     }
 
-    @GetMapping("/register")
+ /*   @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("user", new UserEntity(
         ));
@@ -62,5 +63,5 @@ public class UserController {
     @GetMapping("/login")
     public String showLoginForm() {
         return "login";
-    }
+    }*/
 }

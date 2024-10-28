@@ -1,8 +1,8 @@
-package com.SerenityBuilders.SerenityAI.service;
+package com.SerenityBuilders.SerenityAI.Service;
 
 
-import com.SerenityBuilders.SerenityAI.entity.UserEntity;
-import com.SerenityBuilders.SerenityAI.repository.UserRepository;
+import com.SerenityBuilders.SerenityAI.Entity.UserEntity;
+import com.SerenityBuilders.SerenityAI.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,7 @@
-package com.SerenityBuilders.SerenityAI.controller;
+package com.SerenityBuilders.SerenityAI.Controller;
 
-import com.SerenityBuilders.SerenityAI.entity.UserEntity;
-import com.SerenityBuilders.SerenityAI.service.UserService;
+import com.SerenityBuilders.SerenityAI.Entity.UserEntity;
+import com.SerenityBuilders.SerenityAI.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

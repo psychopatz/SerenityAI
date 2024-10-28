@@ -1,7 +1,7 @@
-package com.SerenityBuilders.SerenityAI.repository;
+package com.SerenityBuilders.SerenityAI.Repository;
 
 
-import com.SerenityBuilders.SerenityAI.entity.MoodEntryEntity;
+import com.SerenityBuilders.SerenityAI.Entity.MoodEntryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -1,7 +1,7 @@
-package com.SerenityBuilders.SerenityAI.controller;
+package com.SerenityBuilders.SerenityAI.Controller;
 
-import com.SerenityBuilders.SerenityAI.entity.RecommendationEntity;
-import com.SerenityBuilders.SerenityAI.service.RecommendationService;
+import com.SerenityBuilders.SerenityAI.Entity.RecommendationEntity;
+import com.SerenityBuilders.SerenityAI.Service.RecommendationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

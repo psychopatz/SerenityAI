@@ -1,8 +1,8 @@
-    package com.SerenityBuilders.SerenityAI.controller;
+    package com.SerenityBuilders.SerenityAI.Controller;
 
 
-    import com.SerenityBuilders.SerenityAI.entity.MoodEntryEntity;
-    import com.SerenityBuilders.SerenityAI.service.MoodEntryService;
+    import com.SerenityBuilders.SerenityAI.Entity.MoodEntryEntity;
+    import com.SerenityBuilders.SerenityAI.Service.MoodEntryService;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.http.HttpStatus;
     import org.springframework.http.ResponseEntity;

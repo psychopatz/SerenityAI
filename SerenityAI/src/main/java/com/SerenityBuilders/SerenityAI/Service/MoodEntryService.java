@@ -1,8 +1,8 @@
-package com.SerenityBuilders.SerenityAI.service;
+package com.SerenityBuilders.SerenityAI.Service;
 
 
-import com.SerenityBuilders.SerenityAI.entity.MoodEntryEntity;
-import com.SerenityBuilders.SerenityAI.repository.MoodEntryRepository;
+import com.SerenityBuilders.SerenityAI.Entity.MoodEntryEntity;
+import com.SerenityBuilders.SerenityAI.Repository.MoodEntryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

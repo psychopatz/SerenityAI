@@ -1,4 +1,4 @@
-package com.SerenityBuilders.SerenityAI.entity;
+package com.SerenityBuilders.SerenityAI.Entity;
 
 import jakarta.persistence.*;
 

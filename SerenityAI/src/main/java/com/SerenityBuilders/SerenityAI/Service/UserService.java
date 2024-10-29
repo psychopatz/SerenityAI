@@ -3,12 +3,16 @@ package com.SerenityBuilders.SerenityAI.Service;
 
 import com.SerenityBuilders.SerenityAI.Entity.UserEntity;
 import com.SerenityBuilders.SerenityAI.Repository.UserRepository;
+import org.apache.hc.client5.http.auth.InvalidCredentialsException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.naming.NameNotFoundException;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -17,9 +21,10 @@ public class UserService {
     private UserRepository userRepository; // Autowire the correct repository
 
 
-  /*  @Autowired
+   /* @Autowired
     @Lazy
     private PasswordEncoder passwordEncoder; // Use PasswordEncoder here*/
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 
     /* @Autowired
@@ -44,7 +49,7 @@ public class UserService {
         // Update user details
         user.setName(newUserDetails.getName());
         user.setEmail(newUserDetails.getEmail());
-        //   user.setPassword(passwordEncoder.encode(newUserDetails.getPassword())); // Ensure password is encoded
+        user.setPassword(passwordEncoder.encode(newUserDetails.getPassword())); // Ensure password is encoded
         user.setDateOfBirth(newUserDetails.getDateOfBirth());
         user.setGender(newUserDetails.getGender());
         user.setSignUpDate(newUserDetails.getSignUpDate());
@@ -63,11 +68,23 @@ public class UserService {
             return "User with ID " + id + " not found"; // Return a message indicating not found
         }
     }
-
-  /*  public void registerUser(UserEntity user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // Encode the password
-        userRepository.save(user);
+    public UserEntity registerUser(UserEntity user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
     }
+
+    public UserEntity loginUser(UserEntity user) throws InvalidCredentialsException {
+        // Create an instance of BCryptPasswordEncoder
+
+        // Check if user exists in the database
+        Optional<UserEntity> foundUser = userRepository.findByEmail(user.getEmail());
+        if (foundUser.isEmpty() || !passwordEncoder.matches(user.getPassword(), foundUser.get().getPassword())) {
+            throw new InvalidCredentialsException("Invalid email or password"); // Custom exception
+        }
+        return foundUser.get(); // Return the authenticated user
+    }
+
+    /*
 
     public UserEntity findByUsername(String name) {
         return userRepository.findByUsername(name).orElse(null); // Return user or null

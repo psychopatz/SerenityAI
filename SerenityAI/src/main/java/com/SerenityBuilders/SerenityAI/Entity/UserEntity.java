@@ -17,11 +17,11 @@ public class UserEntity {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
-   // @Column(name = "password")
-   // private String password;
+    @Column(name = "password")
+    private String password;
 
     @Column(name = "dateOfBirth")
     private String dateOfBirth;
@@ -47,10 +47,11 @@ public class UserEntity {
     // Constructors
     public UserEntity() {}
 
-    public UserEntity(int user_id, String name, String email, String dateOfBirth, String gender, String signUpDate, String lastLogin, String location) {
+    public UserEntity(int user_id, String name, String email,String password, String dateOfBirth, String gender, String signUpDate, String lastLogin, String location) {
         this.user_id = user_id;
         this.name = name;
         this.email = email;
+        this.password = password;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
         this.signUpDate = signUpDate;
@@ -89,13 +90,13 @@ public class UserEntity {
         this.email = email;
     }
 
-  /*  public String getPassword() {
+    public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
-    }*/
+    }
 
     public String getDateOfBirth() {
         return dateOfBirth;

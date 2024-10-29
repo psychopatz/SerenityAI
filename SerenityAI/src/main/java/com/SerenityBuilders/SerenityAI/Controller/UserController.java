@@ -2,6 +2,7 @@ package com.SerenityBuilders.SerenityAI.Controller;
 
 import com.SerenityBuilders.SerenityAI.Entity.UserEntity;
 import com.SerenityBuilders.SerenityAI.Service.UserService;
+import org.apache.hc.client5.http.auth.InvalidCredentialsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.naming.NameNotFoundException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -47,21 +49,28 @@ public class UserController {
         return new ResponseEntity<>(responseMessage, HttpStatus.OK); // Respond with OK status and success message
     }
 
- /*   @GetMapping("/register")
-    public String showRegistrationForm(Model model) {
-        model.addAttribute("user", new UserEntity(
-        ));
-        return "register";
+    @PostMapping("/register")
+    public ResponseEntity<UserEntity> registerUser(@RequestBody UserEntity user) {
+        UserEntity registeredUser = userService.registerUser(user);
+        return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
     }
+/*
 
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("user") UserEntity user) {
         userService.registerUser(user);
         return "redirect:/login";
     }
-
-    @GetMapping("/login")
-    public String showLoginForm() {
-        return "login";
-    }*/
+*/
+@PostMapping("/login")
+public ResponseEntity<?> loginUser(@RequestBody UserEntity user) {
+    try {
+        UserEntity authenticatedUser = userService.loginUser(user);
+        return new ResponseEntity<>(authenticatedUser, HttpStatus.OK);
+    } catch (InvalidCredentialsException e) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("message", "Invalid email or password")); // Send error message
+    }
+}
 }

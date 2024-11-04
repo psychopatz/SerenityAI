@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import UserService from '../services/UserService';
 import { useNavigate } from 'react-router-dom';
+import './Login.css';
 
 const Login = () => {
     const [user, setUser] = useState({ email: '', password: '' });
-    const [error, setError] = useState(''); // State to hold error message
+    const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -14,43 +15,46 @@ const Login = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        setError(''); // Reset error message
+        setError('');
 
         try {
             const loggedInUser = await UserService.loginUser(user);
             console.log('Logged in:', loggedInUser);
-            navigate('/dashboard');
+            navigate('/userlist');
         } catch (error) {
-            // Check if the response has a message from the backend
             if (error.response && error.response.data) {
-                setError(error.response.data.message || "Login failed"); // Display backend error
+                setError(error.response.data.message || "Login failed");
             } else {
-                setError("An unexpected error occurred."); // Generic error
+                setError("An unexpected error occurred.");
             }
             console.error('Login failed:', error);
         }
     };
 
     return (
-        <form onSubmit={handleLogin}>
+        <div className="login-container">
             <h2>Login</h2>
-            <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                onChange={handleChange}
-                required
-            />
-            <input
-                type="password"
-                name="password"
-                placeholder="Password"
-                onChange={handleChange}
-                required
-            />
-            <button type="submit">Login</button>
-            {error && <p style={{ color: 'red' }}>{error}</p>} {/* Display error message */}
-        </form>
+            <form onSubmit={handleLogin}>
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    value={user.email}
+                    onChange={handleChange}
+                    required
+                />
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    value={user.password}
+                    onChange={handleChange}
+                    required
+                />
+                <button type="submit">Login</button>
+                {error && <p className="error-message">{error}</p>}
+            </form>
+        </div>
     );
 };
 

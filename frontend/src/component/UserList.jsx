@@ -30,12 +30,12 @@ const UserList = () => {
     return (
         <div>
             <h2>User List</h2>
-            <Link to="/add">Add New User</Link>
+            <Link to="/dashboard">Add New User</Link>
             <ul>
                 {users.map(user => (
                     <li key={user.user_id}>
                         {user.name} - {user.email}
-                        <Link to={`/user/${user.user_id}`}>View</Link>
+                        <Link to={`/dashboard/${user.user_id}`}>View</Link>
                         <Link to={`/edit/${user.user_id}`}>Edit</Link>
                         <button onClick={() => deleteUser(user.user_id)}>Delete</button>
                     </li>

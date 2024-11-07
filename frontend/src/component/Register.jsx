@@ -19,6 +19,8 @@ const Register = () => {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
+
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log("Form submitted!"); // Check if this logs in the console
@@ -32,9 +34,9 @@ const Register = () => {
     
 
     return (
-        <div className="form-container">
-            <h2>Register</h2>
+        <div>
             <form onSubmit={handleSubmit}>
+                <h2>Register</h2>
                 <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Name" required />
                 <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Email" required />
                 <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Password" required />

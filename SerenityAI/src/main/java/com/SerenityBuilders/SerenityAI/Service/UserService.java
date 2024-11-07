@@ -6,6 +6,7 @@ import com.SerenityBuilders.SerenityAI.Repository.UserRepository;
 import org.apache.hc.client5.http.auth.InvalidCredentialsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -69,7 +70,12 @@ public class UserService {
         }
     }
     public UserEntity registerUser(UserEntity user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new DataIntegrityViolationException("Email already taken");
+        }
+        if (userRepository.existsByName(user.getName())) {
+            throw new DataIntegrityViolationException("Name already taken");
+        }
         return userRepository.save(user);
     }
 

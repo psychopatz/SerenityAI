@@ -4,6 +4,7 @@ import com.SerenityBuilders.SerenityAI.Entity.UserEntity;
 import com.SerenityBuilders.SerenityAI.Service.UserService;
 import org.apache.hc.client5.http.auth.InvalidCredentialsException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -50,9 +51,16 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserEntity> registerUser(@RequestBody UserEntity user) {
-        UserEntity registeredUser = userService.registerUser(user);
-        return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
+    public ResponseEntity<?> registerUser(@RequestBody UserEntity user) {
+        try {
+            UserEntity registeredUser = userService.registerUser(user);
+            return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
+        } catch (DataIntegrityViolationException e) {
+            String errorMessage = e.getMessage();
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(Map.of("message", errorMessage));
+        }
     }
 /*
 

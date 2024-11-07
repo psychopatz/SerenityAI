@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import MoodEntryService from "../services/MoodEntryService";
-
+import './MoodEntryApp.css';
 function MoodEntryApp() {
   const [entries, setEntries] = useState([]);
   const [newEntry, setNewEntry] = useState({

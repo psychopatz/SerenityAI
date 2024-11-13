@@ -82,9 +82,5 @@ public class UserService {
         }
         return foundUser.get();
     }
-/* 
-    // Find user by username
-    public UserEntity findByUsername(String name) {
-        return userRepository.findByUsername(name).orElse(null);
-    }*/
+
 }

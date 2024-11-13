@@ -5,7 +5,17 @@ meta {
 }
 
 post {
-  url: http://localhost:8080/moodentry/post
-  body: none
+  url: http://localhost:8080/moodEntry/post
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "mood_entry_id": 1,
+    "mood_type": "Happy",
+    "description": "Had a great day with friends",
+    "entry_date": "2024-11-13"
+  }
+  
 }

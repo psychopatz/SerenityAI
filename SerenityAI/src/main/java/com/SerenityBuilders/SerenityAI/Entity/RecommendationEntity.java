@@ -4,12 +4,12 @@
     import java.util.Date;
 
     @Entity
-    @Table(name = "recommendation") // Your table name in your database
+    @Table(name = "recommendation") 
     public class RecommendationEntity {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @Column(name = "recommendation_id") // Your recommendation ID
+        @Column(name = "recommendation_id") 
         private int recommendation_id;
 
         @Column(name = "recommendation_type")
@@ -21,7 +21,6 @@
         @Column(name = "date_given")
         private Date dateGiven;
 
-        // Constructors
         public RecommendationEntity() {}
 
         public RecommendationEntity(int recommendation_id, String recommendationType, String recommendationDetails, Date dateGiven) {

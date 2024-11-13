@@ -6,5 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RecommendationRepository extends JpaRepository<RecommendationEntity, Integer> {
-    // Additional query methods can be defined here if needed
 }

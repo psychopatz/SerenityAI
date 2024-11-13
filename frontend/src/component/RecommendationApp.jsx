@@ -1,8 +1,7 @@
-// src/components/RecommendationApp.js
 
 import React, { useState, useEffect } from "react";
 import RecommendationService from "../services/RecommendationServices";
-import './RecommendationApp.css'; // Add this line at the top of the file
+import './RecommendationApp.css'; 
 
 
 function RecommendationApp() {
@@ -35,7 +34,7 @@ function RecommendationApp() {
     e.preventDefault();
     try {
       await RecommendationService.postRecommendation(newRecommendation);
-      fetchRecommendations(); // Refresh the list
+      fetchRecommendations(); 
       setNewRecommendation({ recommendationType: "", recommendationDetails: "", dateGiven: "" }); // Reset form
     } catch (error) {
       console.error("Error adding recommendation:", error);
@@ -45,7 +44,7 @@ function RecommendationApp() {
   const handleDelete = async (id) => {
     try {
       await RecommendationService.deleteRecommendation(id);
-      fetchRecommendations(); // Refresh the list
+      fetchRecommendations(); 
     } catch (error) {
       console.error("Error deleting recommendation:", error);
     }

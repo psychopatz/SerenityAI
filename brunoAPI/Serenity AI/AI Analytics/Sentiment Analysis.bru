@@ -1,0 +1,28 @@
+meta {
+  name: Sentiment Analysis
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/api/ai-analysis/sentiment
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "contents": [
+          {
+              "role": "user",
+              "parts": [
+                  { "text": "Fuck yourself" }
+              ]
+          }
+      ]
+  }
+}
+
+body:text {
+  "hello"
+}

@@ -6,9 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class 	SerenityAiApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(SerenityAiApplication.class, args);
-		System.out.println("Success");
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(SerenityAiApplication.class, args);
+        System.out.println("Success api host on http://localhost:8080/");
+    }
 
 }

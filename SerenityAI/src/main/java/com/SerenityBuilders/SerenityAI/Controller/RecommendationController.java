@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000") // Adjust based on your frontend URL
+@CrossOrigin(origins = "http://localhost:5173") // Adjust based on your frontend URL
 @RequestMapping("/api/recommendation")
 public class RecommendationController {
 

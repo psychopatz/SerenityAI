@@ -5,6 +5,7 @@ import Login from './component/LoginRegister';
 import MoodEntryApp from './component/MoodEntryApp';
 import ChatInterface from './component/ChatInterface';
 import UserList from './component/UserList';
+import RecommendationApp from './component/RecommendationApp';
 
 
 const App = () => {
@@ -16,6 +17,8 @@ const App = () => {
                 <Route path="/moodentry" element={<MoodEntryApp />} />
                 <Route path="/chat" element={<ChatInterface/>} />
                 <Route path="/list" element={<UserList/>} />
+                <Route path="/recommendation" element={<RecommendationApp/>} />
+
             </Routes>
         </Router>
     );

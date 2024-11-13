@@ -8,17 +8,22 @@ import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/api/ai-analysis")
-public class ChatbotController {
+public class AiAnalysisController {
 
     private final LlmUtil llmUtil;
 
     @Autowired
-    public ChatbotController(LlmUtil llmUtil) {
+    public AiAnalysisController(LlmUtil llmUtil) {
         this.llmUtil = llmUtil;
     }
+
+
 
     @PostMapping("/chat")
     public ResponseEntity<String> generateResponse(
@@ -36,6 +41,28 @@ public class ChatbotController {
 
             @SuppressWarnings("unchecked")
             Map<String, Object> generationConfig = (Map<String, Object>) request.get("generationConfig");
+
+            // Determine if the date should be included (default is true)
+            boolean includeDate = request.getOrDefault("includeDate", true).equals(Boolean.TRUE);
+
+            if (includeDate) {
+                // Get the current date and day of the week
+                LocalDate currentDate = LocalDate.now();
+                String dayOfWeek = currentDate.getDayOfWeek()
+                        .getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+
+                // Generate date information
+                String dateInfo = String.format("Today is %s, %s. ", dayOfWeek, currentDate);
+
+                // Append the date information to the first part in the system_instruction
+                @SuppressWarnings("unchecked")
+                List<Map<String, Object>> parts = (List<Map<String, Object>>) systemInstruction.get("parts");
+                if (!parts.isEmpty()) {
+                    Map<String, Object> firstPart = parts.get(0);
+                    String originalText = (String) firstPart.get("text");
+                    firstPart.put("text", dateInfo + originalText);
+                }
+            }
 
             String response = llmUtil.generateResponse(
                     systemInstruction,
@@ -84,4 +111,6 @@ public class ChatbotController {
             return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
         }
     }
+
+
 }

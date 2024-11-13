@@ -1,45 +1,37 @@
 package com.SerenityBuilders.SerenityAI.Service;
 
+import java.util.List;
+import java.util.Optional;
 
-import com.SerenityBuilders.SerenityAI.Entity.UserEntity;
-import com.SerenityBuilders.SerenityAI.Repository.UserRepository;
+import javax.naming.NameNotFoundException;
+
 import org.apache.hc.client5.http.auth.InvalidCredentialsException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.naming.NameNotFoundException;
-import java.util.List;
-import java.util.Optional;
+import com.SerenityBuilders.SerenityAI.Entity.UserEntity;
+import com.SerenityBuilders.SerenityAI.Repository.UserRepository;
 
 @Service
 public class UserService {
 
     @Autowired
-    private UserRepository userRepository; // Autowire the correct repository
+    private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder; // Autowired PasswordEncoder
 
-   /* @Autowired
-    @Lazy
-    private PasswordEncoder passwordEncoder; // Use PasswordEncoder here*/
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-
-    /* @Autowired
-     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-         this.passwordEncoder = passwordEncoder;
-     }*/
-    // Create a new user
+    // Create a new user with encoded password
     public UserEntity postUser(UserEntity user) {
-        return userRepository.save(user); // Save the user entity
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // Encode the password before saving
+        return userRepository.save(user);
     }
 
     // Get all users
     public List<UserEntity> getAllUsers() {
-        return userRepository.findAll(); // Fetch all user records
+        return userRepository.findAll();
     }
 
     // Update user details by ID
@@ -62,13 +54,15 @@ public class UserService {
 
     // Delete user by ID
     public String deleteUser(int id) {
-        if (userRepository.existsById(id)) { // Check if user exists by ID
-            userRepository.deleteById(id); // Delete the user
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
             return "User record has been successfully deleted";
         } else {
-            return "User with ID " + id + " not found"; // Return a message indicating not found
+            return "User with ID " + id + " not found";
         }
     }
+
+    // Register a new user with unique email and name, encoding password
     public UserEntity registerUser(UserEntity user) {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new DataIntegrityViolationException("Email already taken");
@@ -76,23 +70,21 @@ public class UserService {
         if (userRepository.existsByName(user.getName())) {
             throw new DataIntegrityViolationException("Name already taken");
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // Encode the password before saving
         return userRepository.save(user);
     }
 
+    // Authenticate user during login
     public UserEntity loginUser(UserEntity user) throws InvalidCredentialsException {
-        // Create an instance of BCryptPasswordEncoder
-
-        // Check if user exists in the database
         Optional<UserEntity> foundUser = userRepository.findByEmail(user.getEmail());
         if (foundUser.isEmpty() || !passwordEncoder.matches(user.getPassword(), foundUser.get().getPassword())) {
-            throw new InvalidCredentialsException("Invalid email or password"); // Custom exception
+            throw new InvalidCredentialsException("Invalid email or password");
         }
-        return foundUser.get(); // Return the authenticated user
+        return foundUser.get();
     }
-
-    /*
-
+/* 
+    // Find user by username
     public UserEntity findByUsername(String name) {
-        return userRepository.findByUsername(name).orElse(null); // Return user or null
+        return userRepository.findByUsername(name).orElse(null);
     }*/
 }

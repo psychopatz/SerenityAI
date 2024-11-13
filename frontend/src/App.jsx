@@ -4,6 +4,8 @@ import Register from './component/Register';
 import Login from './component/LoginRegister';
 import MoodEntryApp from './component/MoodEntryApp';
 import ChatInterface from './component/ChatInterface';
+import UserList from './component/UserList';
+
 
 const App = () => {
     return (
@@ -13,6 +15,7 @@ const App = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/moodentry" element={<MoodEntryApp />} />
                 <Route path="/chat" element={<ChatInterface/>} />
+                <Route path="/list" element={<UserList/>} />
             </Routes>
         </Router>
     );

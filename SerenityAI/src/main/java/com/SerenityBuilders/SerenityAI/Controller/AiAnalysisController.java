@@ -14,6 +14,7 @@ import java.util.Locale;
 
 @RestController
 @RequestMapping("/api/ai-analysis")
+@CrossOrigin(origins = "http://localhost:5173")
 public class AiAnalysisController {
 
     private final LlmUtil llmUtil;

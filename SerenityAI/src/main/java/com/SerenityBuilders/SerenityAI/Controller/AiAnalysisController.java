@@ -87,7 +87,7 @@ public class AiAnalysisController {
             Map<String, Object> systemInstruction = new HashMap<>();
             List<Map<String, String>> parts = new ArrayList<>();
             Map<String, String> textPart = new HashMap<>();
-            textPart.put("text", "Analyze the sentiment of the following Tweets and classify them as POSITIVE, NEGATIVE, or NEUTRAL.");
+            textPart.put("text", "Analyze the sentiment of the following text and classify them as SAD, HAPPY, ANGRY. Only this text don't explain it");
             parts.add(textPart);
             systemInstruction.put("parts", parts);
 

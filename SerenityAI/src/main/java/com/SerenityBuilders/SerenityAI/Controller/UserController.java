@@ -35,6 +35,17 @@ public class UserController {
         List<UserEntity> user = userService.getAllUsers(); // Use service to fetch all projects
         return new ResponseEntity<>(user, HttpStatus.OK); // Respond with OK status and list of projects
     }
+ 
+     // Get user by ID
+     @GetMapping("/get/{id}")
+     public ResponseEntity<UserEntity> getUserById(@PathVariable int id) {
+         UserEntity user = userService.getUserById(id);
+         if (user != null) {
+             return new ResponseEntity<>(user, HttpStatus.OK);
+         } else {
+             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+         }
+     }
 
     // Update project by ID
     @PutMapping("/update/{id}")

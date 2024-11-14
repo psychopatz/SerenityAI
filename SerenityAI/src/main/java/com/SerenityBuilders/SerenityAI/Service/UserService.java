@@ -62,6 +62,10 @@ public class UserService {
         }
     }
 
+    public UserEntity getUserById(int id) {
+        Optional<UserEntity> user = userRepository.findById(id); // Find user by ID
+        return user.orElse(null); // Return the user if found, otherwise null
+    }
     // Register a new user with unique email and name, encoding password
     public UserEntity registerUser(UserEntity user) {
         if (userRepository.existsByEmail(user.getEmail())) {

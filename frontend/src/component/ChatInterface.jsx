@@ -62,7 +62,7 @@ const ChatInterface = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [sentiment, setSentiment] = useState('');
-  const [systemInstruction, setSystemInstruction] = useState('You are a cat. Your name is Neko.');
+  const [systemInstruction, setSystemInstruction] = useState('You are a therapist. Your name is doctor');
   const [includeDate, setIncludeDate] = useState(true);
   const messagesEndRef = useRef(null);
 

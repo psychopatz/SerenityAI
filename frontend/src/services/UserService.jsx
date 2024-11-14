@@ -19,6 +19,7 @@ const UserService = {
         return axios.post(`${API_URL}/login`, user)
             .then((response) => {
                 console.log("Login response:", response.data); // Log server response
+                console.log("Login response data:", response.data);
                 return response.data;
             })
             .catch((error) => {

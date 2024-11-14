@@ -58,8 +58,7 @@ const LoginRegister = () => {
             // Handle errors for existing email or name
             if (error.response?.data?.message.includes('Email already taken')) {
                 setError('This email is already taken');
-            } else if (error.response?.data?.message.includes('Name already taken')) {
-                setError('This name is already taken');
+            
             } else {
                 setError('Registration failed');
             }

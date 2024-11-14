@@ -67,9 +67,6 @@ public class UserService {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new DataIntegrityViolationException("Email already taken");
         }
-        if (userRepository.existsByName(user.getName())) {
-            throw new DataIntegrityViolationException("Name already taken");
-        }
         user.setPassword(passwordEncoder.encode(user.getPassword())); // Encode the password before saving
         return userRepository.save(user);
     }

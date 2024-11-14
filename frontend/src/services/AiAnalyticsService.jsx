@@ -25,9 +25,28 @@ export const sendSentimentRequest = async (sentimentData) => {
     for (let i = 0; i < 5; i++) {
       console.log(`Attempting sentiment request, attempt ${i + 1}`);
       const response = await axios.post('http://localhost:8080/api/ai-analysis/sentiment', sentimentData);
+      
       if (response.status === 200) {
         console.log('Sentiment request successful');
-        return response.data;
+        
+        const sentimentResponse = response.data;
+        const sentimentCandidate = sentimentResponse.candidates && sentimentResponse.candidates[0];
+        const sentimentContent = sentimentCandidate && sentimentCandidate.content;
+        const sentimentText = sentimentContent && sentimentContent.parts && sentimentContent.parts[0].text;
+        
+        if (sentimentText) {
+          console.log('Sentiment analysis result:', sentimentText);
+
+          // Save sentiment to the database
+          await axios.post('http://localhost:8080/api/sentiment/save', {
+            message: sentimentData.contents[0].parts[0].text, // Extracted message text
+            sentimentValue: sentimentText
+          });
+          
+          console.log('Sentiment data saved to database');
+        }
+        
+        return sentimentResponse;
       } else {
         console.warn('Retrying sentiment request, attempt:', i + 1);
         await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second before retrying
@@ -38,3 +57,4 @@ export const sendSentimentRequest = async (sentimentData) => {
     return null;
   }
 };
+

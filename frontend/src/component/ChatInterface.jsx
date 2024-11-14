@@ -81,16 +81,16 @@ const ChatInterface = () => {
 
   const handleSend = async () => {
     if (!input.trim()) return;
-
+  
     const userMessage = input;
     setInput('');
     setError('');
     setLoading(true);
-
+  
     try {
       const newMessages = [...messages, formatMessage('user', userMessage)];
       setMessages(newMessages);
-
+  
       const chatData = {
         includeDate,
         system_instruction: {
@@ -100,32 +100,44 @@ const ChatInterface = () => {
         safetySettings: [],
         generationConfig: {},
       };
-
+  
       const responseJson = await sendChatRequest(chatData);
       if (!responseJson) throw new Error('Failed to get response after multiple attempts');
-
+  
       const responseCandidate = responseJson.candidates && responseJson.candidates[0];
       const responseContent = responseCandidate && responseCandidate.content;
       const responseText = responseContent && responseContent.parts && responseContent.parts[0].text;
-
+  
       if (!responseText) throw new Error('Invalid response format');
-
+  
       setMessages([...newMessages, formatMessage('model', responseText)]);
-
+  
       const sentimentData = {
         contents: [formatMessage('user', userMessage)],
         safetySettings: [],
         generationConfig: {},
       };
-
+  
       const sentimentJson = await sendSentimentRequest(sentimentData);
       if (sentimentJson) {
         const sentimentCandidate = sentimentJson.candidates && sentimentJson.candidates[0];
         const sentimentContent = sentimentCandidate && sentimentCandidate.content;
         const sentimentText = sentimentContent && sentimentContent.parts && sentimentContent.parts[0].text;
-
+  
         if (sentimentText) {
           setSentiment(sentimentText);
+  
+          // Save sentiment to the database
+          await fetch('/api/sentiment/save', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              message: userMessage,
+              sentimentValue: sentimentText,
+            }),
+          });
         }
       }
     } catch (err) {
@@ -135,7 +147,7 @@ const ChatInterface = () => {
       setLoading(false);
     }
   };
-
+  
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -169,7 +181,7 @@ const ChatInterface = () => {
       </Box>
       <Paper elevation={3} sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: '#f5f5f5' }}>
         <ChatHeader>
-          <Typography variant="h6"> Chatbot Interface Test, gapaabot pako sa inyong database na ma finalize para makaperform nakog rag hehehe</Typography>
+           <Typography variant="h6"> Chatbot Interface Test, gapaabot pako sa inyong database na ma finalize para makaperform nakog rag hehehe</Typography>
         </ChatHeader>
         <MessagesArea>
           {messages.map((msg, index) => (

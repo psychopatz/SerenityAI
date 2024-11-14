@@ -26,12 +26,10 @@ export const sendSentimentRequest = async (sentimentData) => {
     for (let i = 0; i < 5; i++) {
       console.log(`Attempting sentiment request, attempt ${i + 1}`);
       const response = await axios.post('http://localhost:8080/api/ai-analysis/sentiment', sentimentData);
-      
       if (response.status === 200) {
         console.log('Sentiment request successful');
         console.log("Response data:", response.data);
         return response.data;
-
       } else {
         console.warn('Retrying sentiment request, attempt:', i + 1);
         await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second before retrying
@@ -42,4 +40,3 @@ export const sendSentimentRequest = async (sentimentData) => {
     return null;
   }
 };
-

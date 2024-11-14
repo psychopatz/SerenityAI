@@ -87,7 +87,20 @@ public class AiAnalysisController {
             Map<String, Object> systemInstruction = new HashMap<>();
             List<Map<String, String>> parts = new ArrayList<>();
             Map<String, String> textPart = new HashMap<>();
-            textPart.put("text", "Analyze the sentiment of the following text and classify them as SAD, HAPPY, ANGRY. Only this text don't explain it");
+            textPart.put("text", "You are an intelligent assistant designed to analyze user inputs for personal preferences and past experiences. Your task is to determine if the user's input contains:\n" +
+                    "\n" +
+                    "1. **Likes**: Things the user expresses enjoyment or preference for.\n" +
+                    "2. **Dislikes**: Things the user expresses displeasure or aversion toward.\n" +
+                    "3. **Memories**: Recollections of specific events, moments, or experiences.\n" +
+                    "\n" +
+                    "For each input, output the analysis in the following JSON format:\n" +
+                    "\n" +
+                    "```json\n" +
+                    "{\n" +
+                    "  \"likes\": [\"list of likes\"],\n" +
+                    "  \"dislikes\": [\"list of dislikes\"],\n" +
+                    "  \"memories\": [\"list of memories\"]\n" +
+                    "}\n");
             parts.add(textPart);
             systemInstruction.put("parts", parts);
 

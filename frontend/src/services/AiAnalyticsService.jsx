@@ -28,6 +28,7 @@ export const sendSentimentRequest = async (sentimentData) => {
       const response = await axios.post('http://localhost:8080/api/ai-analysis/sentiment', sentimentData);
       if (response.status === 200) {
         console.log('Sentiment request successful');
+        console.log("Response data:", response.data);
         return response.data;
       } else {
         console.warn('Retrying sentiment request, attempt:', i + 1);

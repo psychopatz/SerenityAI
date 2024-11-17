@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 import React from "react";
 import { useLocation } from 'react-router-dom';
 import { navBackgroundImage } from "../styles/NavStyles";
+import logo from '../assets/SAILogo.png'; 
 
 
 const Nav = () => {
@@ -32,10 +33,11 @@ const Nav = () => {
   console.log("Rendering Navigation component");
 
   return (
-    <AppBarStyled position="static" sx={{ width: '1520px' }} style={{ marginTop: '1rem', paddingTop: '1rem'}}>
+    <AppBarStyled position="static" sx={{ width: 'Auto' }} style={{ marginTop: '0rem', paddingTop: '1rem'}}>
       <Toolbar>
+      <img src={logo} alt="Logo" style={{ height: '40px', marginRight: '10px' }} />
         <Typography variant="h6" style={{ flexGrow: 1, marginTop: '10px', color:'black', fontWeight: 'bold' }}>
-          Serenity AI
+         SERENITY AI
         </Typography>
         {navItems.map((item, index) => {
           console.log(`Rendering nav item: ${item.label}`);

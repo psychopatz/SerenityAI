@@ -1,6 +1,11 @@
 package com.SerenityBuilders.SerenityAI.Entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "User")
@@ -11,11 +16,11 @@ public class UserEntity {
     @Column(name = "user_id")
     private int user_id;
 
- //   @Column(name = "username")
- //   private String username;
+    @Column(name = "first_name")
+    private String firstName;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "last_name")
+    private String lastName;
 
     @Column(name = "email", unique = true)
     private String email;
@@ -29,43 +34,29 @@ public class UserEntity {
     @Column(name = "gender")
     private String gender;
 
-    @Column(name = "signUpDate")
-    private String signUpDate;
-
     @Column(name = "lastLogin")
     private String lastLogin;
 
     @Column(name = "location")
     private String location;
 
-    // Add ManyToOne mapping for teacher
- /*   @ManyToOne
-    @JoinColumn(name = "teacher_id", referencedColumnName = "teacher_id")
-    @JsonManagedReference
-    private TeacherEntity teacher;*/
-
     // Constructors
     public UserEntity() {}
 
-    public UserEntity(int user_id, String name, String email,String password, String dateOfBirth, String gender, String signUpDate, String lastLogin, String location) {
+    public UserEntity(int user_id, String firstName, String lastName, String email, String password,
+                      String dateOfBirth, String gender, String lastLogin, String location) {
         this.user_id = user_id;
-        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
-        this.signUpDate = signUpDate;
         this.lastLogin = lastLogin;
         this.location = location;
     }
- /*   public String getUsername() {
-        return username;
-    }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }*/
-
+    // Getters and Setters
     public int getUser_id() {
         return user_id;
     }
@@ -74,12 +65,20 @@ public class UserEntity {
         this.user_id = user_id;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -112,14 +111,6 @@ public class UserEntity {
 
     public void setGender(String gender) {
         this.gender = gender;
-    }
-
-    public String getSignUpDate() {
-        return signUpDate;
-    }
-
-    public void setSignUpDate(String signUpDate) {
-        this.signUpDate = signUpDate;
     }
 
     public String getLastLogin() {

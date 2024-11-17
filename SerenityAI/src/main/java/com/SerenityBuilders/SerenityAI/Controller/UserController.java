@@ -20,45 +20,40 @@ import java.util.Map;
 public class UserController {
 
     @Autowired
-    private UserService userService; // Autowire the project service
+    private UserService userService;
 
-    // Create a new project
     @PostMapping("/post")
     public ResponseEntity<UserEntity> postUser(@RequestBody UserEntity user) {
-        UserEntity savedUser = userService.postUser(user); // Use service to save project
-        return new ResponseEntity<>(savedUser, HttpStatus.CREATED); // Respond with CREATED status
+        UserEntity savedUser = userService.postUser(user);
+        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
-    // Get all projects
     @GetMapping("/get")
     public ResponseEntity<List<UserEntity>> getAllUsers() {
-        List<UserEntity> user = userService.getAllUsers(); // Use service to fetch all projects
-        return new ResponseEntity<>(user, HttpStatus.OK); // Respond with OK status and list of projects
+        List<UserEntity> user = userService.getAllUsers();
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
- 
-     // Get user by ID
-     @GetMapping("/get/{id}")
-     public ResponseEntity<UserEntity> getUserById(@PathVariable int id) {
-         UserEntity user = userService.getUserById(id);
-         if (user != null) {
-             return new ResponseEntity<>(user, HttpStatus.OK);
-         } else {
-             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-         }
-     }
 
-    // Update project by ID
+    @GetMapping("/get/{id}")
+    public ResponseEntity<UserEntity> getUserById(@PathVariable int id) {
+        UserEntity user = userService.getUserById(id);
+        if (user != null) {
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<UserEntity> updateUser(@PathVariable int id, @RequestBody UserEntity newUserDetails) throws NameNotFoundException {
-        UserEntity updatedUser = userService.updatedUser(id, newUserDetails); // Use service to update project
-        return new ResponseEntity<>(updatedUser, HttpStatus.OK); // Respond with OK status and updated project
+        UserEntity updatedUser = userService.updatedUser(id, newUserDetails);
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
-    // Delete a project by ID
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable int id) {
-        String responseMessage = userService.deleteUser(id); // Use service to delete project
-        return new ResponseEntity<>(responseMessage, HttpStatus.OK); // Respond with OK status and success message
+        String responseMessage = userService.deleteUser(id);
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
     @PostMapping("/register")
@@ -67,29 +62,21 @@ public class UserController {
             UserEntity registeredUser = userService.registerUser(user);
             return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
         } catch (DataIntegrityViolationException e) {
-            String errorMessage = e.getMessage();
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
-                    .body(Map.of("message", errorMessage));
+                    .body(Map.of("message", e.getMessage()));
         }
     }
-/*
 
-    @PostMapping("/register")
-    public String registerUser(@ModelAttribute("user") UserEntity user) {
-        userService.registerUser(user);
-        return "redirect:/login";
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@RequestBody UserEntity user) {
+        try {
+            UserEntity authenticatedUser = userService.loginUser(user);
+            return new ResponseEntity<>(authenticatedUser, HttpStatus.OK);
+        } catch (InvalidCredentialsException e) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "Invalid email or password"));
+        }
     }
-*/
-@PostMapping("/login")
-public ResponseEntity<?> loginUser(@RequestBody UserEntity user) {
-    try {
-        UserEntity authenticatedUser = userService.loginUser(user);
-        return new ResponseEntity<>(authenticatedUser, HttpStatus.OK);
-    } catch (InvalidCredentialsException e) {
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(Map.of("message", "Invalid email or password")); // Send error message
-    }
-}
 }

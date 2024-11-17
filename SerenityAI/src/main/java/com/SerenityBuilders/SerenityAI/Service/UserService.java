@@ -21,11 +21,11 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder; // Autowired PasswordEncoder
+    private PasswordEncoder passwordEncoder;
 
     // Create a new user with encoded password
     public UserEntity postUser(UserEntity user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // Encode the password before saving
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -40,16 +40,16 @@ public class UserService {
                 .orElseThrow(() -> new NameNotFoundException("User " + id + " not found"));
 
         // Update user details
-        user.setName(newUserDetails.getName());
+        user.setFirstName(newUserDetails.getFirstName());
+        user.setLastName(newUserDetails.getLastName());
         user.setEmail(newUserDetails.getEmail());
-        user.setPassword(passwordEncoder.encode(newUserDetails.getPassword())); // Ensure password is encoded
+        user.setPassword(passwordEncoder.encode(newUserDetails.getPassword()));
         user.setDateOfBirth(newUserDetails.getDateOfBirth());
         user.setGender(newUserDetails.getGender());
-        user.setSignUpDate(newUserDetails.getSignUpDate());
         user.setLastLogin(newUserDetails.getLastLogin());
         user.setLocation(newUserDetails.getLocation());
 
-        return userRepository.save(user); // Save updated user
+        return userRepository.save(user);
     }
 
     // Delete user by ID
@@ -63,15 +63,16 @@ public class UserService {
     }
 
     public UserEntity getUserById(int id) {
-        Optional<UserEntity> user = userRepository.findById(id); // Find user by ID
-        return user.orElse(null); // Return the user if found, otherwise null
+        Optional<UserEntity> user = userRepository.findById(id);
+        return user.orElse(null);
     }
-    // Register a new user with unique email and name, encoding password
+
+    // Register a new user with unique email and encoded password
     public UserEntity registerUser(UserEntity user) {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new DataIntegrityViolationException("Email already taken");
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // Encode the password before saving
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -83,5 +84,5 @@ public class UserService {
         }
         return foundUser.get();
     }
-
 }
+

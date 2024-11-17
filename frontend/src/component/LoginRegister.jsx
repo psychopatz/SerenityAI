@@ -1,22 +1,40 @@
 import React, { useState } from 'react';
+import {
+    TextField,
+    Button,
+    Typography,
+    MenuItem,
+    Box,
+    Alert,
+    Stack,
+    Paper,
+    IconButton,
+    InputAdornment,
+} from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import UserService from '../services/UserService';
 import { useNavigate } from 'react-router-dom';
-import './LoginRegister.css';
 
 const LoginRegister = () => {
     const [isLogin, setIsLogin] = useState(true);
     const [loginData, setLoginData] = useState({ email: '', password: '' });
     const [registerData, setRegisterData] = useState({
-        name: '',
+        firstName: '',
+        lastName: '',
         email: '',
         password: '',
         dateOfBirth: '',
         gender: '',
-        location: ''
+        location: '',
     });
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
-    const [successMessage, setSuccessMessage] = useState(''); // Added success message state
+    const [successMessage, setSuccessMessage] = useState('');
     const navigate = useNavigate();
+
+    const handleTogglePassword = () => {
+        setShowPassword((prev) => !prev);
+    };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -51,14 +69,21 @@ const LoginRegister = () => {
             setSuccessMessage('Registration successful! Redirecting to login...'); // Show success message
             setTimeout(() => {
                 setIsLogin(true); // Switch to login after 3 seconds
-                setRegisterData({ name: '', email: '', password: '', dateOfBirth: '', gender: '', location: '' }); // Clear the register form
+                setRegisterData({
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    password: '',
+                    dateOfBirth: '',
+                    gender: '',
+                    location: '',
+                }); // Clear the register form
                 setSuccessMessage(''); // Clear the success message after redirection
             }, 3000); // Show success message for 3 seconds before redirecting
         } catch (error) {
             // Handle errors for existing email or name
             if (error.response?.data?.message.includes('Email already taken')) {
                 setError('This email is already taken');
-            
             } else {
                 setError('Registration failed');
             }
@@ -67,100 +92,205 @@ const LoginRegister = () => {
     };
 
     return (
-        <div className="min-h-screen">
-            <div className="flex flex-col items-center bg-card p-8 rounded-lg shadow-lg w-full max-w-md">
-                <h2 className="text-3xl font-bold text-primary mb-6">{isLogin ? 'Login' : 'Register'}</h2>
+        <Box
+    sx={{
+        height: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'background.default',
+        px: 2,
+        boxSizing: 'border-box',
+        backgroundImage: 'linear-gradient(to right, #6a11cb, #2575fc)', // Add gradient background
+    }}
+>
+    <Paper
+        elevation={6}
+        sx={{
+            p: 4,
+            maxWidth: 450,
+            width: '100%',
+            borderRadius: 5,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            textAlign: 'center',
+            backgroundColor: 'white',
+            boxShadow: '0 8px 30px rgba(0, 0, 0, 0.1)', // Add subtle shadow
+        }}
+    >
+        <Typography
+            variant="h4"
+            component="h1"
+            align="center"
+            gutterBottom
+            sx={{
+                fontWeight: 'bold',
+                color: '#333',
+            }}
+        >
+            {isLogin ? 'Welcome Back' : 'Create an Account'}
+        </Typography>
+        <Typography
+            variant="body2"
+            align="center"
+            sx={{ mb: 3, color: '#666' }}
+        >
+            {isLogin
+                ? 'Please log in to your account.'
+                : 'Fill in the details to create your account.'}
+        </Typography>
 
-                {/* Display success message if registration is successful */}
-                {successMessage && <p className="text-success mt-4">{successMessage}</p>}
-
-                <form onSubmit={isLogin ? handleLoginSubmit : handleRegisterSubmit} className="w-full">
-                    {!isLogin && (
-                        <>
-                            <input
-                                type="text"
-                                name="name"
-                                value={registerData.name}
-                                onChange={handleInputChange}
-                                placeholder="Name"
-                                className="input"
-                                required
-                            />
-                            <input
-                                type="date"
-                                name="dateOfBirth"
-                                value={registerData.dateOfBirth}
-                                onChange={handleInputChange}
-                                className="input"
-                                required
-                            />
-                            <select
-                                name="gender"
-                                value={registerData.gender}
-                                onChange={handleInputChange}
-                                className="input"
-                                required
-                            >
-                                <option value="">Select Gender</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="Other">Other</option>
-                            </select>
-                            <input
-                                type="text"
-                                name="location"
-                                value={registerData.location}
-                                onChange={handleInputChange}
-                                placeholder="Location"
-                                className="input"
-                                required
-                            />
-                        </>
-                    )}
-                    <input
-                        type="email"
-                        name="email"
-                        value={isLogin ? loginData.email : registerData.email}
+        <Stack
+            spacing={3}
+            component="form"
+            onSubmit={isLogin ? handleLoginSubmit : handleRegisterSubmit}
+            sx={{
+                width: '100%',
+            }}
+        >
+            {!isLogin && (
+                <>
+                    <TextField
+                        label="First Name"
+                        name="firstName"
+                        value={registerData.firstName}
                         onChange={handleInputChange}
-                        placeholder="Email"
-                        className="input"
+                        fullWidth
                         required
                     />
-                    <input
-                        type="password"
-                        name="password"
-                        value={isLogin ? loginData.password : registerData.password}
+                    <TextField
+                        label="Last Name"
+                        name="lastName"
+                        value={registerData.lastName}
                         onChange={handleInputChange}
-                        placeholder="Password"
-                        className="input"
+                        fullWidth
                         required
                     />
-                    <button type="submit" className="bg-primary">
-                        {isLogin ? 'Login' : 'Register'}
-                    </button>
-                    {error && <p className="text-muted-foreground mt-2">{error}</p>}
-                </form>
+                    <TextField
+                        label="Date of Birth"
+                        type="date"
+                        name="dateOfBirth"
+                        value={registerData.dateOfBirth}
+                        onChange={handleInputChange}
+                        InputLabelProps={{ shrink: true }}
+                        fullWidth
+                        required
+                    />
+                    <TextField
+                        select
+                        label="Gender"
+                        name="gender"
+                        value={registerData.gender}
+                        onChange={handleInputChange}
+                        fullWidth
+                        required
+                    >
+                        <MenuItem value="Male">Male</MenuItem>
+                        <MenuItem value="Female">Female</MenuItem>
+                        <MenuItem value="Other">Other</MenuItem>
+                    </TextField>
+                    <TextField
+                        label="Location"
+                        name="location"
+                        value={registerData.location}
+                        onChange={handleInputChange}
+                        fullWidth
+                        required
+                    />
+                </>
+            )}
+            <TextField
+                label="Email"
+                type="email"
+                name="email"
+                value={isLogin ? loginData.email : registerData.email}
+                onChange={handleInputChange}
+                fullWidth
+                required
+            />
+            <TextField
+                label="Password"
+                type={showPassword ? 'text' : 'password'}
+                name="password"
+                value={isLogin ? loginData.password : registerData.password}
+                onChange={handleInputChange}
+                fullWidth
+                required
+                InputProps={{
+                    endAdornment: (
+                        <InputAdornment position="end">
+                            <IconButton onClick={handleTogglePassword} edge="end">
+                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                        </InputAdornment>
+                    ),
+                }}
+            />
+            <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                size="large"
+                sx={{
+                    py: 1.5,
+                    backgroundImage: 'linear-gradient(to right, #6a11cb, #2575fc)',
+                    color: 'white',
+                    fontWeight: 'bold',
+                    '&:hover': {
+                        backgroundImage: 'linear-gradient(to right, #5a0fb8, #1d62db)',
+                    },
+                }}
+            >
+                {isLogin ? 'Log In' : 'Sign Up'}
+            </Button>
+        </Stack>
 
-                <div className="mt-4 text-muted-foreground">
-                    {isLogin ? (
-                        <p>
-                            Don't have an account?{' '}
-                            <span className="text-secondary cursor-pointer" onClick={() => setIsLogin(false)}>
-                                Sign up
-                            </span>
-                        </p>
-                    ) : (
-                        <p>
-                            Already have an account?{' '}
-                            <span className="text-secondary cursor-pointer" onClick={() => setIsLogin(true)}>
-                                Log in
-                            </span>
-                        </p>
-                    )}
-                </div>
-            </div>
-        </div>
-    );
+        {error && (
+            <Alert severity="error" sx={{ mt: 3, width: '100%' }}>
+                {error}
+            </Alert>
+        )}
+        {successMessage && (
+            <Alert severity="success" sx={{ mt: 3, width: '100%' }}>
+                {successMessage}
+            </Alert>
+        )}
+
+        <Typography variant="body2" align="center" sx={{ mt: 3, color: '#666' }}>
+            {isLogin ? (
+                <>
+                    Don’t have an account?{' '}
+                    <Button
+                        onClick={() => setIsLogin(false)}
+                        variant="text"
+                        sx={{
+                            color: '#6a11cb',
+                            fontWeight: 'bold',
+                        }}
+                    >
+                        Sign Up
+                    </Button>
+                </>
+            ) : (
+                <>
+                    Already have an account?{' '}
+                    <Button
+                        onClick={() => setIsLogin(true)}
+                        variant="text"
+                        sx={{
+                            color: '#6a11cb',
+                            fontWeight: 'bold',
+                        }}
+                    >
+                        Log In
+                    </Button>
+                </>
+            )}
+        </Typography>
+    </Paper>
+</Box>
+  );
 };
 
 export default LoginRegister;

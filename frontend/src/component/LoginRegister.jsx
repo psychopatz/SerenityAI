@@ -52,7 +52,7 @@ const LoginRegister = () => {
         try {
             const loggedInUser = await UserService.loginUser(loginData);
             console.log('Logged in:', loggedInUser);
-            navigate('/chat');
+            navigate('/home');
         } catch (error) {
             setError(error.response?.data?.message || 'Login failed');
             console.error('Login failed:', error);

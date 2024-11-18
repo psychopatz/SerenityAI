@@ -33,8 +33,8 @@ const Nav = () => {
   const navItems = [
     { label: "Home", path: "/home" },
     { label: "Chat", path: "/chat" },
-    { label: "Services", path: "/services" },
-    { label: "Contact", path: "/contact" },
+    { label: "About us", path: "/services" },
+    { label: "Profile", path: "/contact" },
   ];
 
   console.log("Rendering Navigation component");

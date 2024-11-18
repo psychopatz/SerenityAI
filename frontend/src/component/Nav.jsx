@@ -34,7 +34,7 @@ const Nav = () => {
     { label: "Home", path: "/home" },
     { label: "Chat", path: "/chat" },
     { label: "About us", path: "/services" },
-    { label: "Profile", path: "/contact" },
+    { label: "Profile", path: "/profile" },
   ];
 
   console.log("Rendering Navigation component");

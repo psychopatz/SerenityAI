@@ -84,5 +84,24 @@ public class UserService {
         }
         return foundUser.get();
     }
+    public UserEntity getUserByEmail(String email) throws NameNotFoundException {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new NameNotFoundException("User not found"));
+    }
+    
+    public UserEntity updateUserByEmail(String email, UserEntity newUserDetails) throws NameNotFoundException {
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NameNotFoundException("User not found"));
+        
+        user.setFirstName(newUserDetails.getFirstName());
+        user.setLastName(newUserDetails.getLastName());
+        user.setDateOfBirth(newUserDetails.getDateOfBirth());
+        user.setGender(newUserDetails.getGender());
+        user.setLocation(newUserDetails.getLocation());
+        user.setPassword(newUserDetails.getPassword()); // Ensure encryption if necessary
+    
+        return userRepository.save(user); // Save the updated user
+    }
+    
 }
 

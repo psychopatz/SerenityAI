@@ -52,6 +52,7 @@ const LoginRegister = () => {
         try {
             const loggedInUser = await UserService.loginUser(loginData);
             console.log('Logged in:', loggedInUser);
+            localStorage.setItem('userEmail', loggedInUser.email);  // assuming loggedInUser contains email
             navigate('/home');
         } catch (error) {
             setError(error.response?.data?.message || 'Login failed');

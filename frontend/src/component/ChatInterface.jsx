@@ -163,27 +163,11 @@ const ChatInterface = () => {
         <StyledPaper elevation={3}>
           <Typography variant="h6">Current User Mood: {sentiment || 'Unknown'}</Typography>
         </StyledPaper>
-        <StyledPaper elevation={3}>
-          <Typography variant="h6">System Instruction:</Typography>
-          <TextField
-            fullWidth
-            multiline
-            maxRows={4}
-            value={systemInstruction}
-            onChange={(e) => setSystemInstruction(e.target.value)}
-            variant="outlined"
-            size="small"
-          />
-          <FormControlLabel
-            control={<Switch checked={includeDate} onChange={(e) => setIncludeDate(e.target.checked)} color="primary" />}
-            label="Include Date"
-            sx={{ mt: 2 }}
-          />
-        </StyledPaper>
+      
       </Box>
       <Paper elevation={3} sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: '#f5f5f5' }}>
         <ChatHeader>
-           <Typography variant="h6"> Chatbot Interface Test, gapaabot pako sa inyong database na ma finalize para makaperform nakog rag hehehe</Typography>
+           <Typography variant="h6">Baymax </Typography>
         </ChatHeader>
         <MessagesArea>
           {messages.map((msg, index) => (

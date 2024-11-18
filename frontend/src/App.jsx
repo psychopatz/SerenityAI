@@ -4,6 +4,7 @@ import Login from './component/LoginRegister';
 import ChatInterface from './component/ChatInterface';
 import RecommendationApp from './component/RecommendationApp';
 import Nav from './component/Nav';
+import Home from "./component/Home";
 
 const App = () => {
   return (
@@ -13,8 +14,9 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/chat" element={<ChatInterface/>} />
         <Route path="/recommendation" element={<RecommendationApp/>} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Home />} />
       </Routes>
-      
     </Router>
   );
 };

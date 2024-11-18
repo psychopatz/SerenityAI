@@ -1,23 +1,40 @@
+/* Font Import */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap');
+
+/* Root */
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  background-color: #F5F5F5;
+  color: #333333;
 }
 
+/* Logo */
 .logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
+  height: 150px; /* Ensures a balanced logo size */
+  margin: 20px auto;
+  display: block;
   transition: filter 300ms;
+  will-change: filter;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+/* AppBar (Navbar) */
+.MuiAppBar-root {
+  background-color: #4A90E2;
+  color: white;
+}
+
+/* Keyframe for Spinning Logo */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -33,10 +50,67 @@
   }
 }
 
+/* Card Style */
 .card {
   padding: 2em;
 }
 
+/* Read the Docs */
 .read-the-docs {
   color: #888;
+}
+
+/* Homepage Styles */
+.home-logo {
+  height: 150px;
+  margin: 20px auto;
+  display: block;
+}
+
+.home-title {
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  color: #4A90E2;
+  margin: 0;
+}
+
+.home-quote {
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+  font-style: italic;
+  color: #666666;
+  margin-top: 10px;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #4A90E2;
+  padding: 1rem;
+  color: white;
+}
+
+.navbar img {
+  height: 40px;
+}
+
+.navbar a {
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  margin-right: 1rem;
+  font-weight: 500;
+}
+
+/* Additional Media Query Adjustments */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+  }
+
+  .navbar a {
+    margin: 0.5rem 0;
+  }
 }

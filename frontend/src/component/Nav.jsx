@@ -1,9 +1,10 @@
 import { AppBar, Button, Toolbar, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
-import { useLocation } from 'react-router-dom';
+import {Link, useLocation } from 'react-router-dom';
 import { navBackgroundImage } from "../styles/NavStyles";
 import logo from '../assets/SAILogo.png'; 
+
 
 
 const Nav = () => {
@@ -14,13 +15,19 @@ const Nav = () => {
   }
 
   const AppBarStyled = styled(AppBar)({
-
-    backgroundImage: navBackgroundImage 
+    backgroundColor: "#4A90E2",
+    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1201,
     });
 
   const navLinkStyle = {
     color: "#000",
     marginRight: "1rem",
+    textDecoration: "none",
   };
 
   const navItems = [
@@ -33,9 +40,11 @@ const Nav = () => {
   console.log("Rendering Navigation component");
 
   return (
-    <AppBarStyled position="static" sx={{ width: 'Auto' }} style={{ marginTop: '0rem', paddingTop: '1rem'}}>
+    <AppBarStyled>
       <Toolbar>
-      <img src={logo} alt="Logo" style={{ height: '40px', marginRight: '10px' }} />
+      <Link to="/home"><
+        img src={logo} alt="Logo" style={{ height: '40px', marginRight: '10px' }} />
+      </Link>
         <Typography variant="h6" style={{ flexGrow: 1, marginTop: '10px', color:'black', fontWeight: 'bold' }}>
          SERENITY AI
         </Typography>

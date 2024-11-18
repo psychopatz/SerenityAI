@@ -15,9 +15,11 @@ import {
 import { Send as SendIcon, SentimentSatisfiedAlt as EmojiIcon } from '@mui/icons-material';
 import { sendChatRequest, sendSentimentRequest } from '../services/AiAnalyticsService';
 
+
 const StyledContainer = styled(Container)({
   height: '100vh',
   padding: '32px',
+  marginTop: '80px',
 });
 
 const StyledPaper = styled(Paper)(({ theme }) => ({

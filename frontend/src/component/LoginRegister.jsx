@@ -117,9 +117,9 @@ const LoginRegister = () => {
             alt="SAI Logo"
             style={{
                 position: 'absolute',
-                top: '10%', // Adjust as needed
+                top: '13%', // Adjust as needed
                 transform: 'translateY(-50%) ',
-                width: '190px',
+                width: '170px',
                 height: 'auto',
             }}
         />

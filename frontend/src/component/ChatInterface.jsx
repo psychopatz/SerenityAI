@@ -12,6 +12,7 @@ import {
 import SendIcon from '@mui/icons-material/Send';
 import MarkdownPreview from '@uiw/react-markdown-preview';
 import { sendChatRequest, analyzeUserInput } from '../services/AiAnalyticsService';
+import { motion } from 'framer-motion';
 
 const StyledContainer = styled(Container)(({ theme }) => ({
   height: '100vh',
@@ -194,25 +195,31 @@ const ChatInterface = () => {
 
       <StyledBox>
         {messages.slice(-50).map((msg, index) => (
-          <Box 
-            key={index} 
-            sx={{ 
-              textAlign: msg.role === 'user' ? 'right' : 'left',
-              marginBottom: 2 
-            }}
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
           >
-            <MessageBubble role={msg.role}>
-              <MarkdownPreview 
-                source={msg.parts[0].text} 
-                style={{ 
-                  backgroundColor: 'transparent',
-                  margin: 0,
-                  padding: 0,
-                  color: msg.role === 'user' ? '#ffffff' : '#000000'
-                }} 
-              />
-            </MessageBubble>
-          </Box>
+            <Box 
+              sx={{ 
+                textAlign: msg.role === 'user' ? 'right' : 'left',
+                marginBottom: 2 
+              }}
+            >
+              <MessageBubble role={msg.role}>
+                <MarkdownPreview 
+                  source={msg.parts[0].text} 
+                  style={{ 
+                    backgroundColor: 'transparent',
+                    margin: 0,
+                    padding: 0,
+                    color: msg.role === 'user' ? '#ffffff' : '#000000'
+                  }} 
+                />
+              </MessageBubble>
+            </Box>
+          </motion.div>
         ))}
         {loading && (
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>

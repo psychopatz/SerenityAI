@@ -34,7 +34,8 @@ const ChatHeader = styled(Box)(({ theme }) => ({
   borderTopLeftRadius: theme.shape.borderRadius,
   borderTopRightRadius: theme.shape.borderRadius,
   display: 'flex',
-  justifyContent: 'space-between',
+  justifyContent: 'center',
+  textAlign: 'center',
 }));
 
 const MessagesArea = styled(Box)({
@@ -165,9 +166,9 @@ const ChatInterface = () => {
         </StyledPaper>
       
       </Box>
-      <Paper elevation={3} sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: '#f5f5f5' }}>
+      <Paper elevation={3} sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: '#f5f5f5'}}>
         <ChatHeader>
-           <Typography variant="h6">Baymax </Typography>
+           <Typography variant="h6">HELLO, HOW CAN I HELP YOU? </Typography>
         </ChatHeader>
         <MessagesArea>
           {messages.map((msg, index) => (

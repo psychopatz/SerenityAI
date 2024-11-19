@@ -15,6 +15,8 @@ import {Visibility, VisibilityOff } from '@mui/icons-material';
 import UserService from '../services/UserService';
 import { useNavigate } from 'react-router-dom';
 import SAILogo from '../assets/SAILogo.png';
+import Hand from '../assets/hand.png';
+import Hand2 from '../assets/hand2.png';
 
 const LoginRegister = () => {
     const [isLogin, setIsLogin] = useState(true);
@@ -116,12 +118,42 @@ const LoginRegister = () => {
             style={{
                 position: 'absolute',
                 top: '10%', // Adjust as needed
-                transform: 'translateY(-50%)',
-                width: '150px',
+                transform: 'translateY(-50%) ',
+                width: '190px',
                 height: 'auto',
             }}
         />
     )}
+
+{isLogin && (
+<img 
+    src={Hand} 
+    alt="Hand" 
+    style={{ 
+        position: 'absolute', 
+        top: '20px', 
+        left: '310px',
+        height: '500px',
+        
+     }} 
+     
+    />
+)}
+
+{isLogin && (
+<img 
+    src={Hand2} 
+    alt="Hand" 
+    style={{ 
+        position: 'absolute', 
+        right: '390px',
+        height: '600px',
+        bottom: '10px',
+        
+     }} 
+    />
+)}
+
     <Paper
         elevation={6}
         sx={{

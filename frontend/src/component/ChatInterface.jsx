@@ -9,7 +9,7 @@ import {
   Alert,
   styled
 } from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
+import VoiceChatIcon from '@mui/icons-material/VoiceChat';
 import MarkdownPreview from '@uiw/react-markdown-preview';
 import { sendChatRequest, analyzeUserInput } from '../services/AiAnalyticsService';
 import { motion } from 'framer-motion';
@@ -242,7 +242,7 @@ const ChatInterface = () => {
         />
         <StyledButton
           variant="contained"
-          endIcon={<SendIcon />}
+          endIcon={<VoiceChatIcon />}
           onClick={handleSendMessage}
           disabled={!input.trim() || loading}
           fullWidth

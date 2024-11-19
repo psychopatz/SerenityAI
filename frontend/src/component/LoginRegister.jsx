@@ -11,9 +11,10 @@ import {
     IconButton,
     InputAdornment,
 } from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import {Visibility, VisibilityOff } from '@mui/icons-material';
 import UserService from '../services/UserService';
 import { useNavigate } from 'react-router-dom';
+import SAILogo from '../assets/SAILogo.png';
 
 const LoginRegister = () => {
     const [isLogin, setIsLogin] = useState(true);
@@ -91,19 +92,36 @@ const LoginRegister = () => {
         }
     };
 
+    
+
     return (
         <Box
     sx={{
-        height: '100vh',
+        backgroundColor: '#0014FF',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
         display: 'flex',
-        alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'background.default',
-        px: 2,
-        boxSizing: 'border-box',
-        backgroundImage: 'linear-gradient(to right, #6a11cb, #2575fc)', // Add gradient background
+        alignItems: 'center',
+        overflow: 'hidden',
     }}
 >
+{isLogin && (
+        <img
+            src={SAILogo}
+            alt="SAI Logo"
+            style={{
+                position: 'absolute',
+                top: '10%', // Adjust as needed
+                transform: 'translateY(-50%)',
+                width: '150px',
+                height: 'auto',
+            }}
+        />
+    )}
     <Paper
         elevation={6}
         sx={{
@@ -117,8 +135,10 @@ const LoginRegister = () => {
             textAlign: 'center',
             backgroundColor: 'white',
             boxShadow: '0 8px 30px rgba(0, 0, 0, 0.1)', // Add subtle shadow
+           // maxHeight: '670px',
         }}
     >
+        
         <Typography
             variant="h4"
             component="h1"
@@ -257,7 +277,7 @@ const LoginRegister = () => {
             </Alert>
         )}
 
-        <Typography variant="body2" align="center" sx={{ mt: 3, color: '#666' }}>
+        <Typography variant="body2" align="center" sx={{ mt: -0, color: '#666' }}>
             {isLogin ? (
                 <>
                     Don’t have an account?{' '}
@@ -281,6 +301,7 @@ const LoginRegister = () => {
                         sx={{
                             color: '#6a11cb',
                             fontWeight: 'bold',
+                            maxHeight: '0px',
                         }}
                     >
                         Log In

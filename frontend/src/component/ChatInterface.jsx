@@ -1,217 +1,254 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { styled } from '@mui/material/styles';
 import {
-  Paper,
-  TextField,
-  IconButton,
-  Typography,
   Box,
+  TextField,
+  Button,
+  Typography,
   Container,
   CircularProgress,
   Alert,
-  FormControlLabel,
-  Switch
+  styled
 } from '@mui/material';
-import { Send as SendIcon, SentimentSatisfiedAlt as EmojiIcon } from '@mui/icons-material';
-import { sendChatRequest, sendSentimentRequest } from '../services/AiAnalyticsService';
+import VoiceChatIcon from '@mui/icons-material/VoiceChat';
+import MarkdownPreview from '@uiw/react-markdown-preview';
+import { sendChatRequest, analyzeUserInput } from '../services/AiAnalyticsService';
+import { motion } from 'framer-motion';
+import smsSound from '../assets/sms.mp3';
 
-
-const StyledContainer = styled(Container)({
-  height: '100vh',
-  padding: '32px',
-  marginTop: '80px',
-});
-
-const StyledPaper = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(2),
-  backgroundColor: '#f5f5f5',
-}));
-
-const ChatHeader = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(2),
-  backgroundColor: theme.palette.primary.main,
-  color: 'white',
-  borderTopLeftRadius: theme.shape.borderRadius,
-  borderTopRightRadius: theme.shape.borderRadius,
-  display: 'flex',
-  justifyContent: 'space-between',
-}));
-
-const MessagesArea = styled(Box)({
-  flex: 1,
-  overflow: 'auto',
-  padding: '16px',
+const ChatbotBody = styled(Container)(({ theme, isSmallScreen }) => ({
+  height: (isSmallScreen ? '100%' : '100vh'),
   display: 'flex',
   flexDirection: 'column',
-  gap: '16px',
-});
-
-const MessageBox = styled(Box)(({ alignSelf }) => ({
-  alignSelf,
-  maxWidth: '70%',
+  backgroundColor: '#f0f2f5',
+  width: '100%',
+  paddingTop: (isSmallScreen ? '0px' : '64px'),
+  overflowX: 'hidden',
+  maxWidth: '100% !important',
 }));
 
-const MessagePaper = styled(Paper)(({ theme, role }) => ({
+const ChatContents = styled(Box)(({ theme }) => ({
+  flexGrow: 1,
+  overflowY: 'auto',
   padding: theme.spacing(2),
-  backgroundColor: role === 'user' ? theme.palette.primary.light : 'white',
-  color: role === 'user' ? 'white' : theme.palette.text.primary,
-  borderRadius: theme.shape.borderRadius,
+  width: '100%',
+  overflowX: 'hidden',
+  display: 'flex',
+  flexDirection: 'column-reverse',
 }));
 
-const ChatInterface = () => {
+const ChatInterface = ({ isSmallScreen }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [sentiment, setSentiment] = useState('');
-  const [systemInstruction, setSystemInstruction] = useState('You are a therapist. Your name is doctor');
+  const [systemInstruction, setSystemInstruction] = useState('Your name is Serenity, you are an ai therapist. Your job is to help users especially with their emotional issues. Give them tips and advices. When generating, always format your outputs in a proper markup language and use emoji to show emotion');
   const [includeDate, setIncludeDate] = useState(true);
   const messagesEndRef = useRef(null);
 
+  const audioRef = useRef(null);
+
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
-  const formatMessage = (role, text) => ({
-    role,
-    parts: [{ text }],
-  });
+  useEffect(() => {
+    if (messages.length > 0 && messages[messages.length - 1].role === 'model') {
+      audioRef.current?.play();
+    }
+  }, [messages]);
 
-  const handleSend = async () => {
+  const handleSendMessage = async () => {
     if (!input.trim()) return;
-  
-    const userMessage = input;
-    setInput('');
+
+    const userMessage = {
+      role: 'user',
+      parts: [{ text: input }]
+    };
+
     setError('');
+    setMessages(prevMessages => [...prevMessages, userMessage]);
     setLoading(true);
-  
+    setInput('');
+
+    let isMounted = true;
+
     try {
-      const newMessages = [...messages, formatMessage('user', userMessage)];
-      setMessages(newMessages);
-  
       const chatData = {
         includeDate,
         system_instruction: {
-          parts: [{ text: systemInstruction }],
+          parts: [{ text: systemInstruction }]
         },
-        contents: newMessages,
-        safetySettings: [],
-        generationConfig: {},
+        contents: [...messages, userMessage]
       };
-  
-      const responseJson = await sendChatRequest(chatData);
-      if (!responseJson) throw new Error('Failed to get response after multiple attempts');
-  
-      const responseCandidate = responseJson.candidates && responseJson.candidates[0];
-      const responseContent = responseCandidate && responseCandidate.content;
-      const responseText = responseContent && responseContent.parts && responseContent.parts[0].text;
-  
-      if (!responseText) throw new Error('Invalid response format');
-  
-      setMessages([...newMessages, formatMessage('model', responseText)]);
-  
-      const sentimentData = {
-        contents: [formatMessage('user', userMessage)],
-        safetySettings: [],
-        generationConfig: {},
-      };
-  
-      const sentimentJson = await sendSentimentRequest(sentimentData);
-      if (sentimentJson) {
-        const sentimentCandidate = sentimentJson.candidates && sentimentJson.candidates[0];
-        const sentimentContent = sentimentCandidate && sentimentCandidate.content;
-        const sentimentText = sentimentContent && sentimentContent.parts && sentimentContent.parts[0].text;
-  
-        if (sentimentText) {
-          setSentiment(sentimentText);
-  
-          // Save sentiment to the database
-          await fetch('/api/sentiment/save', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              message: userMessage,
-              sentimentValue: sentimentText,
-            }),
-          });
+
+      const response = await sendChatRequest(chatData);
+
+      if (response && response.candidates && response.candidates[0]) {
+        const aiMessage = response.candidates[0].content;
+        if (isMounted) {
+          setMessages(prevMessages => [...prevMessages, aiMessage]);
+        }
+      }
+
+      const analysisData = await analyzeUserInput({
+        contents: [userMessage]
+      });
+
+      if (analysisData?.candidates?.[0]?.content?.parts?.[0]?.text) {
+        try {
+          const analysis = JSON.parse(analysisData.candidates[0].content.parts[0].text);
+          if (isMounted) {
+            setSentiment(analysis.moodtype?.[0] || '');
+            console.log('Sentiment:', analysis.moodtype);
+          }
+        } catch (parseError) {
+          console.warn('Could not parse sentiment analysis');
         }
       }
     } catch (err) {
-      setError(err.message);
-      setMessages((prevMessages) => prevMessages.slice(0, -1));
+      console.error('Chat error:', err);
+      if (isMounted) {
+        setError('Sorry, an error occurred. Please try again.');
+        setMessages(prevMessages => [...prevMessages, {
+          role: 'model',
+          parts: [{ text: "Sorry, I encountered an error. Could you try again?" }]
+        }]);
+      }
     } finally {
-      setLoading(false);
+      if (isMounted) {
+        setLoading(false);
+      }
     }
+
+    return () => {
+      isMounted = false;
+    };
   };
-  
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      handleSendMessage();
     }
   };
 
+  const MessageBubble = styled(Box)(({ theme, role, isSmallScreen }) => ({
+    display: 'inline-block',
+    padding: theme.spacing(2),
+    backgroundColor: role === 'user' ? '#0084ff' : '#e5e5ea',
+    color: role === 'user' ? '#ffffff' : '#000000',
+    borderRadius: '16px',
+    maxWidth: '60%',
+    minWidth: (isSmallScreen ? '40%' : '4%'),
+    wordWrap: 'break-word',
+    textAlign: role === 'user' ? 'left' : 'left',
+    marginBottom: theme.spacing(1),
+    marginRight: role === 'user' ? '20px' : '0',
+    position: 'relative',
+    minHeight: '40px',
+    '&:after': {
+      content: '""',
+      position: 'absolute',
+      bottom: 0,
+      width: 0,
+      height: 0,
+      border: role === 'user' ? '10px solid transparent' : '8px solid transparent',
+      borderTopColor: role === 'user' ? '#0084ff' : '#e5e5ea',
+      left: role === 'user' ? 'auto' : '-8px',
+      right: role === 'user' ? '-10px' : 'auto',
+    },
+  }));
+
   return (
-    <StyledContainer maxWidth="md">
-      <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-        <StyledPaper elevation={3}>
-          <Typography variant="h6">Current User Mood: {sentiment || 'Unknown'}</Typography>
-        </StyledPaper>
-      
-      </Box>
-      <Paper elevation={3} sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: '#f5f5f5' }}>
-        <ChatHeader>
-           <Typography variant="h6">Baymax </Typography>
-        </ChatHeader>
-        <MessagesArea>
-          {messages.map((msg, index) => (
-            <MessageBox key={index} alignSelf={msg.role === 'user' ? 'flex-end' : 'flex-start'}>
-              <MessagePaper elevation={1} role={msg.role}>
-                <Typography>{msg.parts[0].text}</Typography>
-              </MessagePaper>
-            </MessageBox>
-          ))}
-          {loading && (
-            <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
-              <CircularProgress size={24} />
+    <ChatbotBody maxWidth="lg" isSmallScreen={isSmallScreen}>
+      {error && (
+        <Alert
+          severity="error"
+          onClose={() => setError('')}
+          sx={{ mb: 2 }}
+        >
+          {error}
+        </Alert>
+      )}
+
+      {sentiment && (
+        <Typography variant="subtitle1" sx={{ textAlign: 'center', mb: 2 }}>
+          Current Sentiment: {sentiment}
+        </Typography>
+      )}
+
+      <ChatContents>
+        {messages.slice(-50).map((msg, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Box
+              sx={{
+                textAlign: msg.role === 'user' ? 'right' : 'left',
+                marginBottom: 2
+              }}
+            >
+              <MessageBubble role={msg.role} isSmallScreen={isSmallScreen}>
+                <MarkdownPreview
+                  source={msg.parts[0].text}
+                  style={{
+                    backgroundColor: 'transparent',
+                    margin: 0,
+                    padding: 0,
+                    color: msg.role === 'user' ? '#ffffff' : '#000000'
+                  }}
+                />
+              </MessageBubble>
             </Box>
-          )}
-          {error && (
-            <Alert severity="error" sx={{ mt: 2 }}>
-              {error}
-            </Alert>
-          )}
-          <div ref={messagesEndRef} />
-        </MessagesArea>
-        <Box sx={{ p: 2, bgcolor: 'white' }}>
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            <IconButton color="primary">
-              <EmojiIcon />
-            </IconButton>
-            <TextField
-              fullWidth
-              multiline
-              maxRows={4}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Type a message..."
-              variant="outlined"
-              size="small"
-            />
-            <IconButton color="primary" onClick={handleSend} disabled={loading || !input.trim()}>
-              <SendIcon />
-            </IconButton>
+          </motion.div>
+        ))}
+        {loading && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+            <CircularProgress size={24} />
           </Box>
-        </Box>
-      </Paper>
-    </StyledContainer>
+        )}
+        <div ref={messagesEndRef} />
+      </ChatContents>
+
+      <Box sx={{ display: 'flex', alignItems: 'center', padding: 1, borderTop: '1px solid #e0e0e0', backgroundColor: '#f0f2f5' }}>
+        <TextField
+          fullWidth
+          multiline
+          maxRows={isSmallScreen ? 2 : 4}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyPress={handleKeyPress}
+          placeholder="Type your message..."
+          variant="outlined"
+          sx={{ 
+            flexGrow: 1, 
+            marginRight: isSmallScreen ? 0 : 1 
+          }}
+        />
+        <Button
+          variant="contained"
+          onClick={handleSendMessage}
+          disabled={!input.trim() || loading}
+          sx={{ 
+            marginLeft: isSmallScreen ? 1 : 2,
+            minWidth: isSmallScreen ? 48 : 'auto',
+            backgroundColor: '#0084ff', 
+            '&:hover': { backgroundColor: '#0066cc' } 
+          }}
+        >
+          {isSmallScreen ? <VoiceChatIcon /> : <VoiceChatIcon />}
+        </Button>
+      </Box>
+      <audio ref={audioRef} src={smsSound} />
+    </ChatbotBody>
   );
 };
 

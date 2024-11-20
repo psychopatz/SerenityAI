@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Box, 
-  TextField, 
-  Button, 
-  Typography, 
-  Container, 
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Container,
   CircularProgress,
   Alert,
   styled
@@ -13,6 +13,7 @@ import VoiceChatIcon from '@mui/icons-material/VoiceChat';
 import MarkdownPreview from '@uiw/react-markdown-preview';
 import { sendChatRequest, analyzeUserInput } from '../services/AiAnalyticsService';
 import { motion } from 'framer-motion';
+import smsSound from '../assets/sms.mp3'; // Import the SMS sound file
 
 const StyledContainer = styled(Container)(({ theme }) => ({
   height: '100vh',
@@ -61,12 +62,21 @@ const ChatInterface = () => {
   const [includeDate, setIncludeDate] = useState(true);
   const messagesEndRef = useRef(null);
 
+  const audioRef = useRef(null);
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
     scrollToBottom();
+  }, [messages]);
+
+  useEffect(() => {
+    // Play sound when a new AI message is added
+    if (messages.length > 0 && messages[messages.length - 1].role === 'model') {
+      audioRef.current?.play();
+    }
   }, [messages]);
 
   const handleSendMessage = async () => {
@@ -77,10 +87,7 @@ const ChatInterface = () => {
       parts: [{ text: input }]
     };
 
-    // Reset previous error
     setError('');
-
-    // Add user message to chat
     setMessages(prevMessages => [...prevMessages, userMessage]);
     setLoading(true);
     setInput('');
@@ -88,7 +95,6 @@ const ChatInterface = () => {
     let isMounted = true;
 
     try {
-      // Prepare chat request first
       const chatData = {
         includeDate,
         system_instruction: {
@@ -99,7 +105,6 @@ const ChatInterface = () => {
 
       const response = await sendChatRequest(chatData);
 
-      // Extract AI message if available
       if (response && response.candidates && response.candidates[0]) {
         const aiMessage = response.candidates[0].content;
         if (isMounted) {
@@ -107,12 +112,10 @@ const ChatInterface = () => {
         }
       }
 
-      // Analyze sentiment after chat response
       const analysisData = await analyzeUserInput({
         contents: [userMessage]
       });
 
-      // Extract sentiment if available
       if (analysisData?.candidates?.[0]?.content?.parts?.[0]?.text) {
         try {
           const analysis = JSON.parse(analysisData.candidates[0].content.parts[0].text);
@@ -152,7 +155,7 @@ const ChatInterface = () => {
 
   const MessageBubble = styled(Box)(({ theme, role }) => ({
     display: 'inline-block',
-    padding: theme.spacing(2), // Added padding to avoid cramped look
+    padding: theme.spacing(2),
     backgroundColor: role === 'user' ? '#0084ff' : '#e5e5ea',
     color: role === 'user' ? '#ffffff' : '#000000',
     borderRadius: '16px',
@@ -161,7 +164,7 @@ const ChatInterface = () => {
     textAlign: role === 'user' ? 'right' : 'left',
     marginBottom: theme.spacing(1),
     position: 'relative',
-    minHeight: '40px', // Added minimum height to avoid cramped look
+    minHeight: '40px',
     '&:after': {
       content: '""',
       position: 'absolute',
@@ -178,8 +181,8 @@ const ChatInterface = () => {
   return (
     <StyledContainer maxWidth="lg">
       {error && (
-        <Alert 
-          severity="error" 
+        <Alert
+          severity="error"
           onClose={() => setError('')}
           sx={{ mb: 2 }}
         >
@@ -201,21 +204,21 @@ const ChatInterface = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <Box 
-              sx={{ 
+            <Box
+              sx={{
                 textAlign: msg.role === 'user' ? 'right' : 'left',
-                marginBottom: 2 
+                marginBottom: 2
               }}
             >
               <MessageBubble role={msg.role}>
-                <MarkdownPreview 
-                  source={msg.parts[0].text} 
-                  style={{ 
+                <MarkdownPreview
+                  source={msg.parts[0].text}
+                  style={{
                     backgroundColor: 'transparent',
                     margin: 0,
                     padding: 0,
                     color: msg.role === 'user' ? '#ffffff' : '#000000'
-                  }} 
+                  }}
                 />
               </MessageBubble>
             </Box>
@@ -250,6 +253,7 @@ const ChatInterface = () => {
           Send
         </StyledButton>
       </Box>
+      <audio ref={audioRef} src={smsSound} />
     </StyledContainer>
   );
 };

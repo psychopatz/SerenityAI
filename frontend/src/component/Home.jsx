@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Box, Typography, Button as MuiButton, useMediaQuery } from "@mui/material";
+import { Box, Typography, IconButton, Button as MuiButton, useMediaQuery } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import CloseIcon from "@mui/icons-material/Close";
 import logo from "../assets/SAILogo.png";
-import ChatInterface from "./ChatInterface";
+import ChatboxIframe from "./ChatboxIframe";
 
 const HomeContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -38,23 +39,8 @@ const Quote = styled(Typography)(({ theme }) => ({
   textAlign: "center",
 }));
 
-const ChatContainer = styled(Box)(({ theme, isVisible }) => ({  //Ireuse lang ni ninyo
-  position: "fixed",
-  bottom: isVisible ? 0 : "-100%",
-  right: theme.spacing(3),
-  width: "350px",
-  height: "500px",
-  boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
-  transition: "bottom 0.5s ease-in-out",
-  backgroundColor: "#ffffff",
-  borderRadius: "8px 8px 0 0",
-  overflow: "hidden",
-  zIndex: 1000,
-}));
-
 const Home = () => {
   const [isChatVisible, setIsChatVisible] = useState(false);
-
 
   const toggleChatVisibility = () => {
     setIsChatVisible((prev) => !prev);
@@ -68,9 +54,7 @@ const Home = () => {
       <MuiButton variant="contained" color="primary" onClick={toggleChatVisibility}>
         {isChatVisible ? "Close Chat" : "Open Chat"}
       </MuiButton>
-      <ChatContainer isVisible={isChatVisible}>
-        <ChatInterface isSmallScreen={true} />
-      </ChatContainer>
+      <ChatboxIframe isVisible={isChatVisible} toggleChatVisibility={toggleChatVisibility} />
     </HomeContainer>
   );
 };

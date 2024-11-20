@@ -1,11 +1,13 @@
 // AiAnalyticsService.js
 import axios from 'axios';
 
+const API_URL = "http://localhost:8080/api/ai-analysis";
+
 export const sendChatRequest = async (chatData) => {
   try {
     for (let i = 0; i < 5; i++) {
       console.log(`Attempting chat request, attempt ${i + 1}`);
-      const response = await axios.post('http://localhost:8080/api/ai-analysis/chat', chatData);
+      const response = await axios.post(`${API_URL}/chat`, chatData);
       if (response.status === 200) {
         console.log('Chat request successful');
         console.log("Response data:", response.data);
@@ -25,7 +27,7 @@ export const analyzeUserInput = async (userData) => {
   try {
     for (let i = 0; i < 5; i++) {
       console.log(`Attempting to get aiMemoryFramework request, attempt ${i + 1}`);
-      const response = await axios.post('http://localhost:8080/api/ai-analysis/analyze', userData);
+      const response = await axios.post(`${API_URL}/analyze`, userData);
       if (response.status === 200) {
         console.log('aiMemoryFramework request successful');
         console.log("Response data:", response.data);

@@ -22,7 +22,7 @@ const StyledContainer = styled(Container)(({ theme, isSmallScreen }) => ({
   flexDirection: 'column',
   backgroundColor: '#f0f2f5',
   width: '100%',
-  paddingTop: '64px',
+  paddingTop: (isSmallScreen ? '0px' : '64px'),
   overflowX: 'hidden',
   maxWidth: '100% !important',
 }));

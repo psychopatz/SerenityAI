@@ -1,16 +1,14 @@
 import { AppBar, Button, Toolbar, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React from "react";
-import {Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from "react-router-dom";
 import { navBackgroundImage } from "../styles/NavStyles";
-import logo from '../assets/SAILogo.png'; 
-
-
+import logo from "../assets/SAILogo.png";
 
 const Nav = () => {
   const location = useLocation();
 
-  if (location.pathname === '/login' || location.pathname === '/register') {
+  if (location.pathname === "/login" || location.pathname === "/register") {
     return null;
   }
 
@@ -22,7 +20,7 @@ const Nav = () => {
     left: 0,
     right: 0,
     zIndex: 1201,
-    });
+  });
 
   const navLinkStyle = {
     color: "#000",
@@ -42,16 +40,28 @@ const Nav = () => {
   return (
     <AppBarStyled>
       <Toolbar>
-      <Link to="/home"><
-        img src={logo} alt="Logo" style={{ height: '40px', marginRight: '10px' }} />
-      </Link>
-        <Typography variant="h6" style={{ flexGrow: 1, marginTop: '10px', color:'black', fontWeight: 'bold' }}>
-         SERENITY AI
+        <Link to="/home">
+          <img
+            src={logo}
+            alt="Logo"
+            style={{ height: "40px", marginRight: "10px" }}
+          />
+        </Link>
+        <Typography
+          variant="h6"
+          style={{ flexGrow: 1, marginTop: "10px", color: "black", fontWeight: "bold" }}
+        >
+          SERENITY AI
         </Typography>
         {navItems.map((item, index) => {
           console.log(`Rendering nav item: ${item.label}`);
           return (
-            <Button key={index} style={{ ...navLinkStyle, marginTop: '15px'}} href={item.path}>
+            <Button
+              key={index}
+              component={Link}
+              to={item.path}
+              style={{ ...navLinkStyle, marginTop: "15px" }}
+            >
               {item.label}
             </Button>
           );

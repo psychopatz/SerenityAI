@@ -25,7 +25,7 @@ const ChatHeader = styled(Box)(({ theme }) => ({
   alignItems: "center",
   justifyContent: "space-between",
   padding: theme.spacing(1),
-  backgroundColor: "#f1f1f1",
+  backgroundColor: "#4a90e2",
   borderBottom: "1px solid #e0e0e0",
 }));
 
@@ -33,7 +33,7 @@ const ChatboxIframe = ({ isVisible, toggleChatVisibility }) => {
   return (
     <ChatContainer isVisible={isVisible}>
       <ChatHeader>
-        <Typography variant="subtitle1" style={{ fontWeight: 600 }}>
+        <Typography variant="subtitle1" style={{ fontWeight: 600, paddingLeft: "10px", color: "#fff" }}>
           SerenityAI
         </Typography>
         <IconButton onClick={toggleChatVisibility}>

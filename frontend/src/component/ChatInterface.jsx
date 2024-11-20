@@ -10,7 +10,6 @@ import {
   styled
 } from '@mui/material';
 import VoiceChatIcon from '@mui/icons-material/VoiceChat';
-import SendIcon from '@mui/icons-material/Send';
 import MarkdownPreview from '@uiw/react-markdown-preview';
 import { sendChatRequest, analyzeUserInput } from '../services/AiAnalyticsService';
 import { motion } from 'framer-motion';
@@ -147,6 +146,7 @@ const ChatInterface = ({ isSmallScreen }) => {
     wordWrap: 'break-word',
     textAlign: role === 'user' ? 'right' : 'left',
     marginBottom: theme.spacing(1),
+    marginRight: role === 'user' ? '20px' : '0',
     position: 'relative',
     minHeight: '40px',
     '&:after': {
@@ -236,12 +236,13 @@ const ChatInterface = ({ isSmallScreen }) => {
           onClick={handleSendMessage}
           disabled={!input.trim() || loading}
           sx={{ 
+            marginLeft: isSmallScreen ? 1 : 2,
             minWidth: isSmallScreen ? 48 : 'auto',
             backgroundColor: '#0084ff', 
             '&:hover': { backgroundColor: '#0066cc' } 
           }}
         >
-          {isSmallScreen ? <SendIcon /> : <VoiceChatIcon />}
+          {isSmallScreen ? <VoiceChatIcon /> : <VoiceChatIcon />}
         </Button>
       </Box>
       <audio ref={audioRef} src={smsSound} />

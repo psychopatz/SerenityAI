@@ -1,22 +1,46 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import Login from './component/LoginRegister';
 import ChatInterface from './component/ChatInterface';
 import RecommendationApp from './component/RecommendationApp';
 import Nav from './component/Nav';
 import Home from "./component/Home";
 
+const PageWrapper = ({ children }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, filter: "blur(10px)" }}
+      animate={{ opacity: 1, filter: "blur(0px)" }}
+      exit={{ opacity: 0, filter: "blur(10px)" }}
+      transition={{ duration: 0.6, ease: "easeInOut" }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+const AnimatedRoutes = () => {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/login" element={<PageWrapper><Login /></PageWrapper>} />
+        <Route path="/chat" element={<PageWrapper><ChatInterface /></PageWrapper>} />
+        <Route path="/recommendation" element={<PageWrapper><RecommendationApp /></PageWrapper>} />
+        <Route path="/home" element={<PageWrapper><Home /></PageWrapper>} />
+        <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
+      </Routes>
+    </AnimatePresence>
+  );
+};
+
 const App = () => {
   return (
     <Router>
       <Nav />
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/chat" element={<ChatInterface/>} />
-        <Route path="/recommendation" element={<RecommendationApp/>} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/" element={<Home />} />
-      </Routes>
+      <AnimatedRoutes />
     </Router>
   );
 };

@@ -54,7 +54,9 @@ const Home = () => {
       <MuiButton variant="contained" color="primary" onClick={toggleChatVisibility}>
         {isChatVisible ? "Close Chat" : "Open Chat"}
       </MuiButton>
-      <ChatboxIframe isVisible={isChatVisible} toggleChatVisibility={toggleChatVisibility} />
+      {isChatVisible && (
+        <ChatboxIframe isVisible={isChatVisible} toggleChatVisibility={toggleChatVisibility} />
+      )}
     </HomeContainer>
   );
 };

@@ -100,9 +100,8 @@ const LoginRegister = () => {
     return (
         <Box
     sx={{
-        backgroundColor: '#0014FF',
-        position: 'absolute',
-        top: 0,
+        position: 'relative',
+        top: 130,
         left: 0,
         right: 0,
         bottom: 0,
@@ -110,18 +109,22 @@ const LoginRegister = () => {
         justifyContent: 'center',
         alignItems: 'center',
         overflow: 'hidden',
+        
     }}
 >
 {isLogin && (
         <img
-            src={SAILogo}
-            alt="SAI Logo"
-            style={{
-                position: 'absolute',
-                top: '13%', // Adjust as needed
-                transform: 'translateY(-50%) ',
-                width: '170px',
-                height: 'auto',
+        src={SAILogo}
+        alt="SAI Logo"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '170px',
+          height: 'auto',
+          marginBottom: '16px',
+          zIndex: 1, 
             }}
         />
     )}

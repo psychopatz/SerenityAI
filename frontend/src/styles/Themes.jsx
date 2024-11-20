@@ -98,12 +98,12 @@ const GlobalStyle = () => (
         },
         body: {
           margin: 0,
-          overflow: 'hidden', // Disable scrolling
+          overflow: 'auto', // Disable scrolling
           backgroundImage: `url("data:image/svg+xml;utf8,${encodeURIComponent(svgBackground)}")`, // Embed the SVG background here
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat', // Prevent repetition
-          backgroundAttachment: 'fixed', // Make the background fixed
+          backgroundAttachment: 'fixed', 
         },
       }}
     />

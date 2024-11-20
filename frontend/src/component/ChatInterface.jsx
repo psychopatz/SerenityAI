@@ -33,7 +33,7 @@ const ChatContents = styled(Box)(({ theme }) => ({
   width: '100%',
   overflowX: 'hidden',
   display: 'flex',
-  flexDirection: 'column-reverse',
+  flexDirection: 'column',
 }));
 
 const ChatInterface = ({ isSmallScreen }) => {

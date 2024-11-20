@@ -5,16 +5,28 @@ import logo from "../assets/SAILogo.png";
 import ChatboxIframe from "./ChatboxIframe";
 import { AnimatePresence } from "framer-motion";
 
-const HomeContainer = styled(Box)(({ theme }) => ({
+
+ const HomeContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
   alignItems: "center",
-  height: "100vh",
+  height: "100vh", // Take up full height of viewport
+  width: "100vw", // Take up full width of viewport
   padding: theme.spacing(3),
-  backgroundColor: "#e8f4f9",
+  backgroundColor: "#rgba(255, 255, 255, 0.1)", 
   textAlign: "center",
-}));
+  overflow: "hidden", // Hide scrollbars
+  position: "absolute", // Position absolute to remove any parent restrictions
+  top: 0,
+  right: 0,
+  left: 0, // Change left to 0 to take up full width
+  bottom: 0, // Add this to take up full height
+  overflowX: "hidden",
+  overflowY: "hidden",
+ }));
+
+
 
 const Logo = styled("img")(() => ({
   width: "150px",
@@ -48,7 +60,7 @@ const Home = () => {
 
   return (
     <HomeContainer>
-      <Logo src={logo} alt="SAI Logo" />
+      <Logo src={logo} alt="SAI Logo" sx={{marginBottom:"50px",}}/>
       <Title variant="h1">SERENITY AI</Title>
       <Quote>"Your Personal AI for Emotional Well-being"</Quote>
       <MuiButton variant="contained" color="primary" onClick={toggleChatVisibility}>
@@ -58,7 +70,7 @@ const Home = () => {
         {isChatVisible && (
           <ChatboxIframe isVisible={isChatVisible} toggleChatVisibility={toggleChatVisibility} />
         )}
-      </AnimatePresence>
+      </AnimatePresence> 
     </HomeContainer>
   );
 };

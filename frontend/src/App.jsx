@@ -8,6 +8,7 @@ import Nav from './component/Nav';
 import Home from "./component/Home";
 import Profile from './component/Profile';
 
+
 const PageWrapper = ({ children }) => {
   return (
     <motion.div

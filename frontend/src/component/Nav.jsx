@@ -14,17 +14,20 @@ const Nav = () => {
   }
 
   const AppBarStyled = styled(AppBar)({
-    backgroundColor: "#4A90E2",
+    background: "linear-gradient(to right, #0077b6, #be2ed6)", // Gradient background
     boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
     position: "fixed",
     top: 0,
     left: 0,
     right: 0,
-    zIndex: 1201,
+    zIndex: 50,
+    padding: "3px",
+    backdropFilter: "blur(10px)",
+    borderBottom: "1px solid black", // Add subtle border for separation
   });
 
   const navLinkStyle = {
-    color: "#000",
+    color: "#03045e",
     marginRight: "1rem",
     textDecoration: "none",
   };

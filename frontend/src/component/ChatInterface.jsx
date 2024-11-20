@@ -15,7 +15,7 @@ import { sendChatRequest, analyzeUserInput } from '../services/AiAnalyticsServic
 import { motion } from 'framer-motion';
 import smsSound from '../assets/sms.mp3';
 
-const StyledContainer = styled(Container)(({ theme, isSmallScreen }) => ({
+const ChatbotBody = styled(Container)(({ theme, isSmallScreen }) => ({
   height: (isSmallScreen ? '100%' : '100vh'),
   display: 'flex',
   flexDirection: 'column',
@@ -26,7 +26,7 @@ const StyledContainer = styled(Container)(({ theme, isSmallScreen }) => ({
   maxWidth: '100% !important',
 }));
 
-const StyledBox = styled(Box)(({ theme }) => ({
+const ChatContents = styled(Box)(({ theme }) => ({
   flexGrow: 1,
   overflowY: 'auto',
   padding: theme.spacing(2),
@@ -104,6 +104,7 @@ const ChatInterface = ({ isSmallScreen }) => {
           const analysis = JSON.parse(analysisData.candidates[0].content.parts[0].text);
           if (isMounted) {
             setSentiment(analysis.moodtype?.[0] || '');
+            console.log('Sentiment:', analysis.moodtype);
           }
         } catch (parseError) {
           console.warn('Could not parse sentiment analysis');
@@ -136,15 +137,16 @@ const ChatInterface = ({ isSmallScreen }) => {
     }
   };
 
-  const MessageBubble = styled(Box)(({ theme, role }) => ({
+  const MessageBubble = styled(Box)(({ theme, role, isSmallScreen }) => ({
     display: 'inline-block',
     padding: theme.spacing(2),
     backgroundColor: role === 'user' ? '#0084ff' : '#e5e5ea',
     color: role === 'user' ? '#ffffff' : '#000000',
     borderRadius: '16px',
     maxWidth: '60%',
+    minWidth: (isSmallScreen ? '40%' : '4%'),
     wordWrap: 'break-word',
-    textAlign: role === 'user' ? 'right' : 'left',
+    textAlign: role === 'user' ? 'left' : 'left',
     marginBottom: theme.spacing(1),
     marginRight: role === 'user' ? '20px' : '0',
     position: 'relative',
@@ -163,7 +165,7 @@ const ChatInterface = ({ isSmallScreen }) => {
   }));
 
   return (
-    <StyledContainer maxWidth="lg" isSmallScreen={isSmallScreen}>
+    <ChatbotBody maxWidth="lg" isSmallScreen={isSmallScreen}>
       {error && (
         <Alert
           severity="error"
@@ -180,7 +182,7 @@ const ChatInterface = ({ isSmallScreen }) => {
         </Typography>
       )}
 
-      <StyledBox>
+      <ChatContents>
         {messages.slice(-50).map((msg, index) => (
           <motion.div
             key={index}
@@ -194,7 +196,7 @@ const ChatInterface = ({ isSmallScreen }) => {
                 marginBottom: 2
               }}
             >
-              <MessageBubble role={msg.role}>
+              <MessageBubble role={msg.role} isSmallScreen={isSmallScreen}>
                 <MarkdownPreview
                   source={msg.parts[0].text}
                   style={{
@@ -214,7 +216,7 @@ const ChatInterface = ({ isSmallScreen }) => {
           </Box>
         )}
         <div ref={messagesEndRef} />
-      </StyledBox>
+      </ChatContents>
 
       <Box sx={{ display: 'flex', alignItems: 'center', padding: 1, borderTop: '1px solid #e0e0e0', backgroundColor: '#f0f2f5' }}>
         <TextField
@@ -246,7 +248,7 @@ const ChatInterface = ({ isSmallScreen }) => {
         </Button>
       </Box>
       <audio ref={audioRef} src={smsSound} />
-    </StyledContainer>
+    </ChatbotBody>
   );
 };
 

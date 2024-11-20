@@ -10,20 +10,21 @@ import {
   styled
 } from '@mui/material';
 import VoiceChatIcon from '@mui/icons-material/VoiceChat';
+import SendIcon from '@mui/icons-material/Send';
 import MarkdownPreview from '@uiw/react-markdown-preview';
 import { sendChatRequest, analyzeUserInput } from '../services/AiAnalyticsService';
 import { motion } from 'framer-motion';
-import smsSound from '../assets/sms.mp3'; // Import the SMS sound file
+import smsSound from '../assets/sms.mp3';
 
-const StyledContainer = styled(Container)(({ theme }) => ({
-  height: '100vh',
+const StyledContainer = styled(Container)(({ theme, isSmallScreen }) => ({
+  height: (isSmallScreen ? '100%' : '100vh'),
   display: 'flex',
   flexDirection: 'column',
   backgroundColor: '#f0f2f5',
   width: '100%',
-  paddingTop: '64px', // Offset for the fixed navigation bar
-  overflowX: 'hidden', // Disable horizontal scrolling
-  maxWidth: '100% !important', // Ensure full-width display
+  paddingTop: '64px',
+  overflowX: 'hidden',
+  maxWidth: '100% !important',
 }));
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -31,28 +32,12 @@ const StyledBox = styled(Box)(({ theme }) => ({
   overflowY: 'auto',
   padding: theme.spacing(2),
   width: '100%',
-  overflowX: 'hidden', // Disable horizontal scrolling
+  overflowX: 'hidden',
   display: 'flex',
-  flexDirection: 'column-reverse', // Show latest messages at the bottom
+  flexDirection: 'column-reverse',
 }));
 
-const StyledTextField = styled(TextField)(({ theme }) => ({
-  marginBottom: theme.spacing(1),
-  '& .MuiOutlinedInput-root': {
-    backgroundColor: '#ffffff',
-  },
-  width: '100%',
-}));
-
-const StyledButton = styled(Button)(({ theme }) => ({
-  backgroundColor: '#0084ff',
-  '&:hover': {
-    backgroundColor: '#0066cc',
-  },
-  width: '100%',
-}));
-
-const ChatInterface = () => {
+const ChatInterface = ({ isSmallScreen }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -73,7 +58,6 @@ const ChatInterface = () => {
   }, [messages]);
 
   useEffect(() => {
-    // Play sound when a new AI message is added
     if (messages.length > 0 && messages[messages.length - 1].role === 'model') {
       audioRef.current?.play();
     }
@@ -179,7 +163,7 @@ const ChatInterface = () => {
   }));
 
   return (
-    <StyledContainer maxWidth="lg">
+    <StyledContainer maxWidth="lg" isSmallScreen={isSmallScreen}>
       {error && (
         <Alert
           severity="error"
@@ -232,26 +216,33 @@ const ChatInterface = () => {
         <div ref={messagesEndRef} />
       </StyledBox>
 
-      <Box sx={{ padding: 2, borderTop: '1px solid #e0e0e0', backgroundColor: '#f0f2f5' }}>
-        <StyledTextField
+      <Box sx={{ display: 'flex', alignItems: 'center', padding: 1, borderTop: '1px solid #e0e0e0', backgroundColor: '#f0f2f5' }}>
+        <TextField
           fullWidth
           multiline
-          maxRows={4}
+          maxRows={isSmallScreen ? 2 : 4}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyPress={handleKeyPress}
           placeholder="Type your message..."
           variant="outlined"
+          sx={{ 
+            flexGrow: 1, 
+            marginRight: isSmallScreen ? 0 : 1 
+          }}
         />
-        <StyledButton
+        <Button
           variant="contained"
-          endIcon={<VoiceChatIcon />}
           onClick={handleSendMessage}
           disabled={!input.trim() || loading}
-          fullWidth
+          sx={{ 
+            minWidth: isSmallScreen ? 48 : 'auto',
+            backgroundColor: '#0084ff', 
+            '&:hover': { backgroundColor: '#0066cc' } 
+          }}
         >
-          Send
-        </StyledButton>
+          {isSmallScreen ? <SendIcon /> : <VoiceChatIcon />}
+        </Button>
       </Box>
       <audio ref={audioRef} src={smsSound} />
     </StyledContainer>

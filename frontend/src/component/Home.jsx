@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Box, Typography, IconButton, Button as MuiButton, useMediaQuery } from "@mui/material";
+import { Box, Typography, Button as MuiButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import CloseIcon from "@mui/icons-material/Close";
 import logo from "../assets/SAILogo.png";
 import ChatboxIframe from "./ChatboxIframe";
+import { AnimatePresence } from "framer-motion";
 
 const HomeContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -54,9 +54,11 @@ const Home = () => {
       <MuiButton variant="contained" color="primary" onClick={toggleChatVisibility}>
         {isChatVisible ? "Close Chat" : "Open Chat"}
       </MuiButton>
-      {isChatVisible && (
-        <ChatboxIframe isVisible={isChatVisible} toggleChatVisibility={toggleChatVisibility} />
-      )}
+      <AnimatePresence>
+        {isChatVisible && (
+          <ChatboxIframe isVisible={isChatVisible} toggleChatVisibility={toggleChatVisibility} />
+        )}
+      </AnimatePresence>
     </HomeContainer>
   );
 };

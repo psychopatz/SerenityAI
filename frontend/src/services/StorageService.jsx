@@ -1,18 +1,18 @@
 const StorageService = () => {
   // Helper functions for Local Storage
   const setLocalStorage = (key, value) => {
-    console.log(`Setting LocalStorage key: "${key}" with value:`, value);
+    // console.log(`Setting LocalStorage key: "${key}" with value:`, value);
     localStorage.setItem(key, JSON.stringify(value));
   };
 
   const getLocalStorage = (key) => {
     const value = localStorage.getItem(key);
-    console.log(`Getting LocalStorage key: "${key}" - Value:`, value);
+    // console.log(`Getting LocalStorage key: "${key}" - Value:`, value);
     return value ? JSON.parse(value) : null;
   };
 
   const removeLocalStorage = (key) => {
-    console.log(`Removing LocalStorage key: "${key}"`);
+    // console.log(`Removing LocalStorage key: "${key}"`);
     localStorage.removeItem(key);
   };
 
@@ -23,18 +23,18 @@ const StorageService = () => {
 
   // Helper functions for Session Storage
   const setSessionStorage = (key, value) => {
-    console.log(`Setting SessionStorage key: "${key}" with value:`, value);
+    // console.log(`Setting SessionStorage key: "${key}" with value:`, value);
     sessionStorage.setItem(key, JSON.stringify(value));
   };
 
   const getSessionStorage = (key) => {
     const value = sessionStorage.getItem(key);
-    console.log(`Getting SessionStorage key: "${key}" - Value:`, value);
+    // console.log(`Getting SessionStorage key: "${key}" - Value:`, value);
     return value ? JSON.parse(value) : null;
   };
 
   const removeSessionStorage = (key) => {
-    console.log(`Removing SessionStorage key: "${key}"`);
+    // console.log(`Removing SessionStorage key: "${key}"`);
     sessionStorage.removeItem(key);
   };
 

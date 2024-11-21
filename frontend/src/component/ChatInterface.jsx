@@ -12,7 +12,7 @@ import {
 import VoiceChatIcon from '@mui/icons-material/VoiceChat';
 import MarkdownPreview from '@uiw/react-markdown-preview';
 import { sendChatRequest, analyzeUserInput } from '../services/AiAnalyticsService';
-import StorageService from '../services/StorageService'; // Import StorageService
+import StorageService from '../services/StorageService';
 import { motion } from 'framer-motion';
 import smsSound from '../assets/sms.mp3';
 
@@ -37,24 +37,73 @@ const ChatContents = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
 }));
 
+const MessageBubble = styled(Box)(({ theme, role, isSmallScreen }) => ({
+  display: 'inline-block',
+  padding: theme.spacing(2),
+  backgroundColor: role === 'user' ? '#0084ff' : '#e5e5ea',
+  color: role === 'user' ? '#ffffff' : '#000000',
+  borderRadius: '16px',
+  maxWidth: '60%',
+  minWidth: (isSmallScreen ? '40%' : '4%'),
+  wordWrap: 'break-word',
+  textAlign: role === 'user' ? 'left' : 'left',
+  marginBottom: theme.spacing(1),
+  marginRight: role === 'user' ? '20px' : '0',
+  position: 'relative',
+  minHeight: '40px',
+  '&:after': {
+    content: '""',
+    position: 'absolute',
+    bottom: 0,
+    width: 0,
+    height: 0,
+    border: role === 'user' ? '10px solid transparent' : '8px solid transparent',
+    borderTopColor: role === 'user' ? '#0084ff' : '#e5e5ea',
+    left: role === 'user' ? 'auto' : '-8px',
+    right: role === 'user' ? '-10px' : 'auto',
+  },
+}));
+
 const ChatInterface = ({ isSmallScreen }) => {
-  const storageService = StorageService(); // Initialize StorageService
+  const storageService = StorageService();
   const [messages, setMessages] = useState(() => {
-    // Initialize messages from session storage or empty array
     const storedMessages = storageService.getSessionStorage('chatMessages');
     return storedMessages || [];
   });
   const [input, setInput] = useState('');
-  const userdata = storageService.getLocalStorage('userdata')
+  const userdata = storageService.getLocalStorage('userdata');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [sentiment, setSentiment] = useState('');
-  const [systemInstruction, setSystemInstruction] = useState(`Your name is Serenity, you are an ai therapist. The name of your user is ${userdata.lastName}, ${userdata.firstName}.Your job is to help users especially with their emotional issues. Give them tips and advices.Call the user by their firstname.  When generating, always format your outputs in a proper markup language and use emoji to show emotion`);
+  const [analysisData, setAnalysisData] = useState({
+    likes: [],
+    dislikes: [],
+    memories: [],
+    moodtype: []
+  });
+
+
+const formatArray = (array) => {
+  if (array.length === 0) return 'none';
+  return array.map((item, index) => `${index + 1}. ${item}`).join('\n');
+};
+
+  const [systemInstruction, setSystemInstruction] = useState(
+  `Your name is Serenity, you are an AI therapist. The name of your user is ${userdata.lastName}, ${userdata.firstName}. 
+  Your job is to help users, especially with their emotional issues. Give them tips and advice.
+  Call the user by their first name. 
+  When generating responses, always format your outputs in a proper markup language and use emoji to convey emotion.
+  
+  Here is what you know about the user:
+  Likes: ${formatArray(analysisData.likes)}
+  Dislikes: ${formatArray(analysisData.dislikes)}
+  Memories: ${formatArray(analysisData.memories)}
+  Use this information to make your responses more personalized and empathetic.`
+);
   const [includeDate, setIncludeDate] = useState(true);
   const messagesEndRef = useRef(null);
   const audioRef = useRef(null);
 
-  // Update session storage whenever messages change
   useEffect(() => {
     storageService.setSessionStorage('chatMessages', messages);
   }, [messages]);
@@ -72,6 +121,37 @@ const ChatInterface = ({ isSmallScreen }) => {
       audioRef.current?.play();
     }
   }, [messages]);
+
+  const parseAnalysisResponse = (responseText) => {
+    try {
+      const jsonMatch = responseText.match(/```json\n([\s\S]*?)```/);
+      const jsonText = jsonMatch ? jsonMatch[1].trim() : responseText.trim();
+      return JSON.parse(jsonText);
+    } catch (parseError) {
+      console.warn('Could not parse sentiment analysis', parseError);
+      return null;
+    }
+  };
+
+  const updateAnalysisData = (newAnalysis) => {
+    if (!newAnalysis) return;
+
+    setAnalysisData(prevData => ({
+      likes: [...new Set([...prevData.likes, ...(newAnalysis.likes || [])])],
+      dislikes: [...new Set([...prevData.dislikes, ...(newAnalysis.dislikes || [])])],
+      memories: [...new Set([...prevData.memories, ...(newAnalysis.memories || [])])],
+      moodtype: newAnalysis.moodtype || []
+    }));
+
+    setSentiment(newAnalysis.moodtype?.[0] || '');
+    console.log('Sentiment:', newAnalysis.moodtype?.[0] || '');
+    console.log('Analysis Data:', { 
+      likes: [...new Set([...analysisData.likes, ...(newAnalysis.likes || [])])],
+      dislikes: [...new Set([...analysisData.dislikes, ...(newAnalysis.dislikes || [])])],
+      memories: [...new Set([...analysisData.memories, ...(newAnalysis.memories || [])])],
+      moodtype: newAnalysis.moodtype || []
+    });
+  };
 
   const handleSendMessage = async () => {
     if (!input.trim()) return;
@@ -106,20 +186,15 @@ const ChatInterface = ({ isSmallScreen }) => {
         }
       }
 
-      const analysisData = await analyzeUserInput({
+      const analysisResponse = await analyzeUserInput({
         contents: [userMessage]
       });
 
-      if (analysisData?.candidates?.[0]?.content?.parts?.[0]?.text) {
-        try {
-          const analysis = JSON.parse(analysisData.candidates[0].content.parts[0].text);
-          if (isMounted) {
-            setSentiment(analysis.moodtype?.[0] || '');
-            console.log('Sentiment:', analysis.moodtype);
-          }
-        } catch (parseError) {
-          console.warn('Could not parse sentiment analysis');
-        }
+      if (analysisResponse?.candidates?.[0]?.content?.parts?.[0]?.text) {
+        const analysis = parseAnalysisResponse(
+          analysisResponse.candidates[0].content.parts[0].text
+        );
+        updateAnalysisData(analysis);
       }
     } catch (err) {
       console.error('Chat error:', err);
@@ -141,7 +216,6 @@ const ChatInterface = ({ isSmallScreen }) => {
     };
   };
 
-  // Add a method to clear chat history
   const clearChatHistory = () => {
     setMessages([]);
     storageService.removeSessionStorage('chatMessages');
@@ -153,33 +227,6 @@ const ChatInterface = ({ isSmallScreen }) => {
       handleSendMessage();
     }
   };
-
-  const MessageBubble = styled(Box)(({ theme, role, isSmallScreen }) => ({
-    display: 'inline-block',
-    padding: theme.spacing(2),
-    backgroundColor: role === 'user' ? '#0084ff' : '#e5e5ea',
-    color: role === 'user' ? '#ffffff' : '#000000',
-    borderRadius: '16px',
-    maxWidth: '60%',
-    minWidth: (isSmallScreen ? '40%' : '4%'),
-    wordWrap: 'break-word',
-    textAlign: role === 'user' ? 'left' : 'left',
-    marginBottom: theme.spacing(1),
-    marginRight: role === 'user' ? '20px' : '0',
-    position: 'relative',
-    minHeight: '40px',
-    '&:after': {
-      content: '""',
-      position: 'absolute',
-      bottom: 0,
-      width: 0,
-      height: 0,
-      border: role === 'user' ? '10px solid transparent' : '8px solid transparent',
-      borderTopColor: role === 'user' ? '#0084ff' : '#e5e5ea',
-      left: role === 'user' ? 'auto' : '-8px',
-      right: role === 'user' ? '-10px' : 'auto',
-    },
-  }));
 
   return (
     <ChatbotBody maxWidth="lg" isSmallScreen={isSmallScreen}>
@@ -263,22 +310,6 @@ const ChatInterface = ({ isSmallScreen }) => {
         >
           {isSmallScreen ? <VoiceChatIcon /> : <VoiceChatIcon />}
         </Button>
-       
-
-        {/* 
-        <Button
-          variant="outlined"
-          onClick={clearChatHistory}
-          sx={{ 
-            marginLeft: 1,
-            color: '#0084ff', 
-            borderColor: '#0084ff',
-            '&:hover': { backgroundColor: '#f0f0f0' } 
-          }}
-        >
-          Clear Chat
-        </Button> */}
-
       </Box>
       <audio ref={audioRef} src={smsSound} />
     </ChatbotBody>

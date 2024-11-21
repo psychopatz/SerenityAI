@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import SAILogo from '../assets/SAILogo.png';
 import Hand from '../assets/hand.png';
 import Hand2 from '../assets/hand2.png';
+import StorageService from '../services/StorageService';
 
 const LoginRegister = () => {
     const [isLogin, setIsLogin] = useState(true);
@@ -34,6 +35,7 @@ const LoginRegister = () => {
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const navigate = useNavigate();
+    const storage = StorageService();
 
     const handleTogglePassword = () => {
         setShowPassword((prev) => !prev);
@@ -47,6 +49,9 @@ const LoginRegister = () => {
             setRegisterData((prev) => ({ ...prev, [name]: value }));
         }
     };
+    const handleSaveToLocal = (userdata) => {
+                storage.setLocalStorage("userdata", userdata);
+            };
 
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
@@ -55,8 +60,9 @@ const LoginRegister = () => {
         try {
             const loggedInUser = await UserService.loginUser(loginData);
             console.log('Logged in:', loggedInUser);
-            localStorage.setItem('userEmail', loggedInUser.email);  // assuming loggedInUser contains email
+            handleSaveToLocal(loggedInUser);
             navigate('/home');
+            
         } catch (error) {
             setError(error.response?.data?.message || 'Login failed');
             console.error('Login failed:', error);

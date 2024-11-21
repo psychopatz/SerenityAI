@@ -1,20 +1,20 @@
-import { AppBar, Button, Toolbar, Typography } from "@mui/material";
+import { AppBar, Avatar, Button, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React from "react";
+import React, { useState } from "react";
 import { Link, useLocation, Outlet } from "react-router-dom";
-import { navBackgroundImage } from "../styles/NavStyles";
-import logo from "../assets/SAILogo.png";
 import { motion } from "framer-motion";
+import logo from "../assets/SAILogo.png";
 
 const Nav = () => {
   const location = useLocation();
+  const [anchorEl, setAnchorEl] = useState(null);
 
   if (location.pathname === "/login" || location.pathname === "/register") {
     return null;
   }
 
   const AppBarStyled = styled(AppBar)({
-    background: "linear-gradient(to right, #0077b6, #be2ed6)", // Gradient background
+    background: "linear-gradient(to right, #0077b6, #be2ed6)",
     boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
     position: "fixed",
     top: 0,
@@ -23,7 +23,7 @@ const Nav = () => {
     zIndex: 50,
     padding: "3px",
     backdropFilter: "blur(10px)",
-    borderBottom: "1px solid black", // Add subtle border for separation
+    borderBottom: "1px solid black",
   });
 
   const navLinkStyle = {
@@ -38,6 +38,21 @@ const Nav = () => {
     { label: "About us", path: "/services" },
     { label: "Profile", path: "/profile" },
   ];
+
+  // Retrieve user data from localStorage
+  const userData = JSON.parse(localStorage.getItem("userdata"));
+  const userInitial = userData?.firstName?.charAt(0) + userData?.lastName?.charAt(0) || "";
+  const userProfilePicture = userData?.profilePicture; // Assuming there's a profilePicture field
+
+  const handleAvatarClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const menuItems = ["Settings", "Logout"]; // Dynamic menu items
 
   console.log("Rendering Navigation component");
 
@@ -68,7 +83,7 @@ const Nav = () => {
                 to={item.path}
                 style={{
                   ...navLinkStyle,
-                  color: isActive ? "#FF5733" : "#000", // Change color if the current route is active
+                  color: isActive ? "#FF5733" : "#000",
                   fontWeight: isActive ? "bold" : "normal",
                   marginTop: "15px",
                 }}
@@ -77,6 +92,25 @@ const Nav = () => {
               </Button>
             );
           })}
+          <Avatar
+            src={userProfilePicture}
+            alt={userInitial}
+            style={{ marginLeft: "auto", backgroundColor: "#0077b6" }}
+            onClick={handleAvatarClick}
+          >
+            {!userProfilePicture && userInitial}
+          </Avatar>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          >
+            {menuItems.map((item, index) => (
+              <MenuItem key={index} onClick={handleClose}>{item}</MenuItem>
+            ))}
+          </Menu>
         </Toolbar>
       </AppBarStyled>
       <motion.div

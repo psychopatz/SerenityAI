@@ -24,8 +24,10 @@ const UserService = {
                 const { token } = response.data;
                 if (token) {
                     localStorage.setItem("token", token);
+                    console.log("Token:", token);
                     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                 }
+                console.log("Token:", token);
                 return response.data;
             })
             .catch(handleError);

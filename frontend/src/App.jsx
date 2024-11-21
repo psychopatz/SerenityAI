@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from "react-route
 import { AnimatePresence, motion } from "framer-motion";
 import Login from './component/LoginRegister';
 import ChatInterface from './component/ChatInterface';
-import RecommendationApp from './component/RecommendationApp';
 import Nav from './component/Nav';
 import Home from "./component/Home";
 import Profile from './component/Profile';
@@ -30,7 +29,6 @@ const AnimatedRoutes = () => {
       <Routes location={location} key={location.pathname}>
         <Route path="/login" element={<PageWrapper><Login /></PageWrapper>} />
         <Route path="/chat" element={<PageWrapper><ChatInterface /></PageWrapper>} />
-        <Route path="/recommendation" element={<PageWrapper><RecommendationApp /></PageWrapper>} />
         <Route path="/home" element={<PageWrapper><Home /></PageWrapper>} />
         <Route path="/profile" element={<PageWrapper><Profile /></PageWrapper>} />
         <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />

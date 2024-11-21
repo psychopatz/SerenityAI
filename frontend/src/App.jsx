@@ -32,8 +32,8 @@ const AnimatedRoutes = () => {
         <Route path="/chat" element={<PageWrapper><ChatInterface /></PageWrapper>} />
         <Route path="/recommendation" element={<PageWrapper><RecommendationApp /></PageWrapper>} />
         <Route path="/home" element={<PageWrapper><Home /></PageWrapper>} />
-        <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
         <Route path="/profile" element={<PageWrapper><Profile /></PageWrapper>} />
+        <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
       </Routes>
     </AnimatePresence>
   );

@@ -1,13 +1,16 @@
-import { AppBar, Avatar, Button, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
+import { AppBar, Avatar, Button, Menu, MenuItem, Toolbar, Typography, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React, { useState } from "react";
-import { Link, useLocation, Outlet } from "react-router-dom";
+import { Link, useLocation, Outlet, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import logo from "../assets/SAILogo.png";
+import StorageService from "../services/StorageService";
 
 const Nav = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
+  const storage = StorageService();
 
   if (location.pathname === "/login" || location.pathname === "/register") {
     return null;
@@ -26,6 +29,14 @@ const Nav = () => {
     borderBottom: "1px solid black",
   });
 
+  const MenuItemStyled = styled(MenuItem)({
+    color: "#03045e",
+    fontWeight: "bold",
+    '&:hover': {
+      backgroundColor: "#e0f7fa",
+    },
+  });
+
   const navLinkStyle = {
     color: "#03045e",
     marginRight: "1rem",
@@ -39,8 +50,14 @@ const Nav = () => {
     { label: "Profile", path: "/profile" },
   ];
 
+    const menuItems = [
+    { label: "Settings", path: "/settings" },
+    { label: "Profile", path: "/profile" },
+    { label: "Logout", path: "/logout" },
+  ]; 
+
   // Retrieve user data from localStorage
-  const userData = JSON.parse(localStorage.getItem("userdata"));
+  const userData = storage.getLocalStorage("userdata")
   const userInitial = userData?.firstName?.charAt(0) + userData?.lastName?.charAt(0) || "";
   const userProfilePicture = userData?.profilePicture; // Assuming there's a profilePicture field
 
@@ -52,7 +69,11 @@ const Nav = () => {
     setAnchorEl(null);
   };
 
-  const menuItems = ["Settings", "Logout"]; // Dynamic menu items
+  const handleMenuItemClick = (path) => {
+    setAnchorEl(null);
+    navigate(path);
+  };
+
 
   console.log("Rendering Navigation component");
 
@@ -92,27 +113,50 @@ const Nav = () => {
               </Button>
             );
           })}
-          <Avatar
-            src={userProfilePicture}
-            alt={userInitial}
-            style={{ marginLeft: "auto", backgroundColor: "#0077b6" }}
-            onClick={handleAvatarClick}
-          >
-            {!userProfilePicture && userInitial}
-          </Avatar>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-            transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          >
-            {menuItems.map((item, index) => (
-              <MenuItem key={index} onClick={handleClose}>{item}</MenuItem>
-            ))}
-          </Menu>
+          
+          <Box>
+            <Avatar
+              src={userProfilePicture}
+              alt={userInitial}
+              style={{ marginLeft: "auto", backgroundColor: "#0077b6" }}
+              onClick={handleAvatarClick}
+              aria-haspopup="true"
+              aria-expanded={Boolean(anchorEl) ? 'true' : 'false'}
+            >
+              {!userProfilePicture && userInitial}
+            </Avatar>
+          </Box>
         </Toolbar>
+
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+          PaperProps={{
+            style: {
+              display: 'flex',
+              justifyContent: 'flex-end',
+              minWidth: '25px',
+              top: '50px',
+              left: 'auto',
+              right: '5px',
+              transform: 'translateX(0)',
+              marginTop: "6vh",
+              marginLeft: "94vw",
+              textAlign: 'left'
+            },
+          }}
+        >
+          {menuItems.map((item, index) => (
+            <MenuItemStyled key={index} onClick={() => handleMenuItemClick(item.path)}>
+              {item.label}
+            </MenuItemStyled>
+          ))}
+        </Menu>
       </AppBarStyled>
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -121,6 +165,7 @@ const Nav = () => {
       >
         <Outlet />
       </motion.div>
+      
     </>
   );
 };

@@ -49,7 +49,7 @@ const GlobalStyle = () => (
         body: {
           margin: 0,
           overflow: 'auto', // Disable scrolling
-          backgroundImage: `url("data:image/svg+xml;utf8,${encodeURIComponent(svgBackground)}")`, // Embed the SVG background here
+          backgroundImage: `url("data:image/svg+xml;utf8,${encodeURIComponent(svgBackground)}")`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat', // Prevent repetition

@@ -31,7 +31,12 @@ export const analyzeUserInput = async (userData) => {
       if (response.status === 200) {
         console.log('aiMemoryFramework request successful');
         console.log("Response data:", response.data);
-        return response.data;
+
+        // Assuming the response data now contains a success message
+        if (response.data.message === "Memory saved successfully.") {
+          console.log("User memory successfully saved to database.");
+        }
+        return response.data; // Returning the response data as needed
       } else {
         console.warn('Retrying ai memory framework request, attempt:', i + 1);
         await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second before retrying

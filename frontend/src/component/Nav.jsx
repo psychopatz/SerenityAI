@@ -12,9 +12,11 @@ const Nav = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const storage = StorageService();
 
-  if (location.pathname === "/login" || location.pathname === "/register") {
+  const endpoints = ["/login", "/register", "/"];
+
+  if (endpoints.includes(location.pathname)) {
     return null;
-  }
+}
 
   const AppBarStyled = styled(AppBar)({
     background: "linear-gradient(to right, #0077b6, #be2ed6)",
@@ -47,7 +49,6 @@ const Nav = () => {
     { label: "Home", path: "/home" },
     { label: "Chat", path: "/chat" },
     { label: "About us", path: "/services" },
-    { label: "Profile", path: "/profile" },
   ];
 
     const menuItems = [

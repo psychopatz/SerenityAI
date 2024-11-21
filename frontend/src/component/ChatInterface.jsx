@@ -263,7 +263,9 @@ const ChatInterface = ({ isSmallScreen }) => {
         >
           {isSmallScreen ? <VoiceChatIcon /> : <VoiceChatIcon />}
         </Button>
-        {/* Optional: Add a clear chat button */}
+       
+
+        {/* 
         <Button
           variant="outlined"
           onClick={clearChatHistory}
@@ -275,7 +277,8 @@ const ChatInterface = ({ isSmallScreen }) => {
           }}
         >
           Clear Chat
-        </Button>
+        </Button> */}
+
       </Box>
       <audio ref={audioRef} src={smsSound} />
     </ChatbotBody>

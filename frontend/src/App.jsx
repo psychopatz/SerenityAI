@@ -6,6 +6,7 @@ import ChatInterface from './component/ChatInterface';
 import Nav from './component/Nav';
 import Home from "./component/Home";
 import Profile from './component/Profile';
+import Logout from "./component/Logout";
 
 
 const PageWrapper = ({ children }) => {
@@ -28,6 +29,7 @@ const AnimatedRoutes = () => {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/login" element={<PageWrapper><Login /></PageWrapper>} />
+        <Route path="/logout" element={<PageWrapper><Logout/></PageWrapper>} />
         <Route path="/chat" element={<PageWrapper><ChatInterface /></PageWrapper>} />
         <Route path="/home" element={<PageWrapper><Home /></PageWrapper>} />
         <Route path="/profile" element={<PageWrapper><Profile /></PageWrapper>} />

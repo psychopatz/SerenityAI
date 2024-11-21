@@ -1,6 +1,8 @@
 package com.SerenityBuilders.SerenityAI.Controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,14 +36,18 @@ public class MemoryController {
 
     // Create Memory
     @PostMapping(value = "/post")
-    public ResponseEntity<String> createMemory(@RequestBody Memory memory) {
+    public ResponseEntity<Object> createMemory(@RequestBody Memory memory) {
         try {
-            memoryRepository.save(memory);
-            return ResponseEntity.ok("Memory created successfully.");
+            Memory savedMemory = memoryRepository.save(memory);
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Memory created successfully.");
+            response.put("id", savedMemory.getId());
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
         }
     }
+
 
     // Get All Memories
     @GetMapping(value = "/get")

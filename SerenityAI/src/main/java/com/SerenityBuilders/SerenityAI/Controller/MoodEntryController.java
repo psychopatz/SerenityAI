@@ -36,7 +36,7 @@
             return moodEntryService.putMoodEntryDetails(id, newMoodEntryDetails);
         }
 
-        @DeleteMapping("/delete/{id}")
+            @DeleteMapping("/delete/{id}")
         public String deleteMoodEntry(@PathVariable("id") int id){
             return moodEntryService.deleteMoodEntry(id);
         }

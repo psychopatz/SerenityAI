@@ -49,7 +49,7 @@ const ChatInterface = ({ isSmallScreen }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [sentiment, setSentiment] = useState('');
-  const [systemInstruction, setSystemInstruction] = useState(`Your name is Serenity, you are an ai therapist. The name of your user is ${userdata.lastName}, ${userdata.firstName} Your job is to help users especially with their emotional issues. Give them tips and advices.Call the user by their firstname.  When generating, always format your outputs in a proper markup language and use emoji to show emotion`);
+  const [systemInstruction, setSystemInstruction] = useState(`Your name is Serenity, you are an ai therapist. The name of your user is ${userdata.lastName}, ${userdata.firstName}.Your job is to help users especially with their emotional issues. Give them tips and advices.Call the user by their firstname.  When generating, always format your outputs in a proper markup language and use emoji to show emotion`);
   const [includeDate, setIncludeDate] = useState(true);
   const messagesEndRef = useRef(null);
   const audioRef = useRef(null);

@@ -40,11 +40,17 @@ public class UserEntity {
     @Column(name = "location")
     private String location;
 
+    @Column(name = "memoryID")
+    private int memoryID;
+
+    @Column(name = "privacy_id")
+    private int privacy_id;
+
     // Constructors
     public UserEntity() {}
 
     public UserEntity(int user_id, String firstName, String lastName, String email, String password,
-                      String dateOfBirth, String gender, String lastLogin, String location) {
+                      String dateOfBirth, String gender, String lastLogin, String location,int memoryID,int privacy_id) {
         this.user_id = user_id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -54,6 +60,8 @@ public class UserEntity {
         this.gender = gender;
         this.lastLogin = lastLogin;
         this.location = location;
+        this.memoryID = memoryID;
+        this.privacy_id = privacy_id;
     }
 
     // Getters and Setters
@@ -128,4 +136,12 @@ public class UserEntity {
     public void setLocation(String location) {
         this.location = location;
     }
+
+    public void setMemoryID(int memoryID){this.memoryID = memoryID;}
+
+    public int getMemoryID(){return memoryID;}
+
+    public void setPrivacy_id(int privacyId){this.privacy_id = privacyId;}
+
+    public int getPrivacy_id(){return privacy_id;}
 }

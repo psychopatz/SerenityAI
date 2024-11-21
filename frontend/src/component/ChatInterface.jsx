@@ -12,6 +12,7 @@ import {
 import VoiceChatIcon from '@mui/icons-material/VoiceChat';
 import MarkdownPreview from '@uiw/react-markdown-preview';
 import { sendChatRequest, analyzeUserInput } from '../services/AiAnalyticsService';
+import StorageService from '../services/StorageService'; // Import StorageService
 import { motion } from 'framer-motion';
 import smsSound from '../assets/sms.mp3';
 
@@ -37,16 +38,26 @@ const ChatContents = styled(Box)(({ theme }) => ({
 }));
 
 const ChatInterface = ({ isSmallScreen }) => {
-  const [messages, setMessages] = useState([]);
+  const storageService = StorageService(); // Initialize StorageService
+  const [messages, setMessages] = useState(() => {
+    // Initialize messages from session storage or empty array
+    const storedMessages = storageService.getSessionStorage('chatMessages');
+    return storedMessages || [];
+  });
   const [input, setInput] = useState('');
+  const userdata = storageService.getLocalStorage('userdata')
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [sentiment, setSentiment] = useState('');
-  const [systemInstruction, setSystemInstruction] = useState('Your name is Serenity, you are an ai therapist. Your job is to help users especially with their emotional issues. Give them tips and advices. When generating, always format your outputs in a proper markup language and use emoji to show emotion');
+  const [systemInstruction, setSystemInstruction] = useState(`Your name is Serenity, you are an ai therapist. The name of your user is ${userdata.lastName}, ${userdata.firstName} Your job is to help users especially with their emotional issues. Give them tips and advices.Call the user by their firstname.  When generating, always format your outputs in a proper markup language and use emoji to show emotion`);
   const [includeDate, setIncludeDate] = useState(true);
   const messagesEndRef = useRef(null);
-
   const audioRef = useRef(null);
+
+  // Update session storage whenever messages change
+  useEffect(() => {
+    storageService.setSessionStorage('chatMessages', messages);
+  }, [messages]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -128,6 +139,12 @@ const ChatInterface = ({ isSmallScreen }) => {
     return () => {
       isMounted = false;
     };
+  };
+
+  // Add a method to clear chat history
+  const clearChatHistory = () => {
+    setMessages([]);
+    storageService.removeSessionStorage('chatMessages');
   };
 
   const handleKeyPress = (event) => {
@@ -245,6 +262,19 @@ const ChatInterface = ({ isSmallScreen }) => {
           }}
         >
           {isSmallScreen ? <VoiceChatIcon /> : <VoiceChatIcon />}
+        </Button>
+        {/* Optional: Add a clear chat button */}
+        <Button
+          variant="outlined"
+          onClick={clearChatHistory}
+          sx={{ 
+            marginLeft: 1,
+            color: '#0084ff', 
+            borderColor: '#0084ff',
+            '&:hover': { backgroundColor: '#f0f0f0' } 
+          }}
+        >
+          Clear Chat
         </Button>
       </Box>
       <audio ref={audioRef} src={smsSound} />

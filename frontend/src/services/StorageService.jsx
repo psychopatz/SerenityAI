@@ -1,5 +1,3 @@
-import React from "react";
-
 const StorageService = () => {
   // Helper functions for Local Storage
   const setLocalStorage = (key, value) => {

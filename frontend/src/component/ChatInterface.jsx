@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, memo } from 'react';
 import {
   Box,
   TextField,
@@ -15,6 +15,8 @@ import { sendChatRequest, analyzeUserInput } from '../services/AiAnalyticsServic
 import StorageService from '../services/StorageService';
 import { motion } from 'framer-motion';
 import smsSound from '../assets/sms.mp3';
+import { createMemory, updateMemoryById, getMemoryById } from '../services/MemoryService';
+import UserService from '../services/UserService';
 
 const ChatbotBody = styled(Container)(({ theme, isSmallScreen }) => ({
   height: (isSmallScreen ? '100%' : '100vh'),
@@ -75,6 +77,7 @@ const ChatInterface = ({ isSmallScreen }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [sentiment, setSentiment] = useState('');
+  const [isInitialized, setIsInitialized] = useState(false);
   const [analysisData, setAnalysisData] = useState({
     likes: [],
     dislikes: [],
@@ -82,38 +85,62 @@ const ChatInterface = ({ isSmallScreen }) => {
     moodtype: []
   });
 
-
-const formatArray = (array) => {
-  if (array.length === 0) return 'none';
-  return array.map((item, index) => `${index + 1}. ${item}`).join('\n');
-};
-
-  const [systemInstruction, setSystemInstruction] = useState(
-  `Your name is Serenity, you are an AI therapist. The name of your user is ${userdata.lastName}, ${userdata.firstName}. 
-  Your job is to help users, especially with their emotional issues. Give them tips and advice.
-  Call the user by their first name. 
-  When generating responses, always format your outputs in a proper markup language and use emoji to convey emotion.
-  
-  Here is what you know about the user:
-  Likes: ${formatArray(analysisData.likes)}
-  Dislikes: ${formatArray(analysisData.dislikes)}
-  Memories: ${formatArray(analysisData.memories)}
-  Use this information to make your responses more personalized and empathetic.`
-);
+  const [systemInstruction, setSystemInstruction] = useState('');
   const [includeDate, setIncludeDate] = useState(true);
   const messagesEndRef = useRef(null);
   const audioRef = useRef(null);
+
+  // Initialize analysis data from backend
+  useEffect(() => {
+    const initializeAnalysisData = async () => {
+      if (userdata.memoryID && !isInitialized) {
+        try {
+          const memoryData = await getMemoryById(userdata.memoryID);
+          if (memoryData) {
+            setAnalysisData({
+              likes: memoryData.likes || [],
+              dislikes: memoryData.dislikes || [],
+              memories: memoryData.memories || [],
+              moodtype: memoryData.moodType ? [memoryData.moodType] : []
+            });
+            setIsInitialized(true);
+          }
+        } catch (error) {
+          console.error('Error initializing memory data:', error);
+          setError('Failed to load memory data');
+        }
+      }
+    };
+
+    initializeAnalysisData();
+  }, [userdata.memoryID, isInitialized]);
+
+  useEffect(() => {
+    const formatMemoryArray = (array) => {
+      if (!array || array.length === 0) return 'none';
+      return array.map((item, index) => `${index + 1}. ${item}`).join('\n');
+    };
+
+    setSystemInstruction(
+      `Your name is Serenity, you are a professional therapist. The name of your user is ${userdata.lastName}, ${userdata.firstName}. 
+      Your job is to help users, especially with their emotional issues. Give them tips and advice.
+      Call the user by their first name. 
+      When generating responses, always format your outputs in a proper markup language and use emoji to convey emotion.
+      
+      Here is what you know about the user:
+      Likes: ${formatMemoryArray(analysisData.likes)}
+      Dislikes: ${formatMemoryArray(analysisData.dislikes)}
+      Memories: ${formatMemoryArray(analysisData.memories)}
+      Use this information to make your responses more personalized and empathetic.`
+    );
+  }, [analysisData, userdata]);
 
   useEffect(() => {
     storageService.setSessionStorage('chatMessages', messages);
   }, [messages]);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
   useEffect(() => {
-    scrollToBottom();
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   useEffect(() => {
@@ -133,24 +160,37 @@ const formatArray = (array) => {
     }
   };
 
-  const updateAnalysisData = (newAnalysis) => {
+  const updateAnalysisData = async (newAnalysis) => {
     if (!newAnalysis) return;
 
-    setAnalysisData(prevData => ({
-      likes: [...new Set([...prevData.likes, ...(newAnalysis.likes || [])])],
-      dislikes: [...new Set([...prevData.dislikes, ...(newAnalysis.dislikes || [])])],
-      memories: [...new Set([...prevData.memories, ...(newAnalysis.memories || [])])],
-      moodtype: newAnalysis.moodtype || []
-    }));
-
-    setSentiment(newAnalysis.moodtype?.[0] || '');
-    console.log('Sentiment:', newAnalysis.moodtype?.[0] || '');
-    console.log('Analysis Data:', { 
+    const updatedData = {
       likes: [...new Set([...analysisData.likes, ...(newAnalysis.likes || [])])],
       dislikes: [...new Set([...analysisData.dislikes, ...(newAnalysis.dislikes || [])])],
       memories: [...new Set([...analysisData.memories, ...(newAnalysis.memories || [])])],
-      moodtype: newAnalysis.moodtype || []
-    });
+      moodtype: newAnalysis.moodtype || analysisData.moodtype
+    };
+
+    setAnalysisData(updatedData);
+    
+    try {
+      if (userdata.memoryID === 0) {
+        const response = await createMemory({
+          ...updatedData,
+          moodType: updatedData.moodtype[0]
+        });
+        const memoryId = response.id;
+        const updatedUserData = { ...userdata, memoryID: memoryId };
+        storageService.setLocalStorage('userdata', updatedUserData);
+      } else {
+        await updateMemoryById(userdata.memoryID, {
+          ...updatedData,
+          moodType: updatedData.moodtype[0]
+        });
+      }
+    } catch (error) {
+      console.error('Error updating memory:', error);
+      setError('Failed to update memory');
+    }
   };
 
   const handleSendMessage = async () => {
@@ -194,7 +234,7 @@ const formatArray = (array) => {
         const analysis = parseAnalysisResponse(
           analysisResponse.candidates[0].content.parts[0].text
         );
-        updateAnalysisData(analysis);
+        await updateAnalysisData(analysis);
       }
     } catch (err) {
       console.error('Chat error:', err);

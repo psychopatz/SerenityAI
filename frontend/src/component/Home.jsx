@@ -142,14 +142,14 @@ const Home = () => {
         <Logo src={logo} alt="SAI Logo" sx={{marginBottom:"10px",}}/>
         <Title variant="h1">SERENITY AI</Title>
         <Quote noWrap>"Your Personal AI for Emotional Well-being"</Quote>
-        {/* <MuiButton variant="contained" color="primary" onClick={toggleChatVisibility}>
+        <MuiButton variant="contained" color="primary" onClick={toggleChatVisibility}>
           {isChatVisible ? "Close Chat" : "Open Chat"}
         </MuiButton>
         <AnimatePresence>
           {isChatVisible && (
             <ChatboxIframe isVisible={isChatVisible} toggleChatVisibility={toggleChatVisibility} />
           )}
-        </AnimatePresence>  */}
+        </AnimatePresence> 
       </Box>
       <RightContainer>
   <TopRightContainer>

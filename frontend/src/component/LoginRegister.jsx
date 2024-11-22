@@ -61,7 +61,7 @@ const LoginRegister = () => {
             const loggedInUser = await UserService.loginUser(loginData);
             console.log('Logged in:', loggedInUser);
             handleSaveToLocal(loggedInUser);
-            navigate('/home');
+            navigate('/dashboard');
             
         } catch (error) {
             setError(error.response?.data?.message || 'Login failed');

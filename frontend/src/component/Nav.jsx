@@ -11,19 +11,40 @@ const Nav = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const storage = StorageService();
+  const [shouldRender, setShouldRender] = useState(true);
 
-  const protectedRoutes = ["/dashboard", "/chat", "/settings", "/profile"];
+  const protectedRoutes = ["/dashboard", "/chat", "/settings", "/profile", "/diary"];
   const loggedInRoutes = ["/login", "/register", "/"];
-  const excludedRoutes = ["/login", "/register","/404", "/"];
+  const excludedRoutes = ["/login", "/register", "/404", "/"];
 
-  if (excludedRoutes.includes(location.pathname)) {
-    return null;
+  // Retrieve user data from localStorage
+  const userData = storage.getLocalStorage("userdata");
+  const userInitial = userData?.firstName?.charAt(0) + userData?.lastName?.charAt(0) || "";
+  const userProfilePicture = userData?.profilePicture;
+
+  useEffect(() => {
+    // Handle navigation logic
+    if (protectedRoutes.includes(location.pathname) && !userData) {
+      navigate("/");
+    }
+    if (loggedInRoutes.includes(location.pathname) && userData) {
+      navigate("/dashboard");
+    }
+    
+    // Set whether the nav should render
+    setShouldRender(!excludedRoutes.includes(location.pathname));
+  }, [location.pathname, navigate, userData]);
+
+  // Early return if we shouldn't render the nav
+  if (!shouldRender) {
+    return <Outlet />;
   }
-  
+
   const navItems = [
-    { label: "Home", path: "/home" },
+    { label: "Dashboard", path: "/dashboard" },
     { label: "Chat", path: "/chat" },
-    { label: "About us", path: "/services" },
+    { label: "Diary", path: "/diary" },
+    { label: "About us", path: "/about" },
   ];
 
   const menuItems = [
@@ -31,22 +52,6 @@ const Nav = () => {
     { label: "Profile", path: "/profile" },
     { label: "Logout", path: "/logout" },
   ];
-
-  
-
-
-  useEffect(() => {
-    const userData = storage.getLocalStorage("userdata");
-    if (protectedRoutes.includes(location.pathname) && !userData) {
-      navigate("/");
-    }
-    if (loggedInRoutes.includes(location.pathname) && userData) {
-      navigate("/dashboard");
-    }
-  }, [location.pathname, navigate, storage]);
-
-
-  
 
   const AppBarStyled = styled(AppBar)({
     background: "linear-gradient(to right, #0077b6, #be2ed6)",
@@ -75,11 +80,6 @@ const Nav = () => {
     textDecoration: "none",
   };
 
-  // Retrieve user data from localStorage
-  const userData = storage.getLocalStorage("userdata");
-  const userInitial = userData?.firstName?.charAt(0) + userData?.lastName?.charAt(0) || "";
-  const userProfilePicture = userData?.profilePicture; // Assuming there's a profilePicture field
-
   const handleAvatarClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -92,8 +92,6 @@ const Nav = () => {
     setAnchorEl(null);
     navigate(path);
   };
-
-  console.log("Rendering Navigation component");
 
   return (
     <>
@@ -113,7 +111,6 @@ const Nav = () => {
             SERENITY AI
           </Typography>
           {navItems.map((item, index) => {
-            console.log(`Rendering nav item: ${item.label}`);
             const isActive = location.pathname === item.path;
             return (
               <Button

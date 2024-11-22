@@ -74,6 +74,9 @@ const ChatInterface = ({ isSmallScreen }) => {
   });
   const [input, setInput] = useState('');
   const userdata = storageService.getLocalStorage('userdata');
+  if (!userdata) {
+    window.location.href = '/login';
+  }
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [sentiment, setSentiment] = useState('');

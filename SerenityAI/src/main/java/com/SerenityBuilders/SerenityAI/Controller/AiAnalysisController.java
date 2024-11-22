@@ -74,6 +74,7 @@ import com.SerenityBuilders.SerenityAI.util.LlmUtil;
                 return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
             }
         }
+
         @PostMapping("/analyze")
         public ResponseEntity<String> aiMemoryFramework(
                 @RequestBody Map<String, Object> request
@@ -101,6 +102,90 @@ import com.SerenityBuilders.SerenityAI.util.LlmUtil;
                         "}\n");
                 parts.add(textPart);
                 systemInstruction.put("parts", parts);
+                System.out.println("Analyze Systemprompt =" + systemInstruction);
+                @SuppressWarnings("unchecked")
+                List<Map<String, Object>> contents = (List<Map<String, Object>>) request.get("contents");
+                @SuppressWarnings("unchecked")
+                List<Map<String, String>> safetySettings = (List<Map<String, String>>) request.get("safetySettings");
+                @SuppressWarnings("unchecked")
+                Map<String, Object> generationConfig = (Map<String, Object>) request.get("generationConfig");
+                String response = llmUtil.generateResponse(
+                        systemInstruction,
+                        contents,
+                        safetySettings,
+                        generationConfig);
+                return ResponseEntity.ok(response);
+            } catch (Exception e) {
+                return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+            }
+        }
+
+        @PostMapping("/recommendation")
+        public ResponseEntity<String> generateRecommendation(@RequestBody Map<String, Object> request) {
+            try {
+                // Extract user and memory information from request
+                Map<String, Object> userMap = (Map<String, Object>) request.get("user");
+                Map<String, Object> memoryMap = (Map<String, Object>) request.get("memory");
+
+                // Get user details
+                String firstName = (String) userMap.get("firstName");
+                String lastName = (String) userMap.get("lastName");
+                String dateOfBirth = (String) userMap.get("dateOfBirth");
+                LocalDate userBirthDate = LocalDate.parse(dateOfBirth);
+                LocalDate today = LocalDate.now();
+
+                // Create system instruction for generating recommendation
+                Map<String, Object> systemInstruction = new HashMap<>();
+                List<Map<String, String>> parts = new ArrayList<>();
+                Map<String, String> textPart = new HashMap<>();
+
+                // Randomly select a topic for the greeting
+                String[] topics = { "likes", "dislikes", "memories", "moodtype" };
+                String selectedTopic = topics[new Random().nextInt(topics.length)];
+
+                StringBuilder prompt = new StringBuilder();
+                switch (selectedTopic) {
+                    case "likes":
+                        prompt.append(String.format(
+                                "Hey %s, I heard you've been enjoying %s lately! What's your favorite thing about it?\n\n",
+                                firstName, memoryMap.get("likes")));
+                        break;
+                    case "dislikes":
+                        prompt.append(String.format(
+                                "Hey %s, I know you're not a fan of %s. What's something you'd rather do instead?\n\n",
+                                firstName, memoryMap.get("dislikes")));
+                        break;
+                    case "memories":
+                        prompt.append(String.format(
+                                "Hey %s, I heard you have some great memories of %s! What's your favorite part about it?\n\n",
+                                firstName, memoryMap.get("memories")));
+                        break;
+                    case "moodtype":
+                        prompt.append(
+                                String.format("Hey %s, I can tell you're feeling %s today! What's on your mind?\n\n",
+                                        firstName, memoryMap.get("moodtype")));
+                        break;
+                }
+
+                // Birthday greeting logic
+                if (userBirthDate.equals(today)) {
+                    prompt.append(String.format(
+                            "Today is %s's birthday! Make sure to greet them warmly and include a present emoji related to their likes if possible.\n\n",
+                            firstName));
+                }
+
+                // Add user preferences to the prompt
+                prompt.append(
+                        "Based on the user's likes, dislikes, and memories, choose a specific topic to recommend that the user might enjoy.\n");
+                prompt.append("Likes: " + memoryMap.get("likes") + "\n");
+                prompt.append("Dislikes: " + memoryMap.get("dislikes") + "\n");
+                prompt.append("Memories: " + memoryMap.get("memories") + "\n");
+                prompt.append("Format your output using markdown language\n");
+
+                textPart.put("text", prompt.toString());
+                parts.add(textPart);
+                systemInstruction.put("parts", parts);
+                System.out.println("Recommend Systemprompt =" + systemInstruction);
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> contents = (List<Map<String, Object>>) request.get("contents");
                 @SuppressWarnings("unchecked")
@@ -118,5 +203,6 @@ import com.SerenityBuilders.SerenityAI.util.LlmUtil;
                 return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
             }
         }
-        
-}
+
+
+    }

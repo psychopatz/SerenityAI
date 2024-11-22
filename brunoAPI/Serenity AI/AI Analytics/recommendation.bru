@@ -1,0 +1,51 @@
+meta {
+  name: /recommendation
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8080/api/ai-analysis/recommendation
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "user": {
+      "user_id": 1,
+      "firstName": "Patrick Oliver",
+      "lastName": "Bustamante",
+      "email": "bpatrickoliverb@gmail.com",
+      "dateOfBirth": "2024-11-23",
+      "gender": "Male",
+      "location": "Balud Dalaguete Cebu"
+    },
+    "memory": {
+      "id": 12,
+      "likes": [
+        "pancakes",
+        "banana",
+        "apple",
+        "grapes"
+      ],
+      "dislikes": [
+        "watermelon",
+        "peanuts"
+      ],
+      "memories": [
+        "choking on watermelon seeds"
+      ],
+      "moodType": "neutral"
+    },
+    "contents": [
+          {
+              "role": "user",
+              "parts": [
+                  { "text": "Hello" }
+              ]
+          }
+      ]
+  }
+  
+}

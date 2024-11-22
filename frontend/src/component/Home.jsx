@@ -111,7 +111,7 @@ const Title2 = styled(Typography)(({ theme }) => ({
 }));
 
 const Description = styled(Box)(({ theme }) => ({
-  fontSize: "1.1rem",
+  fontSize: "1.0rem",
   color: "#a29bfe",
   fontFamily: "'Poppins', sans-serif",
   textAlign: "justify",

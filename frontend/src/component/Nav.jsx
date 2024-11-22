@@ -86,12 +86,12 @@ const Nav = () => {
             <img
               src={logo}
               alt="Logo"
-              style={{ height: "40px", marginRight: "10px" }}
+              style={{ height: "50px", marginRight: "10px" }}
             />
           </Link>
           <Typography
             variant="h6"
-            style={{ flexGrow: 1, marginTop: "10px", color: "black", fontWeight: "bold" }}
+            style={{ flexGrow: 1, marginTop: "4px", color: "black", fontWeight: "bold" }}
           >
             SERENITY AI
           </Typography>
@@ -105,7 +105,7 @@ const Nav = () => {
                 to={item.path}
                 style={{
                   ...navLinkStyle,
-                  color: isActive ? "#FF5733" : "#000",
+                  color: isActive ? "#ffffff" : "#000",
                   fontWeight: isActive ? "bold" : "normal",
                   marginTop: "15px",
                 }}

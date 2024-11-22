@@ -1,6 +1,6 @@
 import { AppBar, Avatar, Button, Menu, MenuItem, Toolbar, Typography, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation, Outlet, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import logo from "../assets/SAILogo.png";
@@ -12,11 +12,41 @@ const Nav = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const storage = StorageService();
 
-  const endpoints = ["/login", "/register", "/"];
+  const protectedRoutes = ["/dashboard", "/chat", "/settings", "/profile"];
+  const loggedInRoutes = ["/login", "/register", "/"];
+  const excludedRoutes = ["/login", "/register","/404", "/"];
 
-  if (endpoints.includes(location.pathname)) {
+  if (excludedRoutes.includes(location.pathname)) {
     return null;
-}
+  }
+  
+  const navItems = [
+    { label: "Home", path: "/home" },
+    { label: "Chat", path: "/chat" },
+    { label: "About us", path: "/services" },
+  ];
+
+  const menuItems = [
+    { label: "Settings", path: "/settings" },
+    { label: "Profile", path: "/profile" },
+    { label: "Logout", path: "/logout" },
+  ];
+
+  
+
+
+  useEffect(() => {
+    const userData = storage.getLocalStorage("userdata");
+    if (protectedRoutes.includes(location.pathname) && !userData) {
+      navigate("/");
+    }
+    if (loggedInRoutes.includes(location.pathname) && userData) {
+      navigate("/dashboard");
+    }
+  }, [location.pathname, navigate, storage]);
+
+
+  
 
   const AppBarStyled = styled(AppBar)({
     background: "linear-gradient(to right, #0077b6, #be2ed6)",
@@ -45,20 +75,8 @@ const Nav = () => {
     textDecoration: "none",
   };
 
-  const navItems = [
-    { label: "Home", path: "/home" },
-    { label: "Chat", path: "/chat" },
-    { label: "About us", path: "/services" },
-  ];
-
-    const menuItems = [
-    { label: "Settings", path: "/settings" },
-    { label: "Profile", path: "/profile" },
-    { label: "Logout", path: "/logout" },
-  ]; 
-
   // Retrieve user data from localStorage
-  const userData = storage.getLocalStorage("userdata")
+  const userData = storage.getLocalStorage("userdata");
   const userInitial = userData?.firstName?.charAt(0) + userData?.lastName?.charAt(0) || "";
   const userProfilePicture = userData?.profilePicture; // Assuming there's a profilePicture field
 
@@ -75,14 +93,13 @@ const Nav = () => {
     navigate(path);
   };
 
-
   console.log("Rendering Navigation component");
 
   return (
     <>
       <AppBarStyled>
         <Toolbar>
-          <Link to="/home">
+          <Link to="/dashboard">
             <img
               src={logo}
               alt="Logo"
@@ -114,7 +131,7 @@ const Nav = () => {
               </Button>
             );
           })}
-          
+
           <Box>
             <Avatar
               src={userProfilePicture}
@@ -166,7 +183,6 @@ const Nav = () => {
       >
         <Outlet />
       </motion.div>
-      
     </>
   );
 };

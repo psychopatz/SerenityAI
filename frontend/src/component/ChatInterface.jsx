@@ -45,7 +45,7 @@ const MessageBubble = styled(Box)(({ theme, role, isSmallScreen }) => ({
   backgroundColor: role === 'user' ? '#0084ff' : '#e5e5ea',
   color: role === 'user' ? '#ffffff' : '#000000',
   borderRadius: '16px',
-  maxWidth: '60%',
+  maxWidth: (isSmallScreen ? '100%' : '60%'),
   minWidth: (isSmallScreen ? '40%' : '4%'),
   wordWrap: 'break-word',
   textAlign: role === 'user' ? 'left' : 'left',
@@ -137,6 +137,10 @@ const ChatInterface = ({ isSmallScreen }) => {
       Use this information to make your responses more personalized and empathetic.`
     );
   }, [analysisData, userdata]);
+
+  useEffect(() => {
+    storageService.setSessionStorage('chatMessages', messages);
+  }, []);
 
   useEffect(() => {
     storageService.setSessionStorage('chatMessages', messages);

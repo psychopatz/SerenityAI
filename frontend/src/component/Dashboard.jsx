@@ -1,4 +1,3 @@
-// Dashboard.jsx
 import React, { useEffect, useState } from 'react';
 import {
   Box,
@@ -8,235 +7,251 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, keyframes } from '@mui/material/styles';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
-import ChatboxIframe from './ChatboxIframe'; // Adjust the import path as needed
+import ChatboxIframe from './ChatboxIframe';
 import { getRecommendation } from '../services/AiAnalyticsService';
 import { getMemoryById } from '../services/MemoryService';
 import StorageService from '../services/StorageService';
 import MarkdownPreview from '@uiw/react-markdown-preview';
+import { motion } from 'framer-motion';
 
-// Styled components using MUI's styled API
+// Animation keyframes
+const colorAnimation = keyframes`
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+`;
 
-// Container that centers the content
-const CenteredContentContainer = styled('div')(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center', // Center horizontally
-  justifyContent: 'center', // Center vertically
-  minHeight: '100vh',
-  position: 'relative',
-  zIndex: 1, // Ensure content is above the overlay
-  padding: theme.spacing(2),
-  width: '100%',
-}));
+// Styled Components
+const StyledComponents = {
+  Container: styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: '100vh',
+    position: 'relative',
+    zIndex: 1,
+    padding: theme.spacing(2),
+    width: '100%',
+  })),
 
-// Overlay with blur and dark transparency
-const BlurBackgroundOverlay = styled('div')(({ theme }) => ({
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  width: '100%',
-  height: '100%',
-  backgroundColor: 'rgba(0, 0, 0, 0.5)', // Dark transparent overlay
-  backdropFilter: 'blur(5px)', // Apply blur effect
-  zIndex: 0, // Place behind the content
-}));
+  Overlay: styled('div')({
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backdropFilter: 'blur(5px)',
+    zIndex: 0,
+  }),
 
-// Wrapper for the content with transparent background
-const TransparentContentWrapper = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(4),
-  backgroundColor: 'transparent',
-  boxShadow: 'none',
-  textAlign: 'center',
-  color: '#ffffff', // White text for visibility
-  width: '100%',
-}));
+  Content: styled(Paper)(({ theme }) => ({
+    padding: theme.spacing(4),
+    backgroundColor: 'transparent',
+    boxShadow: 'none',
+    textAlign: 'center',
+    color: '#ffffff',
+    width: '100%',
+  })),
 
-// Welcome message heading
-const WelcomeMessage = styled('h1')(({ theme }) => ({
-  color: '#ffffff',
-  marginBottom: theme.spacing(2),
-  fontSize: '3rem', // Base font size
-  [theme.breakpoints.down('sm')]: {
-    fontSize: '2rem', // Smaller font size on small screens
-  },
-  [theme.breakpoints.up('md')]: {
-    fontSize: '4rem', // Larger font size on medium and up screens
-  },
-}));
+  Welcome: styled('h1')(({ theme }) => ({
+    color: '#ffffff',
+    marginBottom: theme.spacing(2),
+    fontSize: '3rem',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '2rem',
+    },
+    [theme.breakpoints.up('md')]: {
+      fontSize: '4rem',
+    },
+  })),
 
-// **Add the missing SectionTitle styled component**
-const SectionTitle = styled('h2')(({ theme }) => ({
-  color: '#ffffff',
-  marginBottom: theme.spacing(2),
-  fontSize: '2rem', // Base font size
-  [theme.breakpoints.down('sm')]: {
-    fontSize: '1.5rem', // Smaller font size on small screens
-  },
-  [theme.breakpoints.up('md')]: {
-    fontSize: '2.5rem', // Larger font size on medium and up screens
-  },
-}));
+  Loading: styled('h2')(({ theme }) => ({
+    color: '#ffffff',
+    marginBottom: theme.spacing(2),
+    fontSize: '2rem',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1.5rem',
+    },
+    [theme.breakpoints.up('md')]: {
+      fontSize: '2.5rem',
+    },
+  })),
 
-// Recommendation content styled for markdown
-const RecommendationContent = styled(MarkdownPreview)(({ theme }) => ({
-  backgroundColor: 'transparent',
-  margin: 0,
-  padding: 0,
-  color: '#ffffff',
-  fontSize: '1rem', // Base font size
-  [theme.breakpoints.down('sm')]: {
-    fontSize: '0.8rem', // Smaller font size on small screens
-  },
-  [theme.breakpoints.up('md')]: {
-    fontSize: '1.2rem', // Larger font size on medium and up screens
-  },
-  '& p': {
-    margin: theme.spacing(2, 0),
-  },
-}));
+  Recommendation: styled(motion.div)(({ theme }) => ({
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    padding: theme.spacing(3),
+    marginTop: theme.spacing(2),
+    width: '100%',
+    color: '#ffffff',
+    textAlign: 'center',
+    overflow: 'hidden',
+    position: 'relative',
+  })),
 
-// Wrapper for the recommendation with transparent dark background spanning full width
-const RecommendationWrapper = styled(Paper)(({ theme }) => ({
-  backgroundColor: 'rgba(0, 0, 0, 0.7)', // Semi-transparent dark background
-  padding: theme.spacing(3),
-  marginTop: theme.spacing(2),
-  width: '100%', // Full width
-  color: '#ffffff',
-  boxShadow: 'none',
-  textAlign: 'left',
-}));
+  AnimatedBackground: styled('div')({
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '200%',
+    height: '200%',
+    background: 'linear-gradient(270deg, #ff8a00, #e52e71, #9c27b0, #2196f3)',
+    backgroundSize: '800% 800%',
+    animation: `${colorAnimation} 30s ease infinite`,
+    opacity: 0.3,
+  }),
 
-// Chat toggle button styled component
-const ChatToggleButton = styled(IconButton)(({ theme }) => ({
-  position: 'fixed',
-  bottom: theme.spacing(2),
-  right: theme.spacing(2),
-  backgroundColor: '#4a90e2',
-  color: '#fff',
-  '&:hover': {
-    backgroundColor: '#357ABD',
-  },
-  zIndex: 1000,
-}));
+  MarkdownContent: styled(MarkdownPreview)(({ theme }) => ({
+    backgroundColor: 'transparent',
+    margin: 0,
+    padding: 0,
+    color: '#ffffff',
+    fontSize: '1rem',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '0.8rem',
+    },
+    [theme.breakpoints.up('md')]: {
+      fontSize: '1.2rem',
+    },
+    '& p': {
+      margin: theme.spacing(2, 0),
+    },
+  })),
+
+  ChatButton: styled(IconButton)(({ theme }) => ({
+    position: 'fixed',
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
+    backgroundColor: '#4a90e2',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#357ABD',
+    },
+    zIndex: 1000,
+  })),
+};
 
 const Dashboard = () => {
+  // Hooks and Services
   const storageService = StorageService();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
+  // State
   const [userData, setUserData] = useState(null);
   const [memoryData, setMemoryData] = useState(null);
   const [recommendation, setRecommendation] = useState('');
   const [loading, setLoading] = useState(false);
   const [greeting, setGreeting] = useState('');
-  const [isChatVisible, setIsChatVisible] = useState(false); // State to manage chat visibility
+  const [isChatVisible, setIsChatVisible] = useState(false);
 
-  const toggleChatVisibility = () => {
-    setIsChatVisible((prev) => !prev);
+  // Helper Functions
+  const getTimeBasedGreeting = () => {
+    const hours = new Date().getHours();
+    if (hours >= 5 && hours < 12) return 'Good Morning';
+    if (hours >= 12 && hours < 17) return 'Good Afternoon';
+    if (hours >= 17 && hours < 22) return 'Good Evening';
+    return 'Good Night';
   };
 
-  useEffect(() => {
-    // Determine the greeting based on current time
-    const hours = new Date().getHours();
-    let currentGreeting = '';
-    if (hours >= 5 && hours < 12) {
-      currentGreeting = 'Good Morning';
-    } else if (hours >= 12 && hours < 17) {
-      currentGreeting = 'Good Afternoon';
-    } else if (hours >= 17 && hours < 22) {
-      currentGreeting = 'Good Evening';
-    } else {
-      currentGreeting = 'Good Night';
+  const createRequestData = (user, memory) => ({
+    user: {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      dateOfBirth: user.dateOfBirth,
+    },
+    memory: {
+      likes: memory?.likes || [],
+      dislikes: memory?.dislikes || [],
+      memories: memory?.memories || [],
+      moodtype: memory?.moodtype || '',
+    },
+    safetySettings: [],
+    generationConfig: {},
+  });
+
+  const handleRecommendationResponse = (response) => {
+    if (!response?.candidates?.[0]?.content?.parts) {
+      console.error('Invalid recommendation response format.');
+      return '';
     }
-    setGreeting(currentGreeting);
+    return response.candidates[0].content.parts.map(part => part.text).join('\n');
+  };
+
+  const updateChatMessages = (text) => {
+    const chatMessages = storageService.getSessionStorage('chatMessages');
+    if (!chatMessages?.length) {
+      const newChatMessages = [{
+        parts: [{ text }],
+        role: 'model',
+      }];
+      storageService.setSessionStorage('chatMessages', newChatMessages);
+      window.dispatchEvent(new Event('chatMessagesUpdated'));
+    }
+  };
+
+  // Effects
+  useEffect(() => {
+    setGreeting(getTimeBasedGreeting());
   }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      // Fetch user data from local storage
+    const fetchUserData = async () => {
       const storedUserData = storageService.getLocalStorage('userdata');
-
-      if (storedUserData) {
-        setUserData(storedUserData);
-
-        try {
-          // Fetch memory data
-          const memory = await getMemoryById(storedUserData.memoryID);
-          setMemoryData(memory);
-
-          // Check if recommendation is in session storage
-          const storedRecommendation = storageService.getSessionStorage('recommendation');
-
-          if (storedRecommendation) {
-            // Use stored recommendation
-            setRecommendation(storedRecommendation);
-          } else {
-            // Fetch new recommendation and store it
-            await fetchAndStoreRecommendation(storedUserData, memory);
-          }
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        }
-      } else {
+      if (!storedUserData) {
         console.error('No user data found in local storage.');
+        return;
+      }
+
+      setUserData(storedUserData);
+      try {
+        const memory = storedUserData.memoryID === 0 
+          ? { likes: [], dislikes: [], memories: [], moodtype: '' }
+          : await getMemoryById(storedUserData.memoryID);
+        
+        setMemoryData(memory);
+
+        const storedRecommendation = storageService.getSessionStorage('recommendation');
+        if (storedRecommendation) {
+          setRecommendation(storedRecommendation);
+        } else {
+          await fetchRecommendation(storedUserData, memory);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
       }
     };
 
-    fetchData();
+    fetchUserData();
   }, []);
 
-  const fetchAndStoreRecommendation = async (user, memory) => {
+  useEffect(() => {
+    const handleRecommendationUpdated = () => {
+      setRecommendation(storageService.getSessionStorage('recommendation'));
+    };
+
+    window.addEventListener('recommendationUpdated', handleRecommendationUpdated);
+    return () => window.removeEventListener('recommendationUpdated', handleRecommendationUpdated);
+  }, []);
+
+  const fetchRecommendation = async (user, memory) => {
     if (!user || !memory) {
       console.error('User data or memory data is missing.');
       return;
     }
 
     setLoading(true);
-
-    const requestData = {
-      user: {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        dateOfBirth: user.dateOfBirth,
-      },
-      memory: {
-        likes: memory.likes,
-        dislikes: memory.dislikes,
-        memories: memory.memories,
-        moodtype: memory.moodtype,
-      },
-      safetySettings: [],
-      generationConfig: {},
-    };
-
     try {
-      const recommendationResponse = await getRecommendation(requestData);
-
-      // Extract the text from the response
-      let text = '';
-
-      if (
-        recommendationResponse &&
-        recommendationResponse.candidates &&
-        recommendationResponse.candidates.length > 0
-      ) {
-        const candidate = recommendationResponse.candidates[0];
-        if (candidate.content && candidate.content.parts) {
-          const parts = candidate.content.parts;
-          text = parts.map((part) => part.text).join('\n');
-        } else {
-          console.error('Invalid recommendation response format.');
-        }
-      } else {
-        console.error('No candidates found in recommendation response.');
-      }
+      const requestData = createRequestData(user, memory);
+      const response = await getRecommendation(requestData);
+      const text = handleRecommendationResponse(response);
 
       setRecommendation(text);
-
-      // Store the recommendation in session storage
       storageService.setSessionStorage('recommendation', text);
+      window.dispatchEvent(new Event('recommendationUpdated'));
+      updateChatMessages(text);
     } catch (error) {
       console.error('Error getting recommendation:', error);
     } finally {
@@ -244,44 +259,44 @@ const Dashboard = () => {
     }
   };
 
+  // Render Helpers
+  const renderRecommendation = () => (
+    <StyledComponents.Recommendation>
+      <StyledComponents.AnimatedBackground />
+      <Box sx={{ position: 'relative', zIndex: 1 }}>
+        <StyledComponents.MarkdownContent source={recommendation} />
+      </Box>
+    </StyledComponents.Recommendation>
+  );
+
+  const renderContent = () => {
+    if (!memoryData) return <StyledComponents.Loading>Loading your memory data...</StyledComponents.Loading>;
+    if (loading) return <CircularProgress color="inherit" />;
+    if (recommendation) return renderRecommendation();
+    return <StyledComponents.Loading>Loading recommendation...</StyledComponents.Loading>;
+  };
+
   return (
     <>
-      <BlurBackgroundOverlay />
-      <CenteredContentContainer>
-        <TransparentContentWrapper>
-          <WelcomeMessage>
-            {greeting}
-            {userData ? `, ${userData.firstName}!` : '!'}
-          </WelcomeMessage>
-          {memoryData ? (
-            <>
-              {loading ? (
-                <CircularProgress color="inherit" />
-              ) : recommendation ? (
-                <RecommendationWrapper>
-                  <RecommendationContent source={recommendation} />
-                </RecommendationWrapper>
-              ) : (
-                <SectionTitle>Loading recommendation...</SectionTitle>
-              )}
-            </>
-          ) : (
-            <SectionTitle>Loading your memory data...</SectionTitle>
-          )}
-        </TransparentContentWrapper>
-      </CenteredContentContainer>
+      <StyledComponents.Overlay />
+      <StyledComponents.Container>
+        <StyledComponents.Content>
+          <StyledComponents.Welcome>
+            {greeting}{userData ? `, ${userData.firstName}` : ''}!
+          </StyledComponents.Welcome>
+          {renderContent()}
+        </StyledComponents.Content>
+      </StyledComponents.Container>
 
-      {/* Chat Toggle Button - Hidden when chat is visible */}
       {!isChatVisible && (
-        <ChatToggleButton onClick={toggleChatVisibility} size="large">
+        <StyledComponents.ChatButton onClick={() => setIsChatVisible(true)} size="large">
           <ChatBubbleIcon fontSize="large" />
-        </ChatToggleButton>
+        </StyledComponents.ChatButton>
       )}
 
-      {/* ChatboxIframe Component */}
       <ChatboxIframe
         isVisible={isChatVisible}
-        toggleChatVisibility={toggleChatVisibility}
+        toggleChatVisibility={() => setIsChatVisible(false)}
       />
     </>
   );

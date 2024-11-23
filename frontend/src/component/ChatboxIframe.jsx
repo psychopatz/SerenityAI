@@ -1,4 +1,5 @@
-import React from "react";
+// ChatboxIframe.jsx
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Box, Typography, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -31,8 +32,23 @@ const ChatHeader = styled(Box)(({ theme }) => ({
 }));
 
 const ChatboxIframe = ({ isVisible, toggleChatVisibility }) => {
+  const [updateKey, setUpdateKey] = useState(0);
+
+  useEffect(() => {
+    const handleChatMessagesUpdated = () => {
+      setUpdateKey(prevKey => prevKey + 1);
+    };
+
+    window.addEventListener('chatMessagesUpdated', handleChatMessagesUpdated);
+
+    return () => {
+      window.removeEventListener('chatMessagesUpdated', handleChatMessagesUpdated);
+    };
+  }, []);
+
   return ReactDOM.createPortal(
     <ChatContainer
+      key={updateKey} // Add key prop to force re-render
       initial={{ y: "100%", opacity: 0 }}
       animate={{ y: isVisible ? 0 : "100%", opacity: isVisible ? 1 : 0 }}
       exit={{ y: "100%", opacity: 0 }}

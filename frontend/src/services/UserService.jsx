@@ -1,3 +1,4 @@
+// UserService.js
 import axios from 'axios';
 
 const API_URL = 'http://localhost:8080/user'; // Update with your API URL
@@ -37,9 +38,9 @@ const UserService = {
             .catch(handleError);
     },
 
-    updateUserById(id) {
-        console.log(`Updating user with ID: ${id}`); // Debugging log
-        return axios.put(`${API_URL}/update/${id}`)
+    updateUserById(id, userData) { 
+        console.log(`Updating user with ID: ${id} and data:`, userData); // Debugging log
+        return axios.put(`${API_URL}/update/${id}`, userData) // Send userData in the PUT request
             .then((response) => {
                 console.log("Response from backend:", response.data);
                 return response.data;

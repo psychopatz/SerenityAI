@@ -33,37 +33,57 @@ public class UserService {
     public List<UserEntity> getAllUsers() {
         return userRepository.findAll();
     }
+    
 
     public UserEntity updatedUser(int id, UserEntity newUserDetails) throws NameNotFoundException {
+        // Fetch the existing user by ID
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new NameNotFoundException("User " + id + " not found"));
 
-        // Update user details
-        user.setFirstName(newUserDetails.getFirstName());
-        user.setLastName(newUserDetails.getLastName());
-        user.setEmail(newUserDetails.getEmail());
+        // Update fields only if they are provided (not null)
+        if (newUserDetails.getFirstName() != null) {
+            user.setFirstName(newUserDetails.getFirstName());
+        }
+
+        if (newUserDetails.getLastName() != null) {
+            user.setLastName(newUserDetails.getLastName());
+        }
+
+        if (newUserDetails.getEmail() != null) {
+            user.setEmail(newUserDetails.getEmail());
+        }
 
         if (newUserDetails.getPassword() != null && !newUserDetails.getPassword().isEmpty()) {
             user.setPassword(passwordEncoder.encode(newUserDetails.getPassword()));
         }
 
-        user.setDateOfBirth(newUserDetails.getDateOfBirth());
-        user.setGender(newUserDetails.getGender());
-        user.setLastLogin(newUserDetails.getLastLogin());
-        user.setLocation(newUserDetails.getLocation());
-        user.setMemoryID(newUserDetails.getMemoryID());
-        user.setPrivacy_id(newUserDetails.getPrivacy_id());
+        if (newUserDetails.getDateOfBirth() != null) {
+            user.setDateOfBirth(newUserDetails.getDateOfBirth());
+        }
 
-        // Update memoryID and privacy_id if provided
-        // Assuming 0 is not a valid value; adjust as per your business logic
-        if (newUserDetails.getMemoryID() != 0) {
+        if (newUserDetails.getGender() != null) {
+            user.setGender(newUserDetails.getGender());
+        }
+
+        if (newUserDetails.getLastLogin() != null) {
+            user.setLastLogin(newUserDetails.getLastLogin());
+        }
+
+        if (newUserDetails.getLocation() != null) {
+            user.setLocation(newUserDetails.getLocation());
+        }
+
+        // Update memoryID only if it's provided and not zero (assuming 0 is invalid)
+        if (newUserDetails.getMemoryID() != 0 && newUserDetails.getMemoryID() != 0) {
             user.setMemoryID(newUserDetails.getMemoryID());
         }
 
-        if (newUserDetails.getPrivacy_id() != 0) {
+        // Update privacy_id only if it's provided and not zero (assuming 0 is invalid)
+        if (newUserDetails.getPrivacy_id() != 0 && newUserDetails.getPrivacy_id() != 0) {
             user.setPrivacy_id(newUserDetails.getPrivacy_id());
         }
 
+        // Save the updated user entity
         return userRepository.save(user);
     }
 

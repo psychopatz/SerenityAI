@@ -238,6 +238,14 @@ const ChatInterface = ({ isSmallScreen }) => {
     }
   };
 
+  const getCurrentDate = () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const updateAnalysisData = async (newAnalysis) => {
     if (!newAnalysis) return;
 
@@ -259,11 +267,14 @@ const ChatInterface = ({ isSmallScreen }) => {
         const memoryId = response.id;
         const updatedUserData = { ...userdata, memoryID: memoryId };
         storageService.setLocalStorage('userdata', updatedUserData);
+        await UserService.updateUserById(userdata.user_id, {lastLogin:getCurrentDate(), memoryID: memoryId });
+        
       } else {
         await updateMemoryById(userdata.memoryID, {
           ...updatedData,
           moodType: updatedData.moodtype[0]
         });
+        await UserService.updateUserById(userdata.user_id, {lastLogin:getCurrentDate()});
       }
     } catch (error) {
       console.error('Error updating memory:', error);

@@ -1,0 +1,28 @@
+meta {
+  name: /updateUserById
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:8080/user/update/1
+  body: json
+  auth: none
+}
+
+body:json {
+  
+    {
+      "firstName": "Patrick Oliver",
+      "lastName": "Bustamante",
+      "email": "bpatrickoliverb@gmail.com",
+      "password": "",
+      "dateOfBirth": "2024-11-23",
+      "gender": "Male",
+      "lastLogin": null,
+      "location": "Balud Dalaguete Cebu",
+      "memoryID": 0,
+      "privacy_id": 0
+    }
+  
+}

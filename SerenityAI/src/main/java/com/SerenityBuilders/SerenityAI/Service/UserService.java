@@ -33,7 +33,7 @@ public class UserService {
     public List<UserEntity> getAllUsers() {
         return userRepository.findAll();
     }
-    
+
 
     public UserEntity updatedUser(int id, UserEntity newUserDetails) throws NameNotFoundException {
         // Fetch the existing user by ID

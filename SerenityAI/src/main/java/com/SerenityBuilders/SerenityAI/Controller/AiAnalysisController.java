@@ -1,7 +1,9 @@
     package com.SerenityBuilders.SerenityAI.Controller;
 
     import java.time.LocalDate;
+    import java.time.format.DateTimeFormatter;
     import java.time.format.TextStyle;
+    import java.time.temporal.ChronoUnit;
     import java.util.*;
 
     import org.springframework.beans.factory.annotation.Autowired;
@@ -118,6 +120,17 @@ import com.SerenityBuilders.SerenityAI.util.LlmUtil;
         }
 
 
+        // Reusable method to calculate the number of days elapsed between two dates
+        private long calculateTimeElapse(LocalDate lastLogin, LocalDate currentDate) {
+            return ChronoUnit.DAYS.between(lastLogin, currentDate);
+        }
+
+        // Reusable method to format a LocalDate into "Saturday, June 20, 2012"
+        private String dateFormatter(LocalDate date) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy");
+            return date.format(formatter);
+        }
+
         @PostMapping("/recommendation")
         public ResponseEntity<String> generateRecommendation(@RequestBody Map<String, Object> request) {
             try {
@@ -132,13 +145,21 @@ import com.SerenityBuilders.SerenityAI.util.LlmUtil;
                 LocalDate userBirthDate = LocalDate.parse(dateOfBirth);
                 LocalDate today = LocalDate.now();
 
+                // Get lastLogin date
+                String lastLoginStr = (String) userMap.get("lastLogin");
+                LocalDate lastLoginDate = LocalDate.parse(lastLoginStr);
+
+                // Calculate time elapsed since last login
+                long daysElapsed = calculateTimeElapse(lastLoginDate, today);
+                String formattedLastLogin = dateFormatter(lastLoginDate);
+
                 // Create system instruction for generating recommendation
                 Map<String, Object> systemInstruction = new HashMap<>();
                 List<Map<String, String>> parts = new ArrayList<>();
                 Map<String, String> textPart = new HashMap<>();
 
                 // Define topics
-                String[] topicsArray = { "likes", "dislikes", "memories", "moodtype" };
+                String[] topicsArray = { "likes", "dislikes", "memories", "moodType" };
                 List<String> topicsList = new ArrayList<>(Arrays.asList(topicsArray));
                 Random random = new Random();
 
@@ -146,7 +167,7 @@ import com.SerenityBuilders.SerenityAI.util.LlmUtil;
 
                 // Start building the system prompt
                 prompt.append(String.format(
-                        "You are a close friend of %s %s. Based on the user's likes, dislikes, memories, and mood, generate a lifelike message to start a conversation. Be friendly and natural in your tone.\n",
+                        "You are a therapist of of %s, %s. Based on the user's likes, dislikes, memories, mood, and when you last interacted with the user. \nGenerate a lifelike message to start a conversation.\n",
                         firstName, lastName));
 
                 // Birthday greeting logic
@@ -174,6 +195,30 @@ import com.SerenityBuilders.SerenityAI.util.LlmUtil;
                     prompt.append("Mood: ").append(memoryMap.get("moodtype")).append("\n");
                 }
 
+                // Determine the message based on days elapsed
+                String loginMessage;
+                if(daysElapsed == 0){
+                    loginMessage = String.format(
+                            "- The user is logged in earlier\n");
+                } else if (daysElapsed == 1) {
+                    loginMessage = String.format(
+                            "- The user is logged in yesterday\n");
+
+                } else if (daysElapsed < 7) {
+                    loginMessage = String.format(
+                            "- It's been only %d day(s) since the users last logged in on %s.\n",
+                            daysElapsed, formattedLastLogin);
+                } else if (daysElapsed > 30) {
+                    loginMessage = String.format(
+                            "- It's been %d days since the user's last login on %s. You missed the user!\n",
+                            daysElapsed, formattedLastLogin);
+                } else {
+                    loginMessage = String.format(
+                            "- The user last logged in on %s, which was %d day(s) ago. You barely remembered the user\n",
+                            formattedLastLogin, daysElapsed);
+                }
+
+
                 // Decide how many topics to focus on
                 int totalTopics = topicsList.size();
                 int numTopicsToSelect;
@@ -196,6 +241,12 @@ import com.SerenityBuilders.SerenityAI.util.LlmUtil;
 
                 // Select the topics
                 List<String> selectedTopics = topicsList.subList(0, numTopicsToSelect);
+
+                if (memoryMap.containsKey("moodType") && memoryMap.get("moodType") != null) {
+                    String moodtype = (String) memoryMap.get("moodType");
+                    prompt.append("- The user's last mood is: ").append(moodtype).append("\n");
+                }
+
 
                 // Focus on the selected topics
                 if (!userBirthDate.equals(today)) {
@@ -248,9 +299,9 @@ import com.SerenityBuilders.SerenityAI.util.LlmUtil;
                                     prompt.append("- Ask them to share a favorite memory.\n");
                                 }
                                 break;
-                            case "moodtype":
-                                if (memoryMap.containsKey("moodtype") && memoryMap.get("moodtype") != null) {
-                                    String moodtype = (String) memoryMap.get("moodtype");
+                            case "moodType":
+                                if (memoryMap.containsKey("moodType") && memoryMap.get("moodType") != null) {
+                                    String moodtype = (String) memoryMap.get("moodType");
                                     prompt.append("- Their current mood: ").append(moodtype).append("\n");
                                 } else {
                                     // General prompt when moodtype is not available
@@ -264,6 +315,8 @@ import com.SerenityBuilders.SerenityAI.util.LlmUtil;
                         }
                     }
                 }
+                // Add login message to the prompt
+                prompt.append("\n").append(loginMessage);
 
                 // Final instructions
                 prompt.append("\nUse the above information to craft your message. Your message should be in first person and feel like it's coming from a close friend. Do not mention that you are an AI or that you have been given this information.\n");
@@ -273,7 +326,7 @@ import com.SerenityBuilders.SerenityAI.util.LlmUtil;
                 textPart.put("text", prompt.toString());
                 parts.add(textPart);
                 systemInstruction.put("parts", parts);
-                System.out.println("Recommend Systemprompt =" + systemInstruction);
+                System.out.println("Recommend Systemprompt = " + systemInstruction);
 
                 // Get contents from the request, or set default value if missing
                 @SuppressWarnings("unchecked")
@@ -306,7 +359,6 @@ import com.SerenityBuilders.SerenityAI.util.LlmUtil;
                 return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
             }
         }
-
 
 
 

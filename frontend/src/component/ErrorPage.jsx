@@ -12,17 +12,27 @@ const ErrorContainer = styled(Box)(({ theme }) => ({
   textAlign: 'center',
   backgroundColor: 'transparent',
   padding: '0 20px',
-  // backdropFilter: 'blur(10px)',
   position: 'relative',
+  maxWidth: '100%', 
+  overflow: 'hidden', 
+
+  // Add a pseudo-element for the vignette effect
   '&::before': {
     content: '""',
     position: 'absolute',
     top: 0,
     left: 0,
-    right: 0,
-    bottom: 0,
-    background: 'radial-gradient(circle, rgba(0, 0, 0, 0.4), transparent)',
-    zIndex: -1,
+    width: '100%',
+    height: '100%',
+    pointerEvents: 'none', // Allows interactions to pass through
+    background: 'radial-gradient(circle, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.5) 100%)',
+    zIndex: 1, // Places the vignette below the content
+  },
+
+  // Ensure child content appears above the vignette
+  '& > *': {
+    position: 'relative',
+    zIndex: 2,
   },
 }));
 

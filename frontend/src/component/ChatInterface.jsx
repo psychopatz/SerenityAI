@@ -19,16 +19,37 @@ import { createMemory, updateMemoryById, getMemoryById } from '../services/Memor
 import UserService from '../services/UserService';
 
 const ChatbotBody = styled(Container)(({ theme, isSmallScreen }) => ({
+  position: 'relative', // Ensure the pseudo-element is positioned correctly
   height: isSmallScreen ? '100%' : '100vh',
   display: 'flex',
   flexDirection: 'column',
   backgroundColor: 'rgba(255, 255, 255, 0.1)', 
-  backdropFilter: 'blur(10px)',
   width: '100%',
   paddingTop: isSmallScreen ? '0px' : '64px',
   overflowX: 'hidden',
   maxWidth: '100% !important',
+
+
+  // Add a pseudo-element for the vignette effect
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    pointerEvents: 'none', // Allows clicks to pass through
+    background: 'radial-gradient(circle, rgba(0,0,0,0) 60%, rgba(0,0,0,0.5) 100%)',
+    zIndex: 1, // Ensure the vignette is on top
+  },
+
+  // Ensure child content appears above the vignette
+  '& > *': {
+    position: 'relative',
+    zIndex: 2,
+  },
 }));
+
 
 
 const ChatContents = styled(Box)(({ theme }) => ({

@@ -2,11 +2,7 @@
 
     import java.time.LocalDate;
     import java.time.format.TextStyle;
-    import java.util.ArrayList;
-    import java.util.HashMap;
-    import java.util.List;
-    import java.util.Locale;
-    import java.util.Map;
+    import java.util.*;
 
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.http.ResponseEntity;
@@ -75,6 +71,7 @@ import com.SerenityBuilders.SerenityAI.util.LlmUtil;
             }
         }
 
+
         @PostMapping("/analyze")
         public ResponseEntity<String> aiMemoryFramework(
                 @RequestBody Map<String, Object> request
@@ -120,6 +117,7 @@ import com.SerenityBuilders.SerenityAI.util.LlmUtil;
             }
         }
 
+
         @PostMapping("/recommendation")
         public ResponseEntity<String> generateRecommendation(@RequestBody Map<String, Object> request) {
             try {
@@ -139,53 +137,144 @@ import com.SerenityBuilders.SerenityAI.util.LlmUtil;
                 List<Map<String, String>> parts = new ArrayList<>();
                 Map<String, String> textPart = new HashMap<>();
 
-                // Randomly select a topic for the greeting
-                String[] topics = { "likes", "dislikes", "memories", "moodtype" };
-                String selectedTopic = topics[new Random().nextInt(topics.length)];
+                // Define topics
+                String[] topicsArray = { "likes", "dislikes", "memories", "moodtype" };
+                List<String> topicsList = new ArrayList<>(Arrays.asList(topicsArray));
+                Random random = new Random();
 
                 StringBuilder prompt = new StringBuilder();
-                switch (selectedTopic) {
-                    case "likes":
-                        prompt.append(String.format(
-                                "Hey %s, I heard you've been enjoying %s lately! What's your favorite thing about it?\n\n",
-                                firstName, memoryMap.get("likes")));
-                        break;
-                    case "dislikes":
-                        prompt.append(String.format(
-                                "Hey %s, I know you're not a fan of %s. What's something you'd rather do instead?\n\n",
-                                firstName, memoryMap.get("dislikes")));
-                        break;
-                    case "memories":
-                        prompt.append(String.format(
-                                "Hey %s, I heard you have some great memories of %s! What's your favorite part about it?\n\n",
-                                firstName, memoryMap.get("memories")));
-                        break;
-                    case "moodtype":
-                        prompt.append(
-                                String.format("Hey %s, I can tell you're feeling %s today! What's on your mind?\n\n",
-                                        firstName, memoryMap.get("moodtype")));
-                        break;
-                }
+
+                // Start building the system prompt
+                prompt.append(String.format(
+                        "You are a close friend of %s %s. Based on the user's likes, dislikes, memories, and mood, generate a lifelike message to start a conversation. Be friendly and natural in your tone.",
+                        firstName, lastName));
 
                 // Birthday greeting logic
                 if (userBirthDate.equals(today)) {
                     prompt.append(String.format(
-                            "Today is %s's birthday! Make sure to greet them warmly and include a present emoji related to their likes if possible.\n\n",
+                            " Today is %s's birthday! Make sure to wish them a happy birthday in a warm and personal way, possibly including a present emoji related to their likes.\n",
                             firstName));
                 }
 
-                // Add user preferences to the prompt
-                prompt.append(
-                        "Based on the user's likes, dislikes, and memories, choose a specific topic to recommend that the user might enjoy.\n");
-                prompt.append("Likes: " + memoryMap.get("likes") + "\n");
-                prompt.append("Dislikes: " + memoryMap.get("dislikes") + "\n");
-                prompt.append("Memories: " + memoryMap.get("memories") + "\n");
-                prompt.append("Format your output using markdown language\n");
+                // Include user's details
+                prompt.append("\nHere are the user's details:\n");
+                prompt.append("First Name: ").append(firstName).append("\n");
+                prompt.append("Last Name: ").append(lastName).append("\n");
 
+                if (memoryMap.containsKey("likes") && memoryMap.get("likes") != null) {
+                    prompt.append("Likes: ").append(memoryMap.get("likes")).append("\n");
+                }
+                if (memoryMap.containsKey("dislikes") && memoryMap.get("dislikes") != null) {
+                    prompt.append("Dislikes: ").append(memoryMap.get("dislikes")).append("\n");
+                }
+                if (memoryMap.containsKey("memories") && memoryMap.get("memories") != null) {
+                    prompt.append("Memories: ").append(memoryMap.get("memories")).append("\n");
+                }
+                if (memoryMap.containsKey("moodtype") && memoryMap.get("moodtype") != null) {
+                    prompt.append("Mood: ").append(memoryMap.get("moodtype")).append("\n");
+                }
+
+                // Decide how many topics to focus on
+                int totalTopics = topicsList.size();
+                int numTopicsToSelect;
+
+                // Randomly decide the number of topics:
+                // 50% chance to select one topic
+                // 30% chance to select two topics
+                // 20% chance to select all topics
+                int rng = random.nextInt(100);
+                if (rng < 50) {
+                    numTopicsToSelect = 1;
+                } else if (rng < 80) {
+                    numTopicsToSelect = 2;
+                } else {
+                    numTopicsToSelect = totalTopics;
+                }
+
+                // Shuffle the topics to randomize their order
+                Collections.shuffle(topicsList);
+
+                // Select the topics
+                List<String> selectedTopics = topicsList.subList(0, numTopicsToSelect);
+
+                // Focus on the selected topics
+                if (!userBirthDate.equals(today)) {
+                    prompt.append("\nFor today's conversation, focus on the following topics:\n");
+
+                    for (String topic : selectedTopics) {
+                        switch (topic) {
+                            case "likes":
+                                if (memoryMap.containsKey("likes") && memoryMap.get("likes") != null) {
+                                    List<String> likes = (List<String>) memoryMap.get("likes");
+                                    if (likes != null && !likes.isEmpty()) {
+                                        String selectedLike = likes.get(random.nextInt(likes.size()));
+                                        prompt.append("- One of their likes: ").append(selectedLike).append("\n");
+                                    } else {
+                                        // General prompt when likes are not available
+                                        prompt.append("- Ask them about what they've been interested in lately.\n");
+                                    }
+                                } else {
+                                    // General prompt when likes are not available
+                                    prompt.append("- Ask them about what they've been interested in lately.\n");
+                                }
+                                break;
+                            case "dislikes":
+                                if (memoryMap.containsKey("dislikes") && memoryMap.get("dislikes") != null) {
+                                    List<String> dislikes = (List<String>) memoryMap.get("dislikes");
+                                    if (dislikes != null && !dislikes.isEmpty()) {
+                                        String selectedDislike = dislikes.get(random.nextInt(dislikes.size()));
+                                        prompt.append("- One of their dislikes: ").append(selectedDislike).append("\n");
+                                    } else {
+                                        // General prompt when dislikes are not available
+                                        prompt.append("- Ask if there's anything they've been avoiding lately.\n");
+                                    }
+                                } else {
+                                    // General prompt when dislikes are not available
+                                    prompt.append("- Ask if there's anything they've been avoiding lately.\n");
+                                }
+                                break;
+                            case "memories":
+                                if (memoryMap.containsKey("memories") && memoryMap.get("memories") != null) {
+                                    List<String> memories = (List<String>) memoryMap.get("memories");
+                                    if (memories != null && !memories.isEmpty()) {
+                                        String selectedMemory = memories.get(random.nextInt(memories.size()));
+                                        prompt.append("- One of their memories: ").append(selectedMemory).append("\n");
+                                    } else {
+                                        // General prompt when memories are not available
+                                        prompt.append("- Ask them to share a favorite memory.\n");
+                                    }
+                                } else {
+                                    // General prompt when memories are not available
+                                    prompt.append("- Ask them to share a favorite memory.\n");
+                                }
+                                break;
+                            case "moodtype":
+                                if (memoryMap.containsKey("moodtype") && memoryMap.get("moodtype") != null) {
+                                    String moodtype = (String) memoryMap.get("moodtype");
+                                    prompt.append("- Their current mood: ").append(moodtype).append("\n");
+                                } else {
+                                    // General prompt when moodtype is not available
+                                    prompt.append("- Ask them how they've been feeling lately.\n");
+                                }
+                                break;
+                            default:
+                                // Default to a friendly chat
+                                prompt.append("- Engage them in a friendly chat.\n");
+                                break;
+                        }
+                    }
+                }
+
+                // Final instructions
+                prompt.append("\nUse the above information to craft your message. Your message should be in first person and feel like it's coming from a close friend. Do not mention that you are an AI or that you have been given this information.\n");
+                prompt.append("Format your output using markdown language.\n");
+
+                // Add the prompt to the system instruction
                 textPart.put("text", prompt.toString());
                 parts.add(textPart);
                 systemInstruction.put("parts", parts);
                 System.out.println("Recommend Systemprompt =" + systemInstruction);
+
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> contents = (List<Map<String, Object>>) request.get("contents");
                 @SuppressWarnings("unchecked")
@@ -203,6 +292,7 @@ import com.SerenityBuilders.SerenityAI.util.LlmUtil;
                 return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
             }
         }
+
 
 
     }

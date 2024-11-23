@@ -70,19 +70,33 @@ const ChatboxContainer = ({ isChatVisible, setIsChatVisible }) => {
   const location = useLocation();
   const currentPath = location.pathname;
 
-  // Ref to store the last isChatVisible state
+  // Ref to store the last isChatVisible state when on allowed paths
   const lastIsChatVisible = useRef(isChatVisible);
 
+  // Ref to store the previous path's allowed status
+  const prevIsAllowedPath = useRef(allowedPaths.includes(currentPath));
+
   useEffect(() => {
-    if (allowedPaths.includes(currentPath)) {
-      // Revert to the last visible state when entering an allowed path
-      setIsChatVisible(lastIsChatVisible.current);
-    } else {
-      // Store the current state before hiding
+    const isAllowedPath = allowedPaths.includes(currentPath);
+    const wasAllowedPath = prevIsAllowedPath.current;
+
+    console.log(`Navigating to: ${currentPath}`);
+    console.log(`Was allowed path: ${wasAllowedPath}, Is allowed path: ${isAllowedPath}`);
+
+    if (wasAllowedPath && !isAllowedPath) {
+      // Navigating from allowed to disallowed
+      console.log("Navigating away from allowed path. Saving chat visibility state and hiding chat.");
       lastIsChatVisible.current = isChatVisible;
-      // Hide the chat on disallowed paths
       setIsChatVisible(false);
+    } else if (!wasAllowedPath && isAllowedPath) {
+      // Navigating from disallowed to allowed
+      console.log("Navigating back to allowed path. Restoring chat visibility state.");
+      setIsChatVisible(lastIsChatVisible.current);
     }
+    // If navigating between allowed paths or between disallowed paths, do nothing
+
+    // Update previous allowed path ref
+    prevIsAllowedPath.current = isAllowedPath;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPath]);
 

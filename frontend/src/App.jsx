@@ -7,7 +7,8 @@ import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 
-import LoginRegister from './component/LoginRegister';
+import Login from "./component/Login";
+import Register from "./component/Register";
 import ChatInterface from './component/ChatInterface';
 import Nav from './component/Nav';
 import Home from "./component/Home";
@@ -53,7 +54,8 @@ const AnimatedRoutes = () => {
   return (
     <AnimatePresence mode="wait">
       <Routes>
-        <Route path="/login" element={<PageWrapper><LoginRegister /></PageWrapper>} />
+        <Route path="/login" element={<PageWrapper><Login /></PageWrapper>} />
+        <Route path="/register" element={<PageWrapper><Register /></PageWrapper>} />
         <Route path="/logout" element={<PageWrapper><Logout/></PageWrapper>} />
         <Route path="/chat" element={<PageWrapper><ChatInterface /></PageWrapper>} />
         <Route path="/dashboard" element={<PageWrapper><Dashboard /></PageWrapper>} />

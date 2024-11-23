@@ -14,12 +14,12 @@ const ChatContainer = styled(motion.div)(({ theme }) => ({
   width: "350px",
   height: "500px",
   boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
-  backgroundColor: "#ffffff",
-  borderRadius: "8px 8px 0 0",
+  backgroundColor: "rgba(255, 255, 255, 0.2)", 
   overflow: "hidden",
   zIndex: 1000,
   display: "flex",
   flexDirection: "column",
+  borderRadius: "16px 16px 0 0",
 }));
 
 const ChatHeader = styled(Box)(({ theme }) => ({
@@ -27,8 +27,9 @@ const ChatHeader = styled(Box)(({ theme }) => ({
   alignItems: "center",
   justifyContent: "space-between",
   padding: theme.spacing(1),
-  backgroundColor: "#4a90e2",
-  borderBottom: "1px solid #e0e0e0",
+  backgroundColor: "rgba(74, 144, 226, 1)", 
+  borderBottom: "1px solid rgba(224, 224, 224, 0.5)", 
+  borderRadius: "16px 16px 0 0",
 }));
 
 const ChatboxIframe = ({ isVisible, toggleChatVisibility }) => {
@@ -55,7 +56,7 @@ const ChatboxIframe = ({ isVisible, toggleChatVisibility }) => {
       transition={{ duration: 0.5, ease: "easeInOut" }}
     >
       <ChatHeader>
-        <Typography variant="subtitle1" style={{ fontWeight: 600, paddingLeft: "10px", color: "#fff" }}>
+        <Typography variant="subtitle1" style={{ fontWeight: 600, paddingLeft: "10px", color: "rgba(255, 255, 255, 1)" }}>
           SerenityAI
         </Typography>
         <IconButton onClick={toggleChatVisibility}>

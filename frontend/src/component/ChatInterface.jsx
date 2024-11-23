@@ -9,7 +9,7 @@ import {
   Alert,
   styled
 } from '@mui/material';
-import VoiceChatIcon from '@mui/icons-material/VoiceChat';
+import SendIcon from '@mui/icons-material/Send';
 import MarkdownPreview from '@uiw/react-markdown-preview';
 import { sendChatRequest, analyzeUserInput } from '../services/AiAnalyticsService';
 import StorageService from '../services/StorageService';
@@ -19,15 +19,17 @@ import { createMemory, updateMemoryById, getMemoryById } from '../services/Memor
 import UserService from '../services/UserService';
 
 const ChatbotBody = styled(Container)(({ theme, isSmallScreen }) => ({
-  height: (isSmallScreen ? '100%' : '100vh'),
+  height: isSmallScreen ? '100%' : '100vh',
   display: 'flex',
   flexDirection: 'column',
-  backgroundColor: '#f0f2f5',
+  backgroundColor: 'rgba(255, 255, 255, 0.1)', 
+  backdropFilter: 'blur(10px)',
   width: '100%',
-  paddingTop: (isSmallScreen ? '0px' : '64px'),
+  paddingTop: isSmallScreen ? '0px' : '64px',
   overflowX: 'hidden',
   maxWidth: '100% !important',
 }));
+
 
 const ChatContents = styled(Box)(({ theme }) => ({
   flexGrow: 1,
@@ -42,7 +44,7 @@ const ChatContents = styled(Box)(({ theme }) => ({
 const MessageBubble = styled(Box)(({ theme, role, isSmallScreen }) => ({
   display: 'inline-block',
   padding: theme.spacing(2),
-  backgroundColor: role === 'user' ? '#0084ff' : '#e5e5ea',
+  backgroundColor: role === 'user' ? 'rgba(0, 132, 255, 0.8)' : 'rgba(229, 229, 234, 0.8)',
   color: role === 'user' ? '#ffffff' : '#000000',
   borderRadius: '16px',
   maxWidth: (isSmallScreen ? '100%' : '60%'),
@@ -65,6 +67,54 @@ const MessageBubble = styled(Box)(({ theme, role, isSmallScreen }) => ({
     right: role === 'user' ? '-10px' : 'auto',
   },
 }));
+
+
+const SendButton = styled(Button)(({ theme, isSmallScreen }) => ({
+  marginLeft: isSmallScreen ? theme.spacing(1) : theme.spacing(2),
+  minWidth: isSmallScreen ? 48 : 'auto',
+  backgroundColor: 'rgba(0, 132, 255, 0.5)',
+  backdropFilter: 'blur(5px)',
+  '&:hover': {
+    backgroundColor: 'rgba(0, 132, 255, 0.9)',
+  },
+  color: '#ffffff',
+  borderRadius: '50%',
+  width: 48,
+  height: 48,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
+
+const InputContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  padding: theme.spacing(1),
+  borderTop: '1px solid rgba(255, 255, 255, 0.2)',
+  backgroundColor: 'rgba(255, 255, 255, 0.3)',
+  backdropFilter: 'blur(10px)',
+  borderRadius: '16px',
+  
+}));
+
+const InputMessage = styled(TextField)(({ theme, isSmallScreen }) => ({
+  flexGrow: 1,
+  marginRight: isSmallScreen ? 0 : theme.spacing(1),
+  backgroundColor: 'rgba(255, 255, 255, 0.2)', 
+  borderRadius: '16px', 
+  overflow: 'hidden',
+  backdropFilter: 'blur(5px)',
+  '& .MuiOutlinedInput-root': {
+    borderRadius: '16px',
+    padding: isSmallScreen ? '4px' : '8px', 
+    minHeight: isSmallScreen ? '36px' : '56px',
+  },
+  '& .MuiOutlinedInput-input': {
+    lineHeight: isSmallScreen ? '1.2' : '1.5', 
+    color: '#000',
+  },
+}));
+
 
 const ChatInterface = ({ isSmallScreen }) => {
   const storageService = StorageService();
@@ -329,35 +379,29 @@ const ChatInterface = ({ isSmallScreen }) => {
         <div ref={messagesEndRef} />
       </ChatContents>
 
-      <Box sx={{ display: 'flex', alignItems: 'center', padding: 1, borderTop: '1px solid #e0e0e0', backgroundColor: '#f0f2f5' }}>
-        <TextField
-          fullWidth
-          multiline
-          maxRows={isSmallScreen ? 2 : 4}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyPress={handleKeyPress}
-          placeholder="Type your message..."
-          variant="outlined"
-          sx={{ 
-            flexGrow: 1, 
-            marginRight: isSmallScreen ? 0 : 1 
-          }}
-        />
-        <Button
-          variant="contained"
-          onClick={handleSendMessage}
-          disabled={!input.trim() || loading}
-          sx={{ 
-            marginLeft: isSmallScreen ? 1 : 2,
-            minWidth: isSmallScreen ? 48 : 'auto',
-            backgroundColor: '#0084ff', 
-            '&:hover': { backgroundColor: '#0066cc' } 
-          }}
-        >
-          {isSmallScreen ? <VoiceChatIcon /> : <VoiceChatIcon />}
-        </Button>
-      </Box>
+      <InputContainer>
+      <InputMessage
+            fullWidth
+            multiline
+            maxRows={isSmallScreen ? 2 : 4} 
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="Type your message..."
+            variant="outlined"
+            isSmallScreen={isSmallScreen} 
+          />
+    
+
+    <SendButton
+      variant="contained"
+      onClick={handleSendMessage}
+      disabled={!input.trim() || loading}
+      isSmallScreen={isSmallScreen}
+    >
+      <SendIcon />
+    </SendButton>
+  </InputContainer>
       <audio ref={audioRef} src={smsSound} />
     </ChatbotBody>
   );

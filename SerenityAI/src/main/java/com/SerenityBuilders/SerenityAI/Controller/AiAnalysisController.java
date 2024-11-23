@@ -146,13 +146,13 @@ import com.SerenityBuilders.SerenityAI.util.LlmUtil;
 
                 // Start building the system prompt
                 prompt.append(String.format(
-                        "You are a close friend of %s %s. Based on the user's likes, dislikes, memories, and mood, generate a lifelike message to start a conversation. Be friendly and natural in your tone.",
+                        "You are a close friend of %s %s. Based on the user's likes, dislikes, memories, and mood, generate a lifelike message to start a conversation. Be friendly and natural in your tone.\n",
                         firstName, lastName));
 
                 // Birthday greeting logic
                 if (userBirthDate.equals(today)) {
                     prompt.append(String.format(
-                            " Today is %s's birthday! Make sure to wish them a happy birthday in a warm and personal way, possibly including a present emoji related to their likes.\n",
+                            "Today is %s's birthday! Make sure to wish them a happy birthday in a warm and personal way, possibly including a present emoji related to their likes.\n",
                             firstName));
                 }
 
@@ -267,7 +267,7 @@ import com.SerenityBuilders.SerenityAI.util.LlmUtil;
 
                 // Final instructions
                 prompt.append("\nUse the above information to craft your message. Your message should be in first person and feel like it's coming from a close friend. Do not mention that you are an AI or that you have been given this information.\n");
-                prompt.append("Format your output using markdown language.\n");
+                prompt.append("Format your output using markdown language. Make sure to include proper newlines (`\\n`) where appropriate to enhance readability. Use emojis to express your feelings.\n");
 
                 // Add the prompt to the system instruction
                 textPart.put("text", prompt.toString());
@@ -306,6 +306,7 @@ import com.SerenityBuilders.SerenityAI.util.LlmUtil;
                 return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
             }
         }
+
 
 
 

@@ -43,7 +43,9 @@ public class UserService {
         user.setFirstName(newUserDetails.getFirstName());
         user.setLastName(newUserDetails.getLastName());
         user.setEmail(newUserDetails.getEmail());
-        user.setPassword(passwordEncoder.encode(newUserDetails.getPassword()));
+        if (newUserDetails.getPassword() != null && !newUserDetails.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(newUserDetails.getPassword()));
+        }
         user.setDateOfBirth(newUserDetails.getDateOfBirth());
         user.setGender(newUserDetails.getGender());
         user.setLastLogin(newUserDetails.getLastLogin());
@@ -98,7 +100,9 @@ public class UserService {
         user.setDateOfBirth(newUserDetails.getDateOfBirth());
         user.setGender(newUserDetails.getGender());
         user.setLocation(newUserDetails.getLocation());
-        user.setPassword(newUserDetails.getPassword()); // Ensure encryption if necessary
+        if (newUserDetails.getPassword() != null && !newUserDetails.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(newUserDetails.getPassword()));
+        }
     
         return userRepository.save(user); // Save the updated user
     }

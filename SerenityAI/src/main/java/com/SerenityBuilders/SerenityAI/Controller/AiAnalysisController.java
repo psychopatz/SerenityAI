@@ -275,8 +275,22 @@ import com.SerenityBuilders.SerenityAI.util.LlmUtil;
                 systemInstruction.put("parts", parts);
                 System.out.println("Recommend Systemprompt =" + systemInstruction);
 
+                // Get contents from the request, or set default value if missing
                 @SuppressWarnings("unchecked")
                 List<Map<String, Object>> contents = (List<Map<String, Object>>) request.get("contents");
+                if (contents == null || contents.isEmpty()) {
+                    // Set contents to default value
+                    contents = new ArrayList<>();
+                    Map<String, Object> userMessage = new HashMap<>();
+                    userMessage.put("role", "user");
+                    List<Map<String, String>> contentParts = new ArrayList<>();
+                    Map<String, String> contentTextPart = new HashMap<>();
+                    contentTextPart.put("text", "Hello");
+                    contentParts.add(contentTextPart);
+                    userMessage.put("parts", contentParts);
+                    contents.add(userMessage);
+                }
+
                 @SuppressWarnings("unchecked")
                 List<Map<String, String>> safetySettings = (List<Map<String, String>>) request.get("safetySettings");
                 @SuppressWarnings("unchecked")
@@ -292,6 +306,7 @@ import com.SerenityBuilders.SerenityAI.util.LlmUtil;
                 return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
             }
         }
+
 
 
 

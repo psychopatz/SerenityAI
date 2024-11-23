@@ -145,6 +145,7 @@ const Dashboard = () => {
       firstName: user.firstName,
       lastName: user.lastName,
       dateOfBirth: user.dateOfBirth,
+      lastLogin: user.lastLogin,
     },
     memory: {
       likes: memory?.likes || [],

@@ -34,7 +34,6 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    // Update user details by ID
     public UserEntity updatedUser(int id, UserEntity newUserDetails) throws NameNotFoundException {
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new NameNotFoundException("User " + id + " not found"));
@@ -43,16 +42,29 @@ public class UserService {
         user.setFirstName(newUserDetails.getFirstName());
         user.setLastName(newUserDetails.getLastName());
         user.setEmail(newUserDetails.getEmail());
+
         if (newUserDetails.getPassword() != null && !newUserDetails.getPassword().isEmpty()) {
             user.setPassword(passwordEncoder.encode(newUserDetails.getPassword()));
         }
+
         user.setDateOfBirth(newUserDetails.getDateOfBirth());
         user.setGender(newUserDetails.getGender());
         user.setLastLogin(newUserDetails.getLastLogin());
         user.setLocation(newUserDetails.getLocation());
 
+        // Update memoryID and privacy_id if provided
+        // Assuming 0 is not a valid value; adjust as per your business logic
+        if (newUserDetails.getMemoryID() != 0) {
+            user.setMemoryID(newUserDetails.getMemoryID());
+        }
+
+        if (newUserDetails.getPrivacy_id() != 0) {
+            user.setPrivacy_id(newUserDetails.getPrivacy_id());
+        }
+
         return userRepository.save(user);
     }
+
 
     // Delete user by ID
     public String deleteUser(int id) {

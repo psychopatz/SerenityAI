@@ -3,13 +3,9 @@ import {
   Box,
   CircularProgress,
   Paper,
-  IconButton,
-  useMediaQuery,
   useTheme,
 } from '@mui/material';
 import { styled, keyframes } from '@mui/material/styles';
-import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
-import ChatboxIframe from './ChatboxIframe';
 import { getRecommendation } from '../services/AiAnalyticsService';
 import { getMemoryById } from '../services/MemoryService';
 import StorageService from '../services/StorageService';
@@ -120,24 +116,12 @@ const StyledComponents = {
     },
   })),
 
-  ChatButton: styled(IconButton)(({ theme }) => ({
-    position: 'fixed',
-    bottom: theme.spacing(2),
-    right: theme.spacing(2),
-    backgroundColor: '#4a90e2',
-    color: '#fff',
-    '&:hover': {
-      backgroundColor: '#357ABD',
-    },
-    zIndex: 1000,
-  })),
 };
 
 const Dashboard = () => {
   // Hooks and Services
   const storageService = StorageService();
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   // State
   const [userData, setUserData] = useState(null);
@@ -145,7 +129,7 @@ const Dashboard = () => {
   const [recommendation, setRecommendation] = useState('');
   const [loading, setLoading] = useState(false);
   const [greeting, setGreeting] = useState('');
-  const [isChatVisible, setIsChatVisible] = useState(false);
+ 
 
   // Helper Functions
   const getTimeBasedGreeting = () => {
@@ -288,16 +272,7 @@ const Dashboard = () => {
         </StyledComponents.Content>
       </StyledComponents.Container>
 
-      {!isChatVisible && (
-        <StyledComponents.ChatButton onClick={() => setIsChatVisible(true)} size="large">
-          <ChatBubbleIcon fontSize="large" />
-        </StyledComponents.ChatButton>
-      )}
-
-      <ChatboxIframe
-        isVisible={isChatVisible}
-        toggleChatVisibility={() => setIsChatVisible(false)}
-      />
+      
     </>
   );
 };

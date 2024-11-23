@@ -12,7 +12,7 @@ const ErrorContainer = styled(Box)(({ theme }) => ({
   textAlign: 'center',
   backgroundColor: 'transparent',
   padding: '0 20px',
-  backdropFilter: 'blur(10px)',
+  // backdropFilter: 'blur(10px)',
   position: 'relative',
   '&::before': {
     content: '""',

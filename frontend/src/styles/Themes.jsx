@@ -1,7 +1,8 @@
+// AppThemeProvider.jsx
 import { createTheme } from '@mui/material/styles';
 import { CssBaseline, GlobalStyles } from '@mui/material';
-import {svgBackground} from './SvgAssets'
 import React from 'react';
+import AnimatedBackground from './AnimatedBackground'; // Import the component
 
 const theme = createTheme({
   palette: {
@@ -36,36 +37,29 @@ const theme = createTheme({
   },
 });
 
-
-
 const GlobalStyle = () => (
-    <GlobalStyles
-      styles={{
-        '*': {
-          margin: 0,
-          padding: 0,
-          boxSizing: 'border-box',
-        },
-        body: {
-          margin: 0,
-          overflow: 'auto', // Disable scrolling
-          backgroundImage: `url("data:image/svg+xml;utf8,${encodeURIComponent(svgBackground)}")`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat', // Prevent repetition
-          backgroundAttachment: 'fixed', 
-        },
-      }}
-    />
-  );
-  
+  <GlobalStyles
+    styles={{
+      '*': {
+        margin: 0,
+        padding: 0,
+        boxSizing: 'border-box',
+      },
+      body: {
+        margin: 0,
+        overflow: 'hidden', // Hide scrollbars to prevent scrolling
+      },
+    }}
+  />
+);
 
 const AppThemeProvider = ({ children }) => (
-  <>
+  <React.Fragment>
     <CssBaseline />
     <GlobalStyle />
+    <AnimatedBackground /> {/* Include the animated background */}
     {children}
-  </>
+  </React.Fragment>
 );
 
 export { theme, AppThemeProvider };

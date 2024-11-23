@@ -50,6 +50,8 @@ public class UserService {
         user.setGender(newUserDetails.getGender());
         user.setLastLogin(newUserDetails.getLastLogin());
         user.setLocation(newUserDetails.getLocation());
+        user.setMemoryID(newUserDetails.getMemoryID());
+        user.setPrivacy_id(newUserDetails.getPrivacy_id());
 
         return userRepository.save(user);
     }
@@ -99,10 +101,13 @@ public class UserService {
         user.setLastName(newUserDetails.getLastName());
         user.setDateOfBirth(newUserDetails.getDateOfBirth());
         user.setGender(newUserDetails.getGender());
+        user.setLastLogin(newUserDetails.getLastLogin());
         user.setLocation(newUserDetails.getLocation());
         if (newUserDetails.getPassword() != null && !newUserDetails.getPassword().isEmpty()) {
             user.setPassword(passwordEncoder.encode(newUserDetails.getPassword()));
         }
+        user.setMemoryID(newUserDetails.getMemoryID());
+        user.setPrivacy_id(newUserDetails.getPrivacy_id());
     
         return userRepository.save(user); // Save the updated user
     }

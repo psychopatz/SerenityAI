@@ -1,21 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import StorageService from '../services/StorageService';
 import { Paper, Typography, Box, Avatar } from '@mui/material';
-import { getAllMemories } from '../services/MemoryService'; // Import function to fetch memories from the database
+import { getAllMemories } from '../services/MemoryService';
 
 const Diary = () => {
-  const [userMemories, setUserMemories] = useState([]); // State to store user's memories
-  const [currentUser, setCurrentUser] = useState(null); // State for the current user
+  const [userMemories, setUserMemories] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const storage = StorageService();
 
+  // Preload sounds
+  const soundLikes = new Audio('../assets/sms.mp3');
+  const soundDislikes = new Audio('../assets/sms.mp3');
+  const soundMoodType = new Audio('../assets/sms.mp3');
+  const soundMemories = new Audio('../assets/sms.mp3');
+
   useEffect(() => {
     const fetchUserMemories = async () => {
       try {
-        // Retrieve current user from localStorage
-        const userdata = storage.getLocalStorage('userdata'); // Assuming 'userdata' is the key
+        const userdata = storage.getLocalStorage('userdata');
         setCurrentUser(userdata);
 
         if (!userdata) {
@@ -24,12 +29,11 @@ const Diary = () => {
           return;
         }
 
-        // Fetch memories from the database
-        const allMemories = await getAllMemories(); // Fetch all memories from the API
-
-        // Filter memories for the current user based on memoryID
+        const allMemories = await getAllMemories();
         const userMemoryID = userdata.memoryID;
-        const filteredMemories = allMemories.filter(memory => memory.id === userMemoryID);
+        const filteredMemories = allMemories.filter(
+          (memory) => memory.id === userMemoryID
+        );
 
         setUserMemories(filteredMemories);
       } catch (err) {
@@ -62,7 +66,7 @@ const Diary = () => {
       <Box
         sx={{
           width: '25%',
-          backgroundColor: '#fff9c4', // Light yellow background
+          backgroundColor: '#fff9c4',
           borderRadius: 2,
           padding: 3,
           boxShadow: 3,
@@ -78,11 +82,17 @@ const Diary = () => {
             marginBottom: 2,
             boxShadow: 2,
           }}
-          alt={`${currentUser?.firstName || 'User'} ${currentUser?.lastName || ''}`}
-          src={currentUser?.profilePicture || '/static/images/avatar.png'} // Add profile picture URL if available
+          alt={`${currentUser?.firstName || 'User'} ${
+            currentUser?.lastName || ''
+          }`}
+          src={
+            currentUser?.profilePicture || '/static/images/avatar.png'
+          }
         />
         <Typography variant="h6" gutterBottom>
-          {`${currentUser?.firstName || 'First Name'} ${currentUser?.lastName || 'Last Name'}`}
+          {`${currentUser?.firstName || 'First Name'} ${
+            currentUser?.lastName || 'Last Name'
+          }`}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           <strong>Gender:</strong> {currentUser?.gender || 'Not Provided'}
@@ -108,34 +118,33 @@ const Diary = () => {
               sx={{
                 margin: '16px auto',
                 padding: 3,
-                backgroundColor: 'transparent', // Light background
+                backgroundColor: 'transparent',
                 borderRadius: 2,
-                
               }}
             >
               <Typography variant="h6" gutterBottom>{`Memory ID: ${memory.id}`}</Typography>
-              {/* Vertically Aligned Sections */}
               <Box
                 sx={{
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: 2, // Space between sections
+                  gap: 2,
                 }}
               >
                 {/* Likes Section */}
                 <Box
                   sx={{
                     padding: 2,
-                    backgroundColor: '#e3f2fd', // Light blue
+                    backgroundColor: '#e3f2fd',
                     borderRadius: 2,
-                    opacity: 0.1, // Semi-transparent
-                    transition: 'all 0.3s ease', // Smooth hover effect
+                    opacity: 0.1,
+                    transition: 'all 0.3s ease',
                     '&:hover': {
-                      backgroundColor: '#bbdefb', // Darker blue on hover
-                      boxShadow: 3, // Add shadow
+                      backgroundColor: '#bbdefb',
+                      boxShadow: 3,
                       opacity: 1,
                     },
                   }}
+                  onMouseEnter={() => soundLikes.play()} // Play sound on hover
                 >
                   <Typography variant="subtitle1" color="primary">
                     Likes
@@ -149,16 +158,17 @@ const Diary = () => {
                 <Box
                   sx={{
                     padding: 2,
-                    backgroundColor: '#ffccbc', // Light coral
+                    backgroundColor: '#ffccbc',
                     borderRadius: 2,
-                    opacity: 0.1, // Semi-transparent
-                    transition: 'all 0.3s ease', // Smooth hover effect
+                    opacity: 0.1,
+                    transition: 'all 0.3s ease',
                     '&:hover': {
-                      backgroundColor: '#ffab91', // Darker coral on hover
-                      boxShadow: 3, // Add shadow
+                      backgroundColor: '#ffab91',
+                      boxShadow: 3,
                       opacity: 1,
                     },
                   }}
+                  onMouseEnter={() => soundDislikes.play()} // Play sound on hover
                 >
                   <Typography variant="subtitle1" color="secondary">
                     Dislikes
@@ -172,16 +182,17 @@ const Diary = () => {
                 <Box
                   sx={{
                     padding: 2,
-                    backgroundColor: '#dcedc8', // Light green
+                    backgroundColor: '#dcedc8',
                     borderRadius: 2,
-                    opacity: 0.1, // Semi-transparent
-                    transition: 'all 0.3s ease', // Smooth hover effect
+                    opacity: 0.1,
+                    transition: 'all 0.3s ease',
                     '&:hover': {
-                      backgroundColor: '#c5e1a5', // Darker green on hover
-                      boxShadow: 3, // Add shadow
+                      backgroundColor: '#c5e1a5',
+                      boxShadow: 3,
                       opacity: 1,
                     },
                   }}
+                  onMouseEnter={() => soundMoodType.play()} // Play sound on hover
                 >
                   <Typography variant="subtitle1" color="textPrimary">
                     Mood Type
@@ -195,16 +206,17 @@ const Diary = () => {
                 <Box
                   sx={{
                     padding: 2,
-                    backgroundColor: '#ffe0b2', // Light orange
+                    backgroundColor: '#ffe0b2',
                     borderRadius: 2,
-                    opacity: 0.1, // Semi-transparent
-                    transition: 'all 0.3s ease', // Smooth hover effect
+                    opacity: 0.1,
+                    transition: 'all 0.3s ease',
                     '&:hover': {
-                      backgroundColor: '#ffcc80', // Darker orange on hover
-                      boxShadow: 3, // Add shadow
+                      backgroundColor: '#ffcc80',
+                      boxShadow: 3,
                       opacity: 1,
                     },
                   }}
+                  onMouseEnter={() => soundMemories.play()} // Play sound on hover
                 >
                   <Typography variant="subtitle1" color="textSecondary">
                     Memories
@@ -217,9 +229,7 @@ const Diary = () => {
             </Paper>
           ))
         ) : (
-          <Typography align="center">
-            No memories found for this user.
-          </Typography>
+          <Typography align="center">No memories found for this user.</Typography>
         )}
       </Box>
     </Box>

@@ -104,13 +104,13 @@ const Diary = () => {
           userMemories.map((memory) => (
             <Paper
               key={memory.id}
-              elevation={3}
+              elevation={0}
               sx={{
                 margin: '16px auto',
                 padding: 3,
-                backgroundColor: '#f9f9f9', // Light background
+                backgroundColor: 'transparent', // Light background
                 borderRadius: 2,
-                boxShadow: 2,
+                
               }}
             >
               <Typography variant="h6" gutterBottom>{`Memory ID: ${memory.id}`}</Typography>

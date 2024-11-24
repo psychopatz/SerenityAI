@@ -85,6 +85,9 @@ const Diary = () => {
           {`${currentUser?.firstName || 'First Name'} ${currentUser?.lastName || 'Last Name'}`}
         </Typography>
         <Typography variant="body2" color="text.secondary">
+          <strong>Gender:</strong> {currentUser?.gender || 'Not Provided'}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
           <strong>Location:</strong> {currentUser?.location || 'Unknown'}
         </Typography>
         <Typography variant="body2" color="text.secondary">
@@ -104,47 +107,84 @@ const Diary = () => {
               elevation={3}
               sx={{
                 margin: '16px auto',
-                padding: 2,
-                backgroundColor: '#fff9c4', // Light yellow background
-                width: 'fit-content', // Fit to content
-                maxWidth: '100%', // Prevent overflow
-                position: 'relative',
+                padding: 3,
+                backgroundColor: '#f9f9f9', // Light background
                 borderRadius: 2,
-                overflow: 'hidden',
+                boxShadow: 2,
               }}
             >
-              {/* Adding the "lined paper" effect */}
+              <Typography variant="h6" gutterBottom>{`Memory ID: ${memory.id}`}</Typography>
+              {/* Vertically Aligned Sections */}
               <Box
                 sx={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '100%',
-                  backgroundImage: `repeating-linear-gradient(
-                    to bottom,
-                    rgba(0, 0, 0, 0.1) 0px,
-                    rgba(0, 0, 0, 0.1) 1px,
-                    transparent 25px
-                  )`,
-                  zIndex: 0,
-                  pointerEvents: 'none',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 2, // Space between sections
                 }}
-              />
-              <Box sx={{ position: 'relative', zIndex: 1 }}>
-                <Typography variant="h6">{`Memory ID: ${memory.id}`}</Typography>
-                <Typography>
-                  <strong>Likes:</strong> {memory.likes?.join(', ') || 'No likes'}
-                </Typography>
-                <Typography>
-                  <strong>Dislikes:</strong> {memory.dislikes?.join(', ') || 'No dislikes'}
-                </Typography>
-                <Typography>
-                  <strong>Mood Type:</strong> {memory.moodType || 'No mood type'}
-                </Typography>
-                <Typography>
-                  <strong>Memories:</strong> {memory.memories?.join(', ') || 'No Memories type'}
-                </Typography>
+              >
+                {/* Likes Section */}
+                <Box
+                  sx={{
+                    padding: 2,
+                    backgroundColor: '#e3f2fd', // Light blue
+                    borderRadius: 2,
+                  }}
+                >
+                  <Typography variant="subtitle1" color="primary">
+                    Likes
+                  </Typography>
+                  <Typography variant="body2">
+                    {memory.likes?.join(', ') || 'No likes'}
+                  </Typography>
+                </Box>
+
+                {/* Dislikes Section */}
+                <Box
+                  sx={{
+                    padding: 2,
+                    backgroundColor: '#ffccbc', // Light coral
+                    borderRadius: 2,
+                  }}
+                >
+                  <Typography variant="subtitle1" color="secondary">
+                    Dislikes
+                  </Typography>
+                  <Typography variant="body2">
+                    {memory.dislikes?.join(', ') || 'No dislikes'}
+                  </Typography>
+                </Box>
+
+                {/* Mood Type Section */}
+                <Box
+                  sx={{
+                    padding: 2,
+                    backgroundColor: '#dcedc8', // Light green
+                    borderRadius: 2,
+                  }}
+                >
+                  <Typography variant="subtitle1" color="textPrimary">
+                    Mood Type
+                  </Typography>
+                  <Typography variant="body2">
+                    {memory.moodType || 'No mood type'}
+                  </Typography>
+                </Box>
+
+                {/* Memories Section */}
+                <Box
+                  sx={{
+                    padding: 2,
+                    backgroundColor: '#ffe0b2', // Light orange
+                    borderRadius: 2,
+                  }}
+                >
+                  <Typography variant="subtitle1" color="textSecondary">
+                    Memories
+                  </Typography>
+                  <Typography variant="body2">
+                    {memory.memories?.join(', ') || 'No memories'}
+                  </Typography>
+                </Box>
               </Box>
             </Paper>
           ))

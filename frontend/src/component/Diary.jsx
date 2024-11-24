@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import StorageService from '../services/StorageService';
 import { Paper, Typography, Box, Avatar } from '@mui/material';
 import { getAllMemories } from '../services/MemoryService';
+import dc from '../assets/amongus.mp3';
 
 const Diary = () => {
   const [userMemories, setUserMemories] = useState([]);
@@ -12,10 +13,10 @@ const Diary = () => {
   const storage = StorageService();
 
   // Preload sounds
-  const soundLikes = new Audio('../assets/sms.mp3');
-  const soundDislikes = new Audio('../assets/sms.mp3');
-  const soundMoodType = new Audio('../assets/sms.mp3');
-  const soundMemories = new Audio('../assets/sms.mp3');
+  const soundLikes = new Audio(dc);
+  const soundDislikes = new Audio(dc);
+  const soundMoodType = new Audio(dc);
+  const soundMemories = new Audio(dc);
 
   useEffect(() => {
     const fetchUserMemories = async () => {
@@ -136,11 +137,11 @@ const Diary = () => {
                     padding: 2,
                     backgroundColor: '#e3f2fd',
                     borderRadius: 2,
-                    opacity: 0.1,
+                    opacity: 0.0,
                     transition: 'all 0.3s ease',
                     '&:hover': {
                       backgroundColor: '#bbdefb',
-                      boxShadow: 3,
+                      boxShadow: 10,
                       opacity: 1,
                     },
                   }}
@@ -160,7 +161,7 @@ const Diary = () => {
                     padding: 2,
                     backgroundColor: '#ffccbc',
                     borderRadius: 2,
-                    opacity: 0.1,
+                    opacity: 0.0,
                     transition: 'all 0.3s ease',
                     '&:hover': {
                       backgroundColor: '#ffab91',
@@ -184,7 +185,7 @@ const Diary = () => {
                     padding: 2,
                     backgroundColor: '#dcedc8',
                     borderRadius: 2,
-                    opacity: 0.1,
+                    opacity: 0.0,
                     transition: 'all 0.3s ease',
                     '&:hover': {
                       backgroundColor: '#c5e1a5',
@@ -208,7 +209,7 @@ const Diary = () => {
                     padding: 2,
                     backgroundColor: '#ffe0b2',
                     borderRadius: 2,
-                    opacity: 0.1,
+                    opacity: 0.0,
                     transition: 'all 0.3s ease',
                     '&:hover': {
                       backgroundColor: '#ffcc80',

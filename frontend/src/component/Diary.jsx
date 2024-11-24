@@ -128,6 +128,11 @@ const Diary = () => {
                     padding: 2,
                     backgroundColor: '#e3f2fd', // Light blue
                     borderRadius: 2,
+                    transition: 'all 0.3s ease', // Smooth hover effect
+                    '&:hover': {
+                      backgroundColor: '#bbdefb', // Darker blue on hover
+                      boxShadow: 3, // Add shadow
+                    },
                   }}
                 >
                   <Typography variant="subtitle1" color="primary">
@@ -144,6 +149,11 @@ const Diary = () => {
                     padding: 2,
                     backgroundColor: '#ffccbc', // Light coral
                     borderRadius: 2,
+                    transition: 'all 0.3s ease', // Smooth hover effect
+                    '&:hover': {
+                      backgroundColor: '#ffab91', // Darker coral on hover
+                      boxShadow: 3, // Add shadow
+                    },
                   }}
                 >
                   <Typography variant="subtitle1" color="secondary">
@@ -160,6 +170,11 @@ const Diary = () => {
                     padding: 2,
                     backgroundColor: '#dcedc8', // Light green
                     borderRadius: 2,
+                    transition: 'all 0.3s ease', // Smooth hover effect
+                    '&:hover': {
+                      backgroundColor: '#c5e1a5', // Darker green on hover
+                      boxShadow: 3, // Add shadow
+                    },
                   }}
                 >
                   <Typography variant="subtitle1" color="textPrimary">
@@ -176,6 +191,11 @@ const Diary = () => {
                     padding: 2,
                     backgroundColor: '#ffe0b2', // Light orange
                     borderRadius: 2,
+                    transition: 'all 0.3s ease', // Smooth hover effect
+                    '&:hover': {
+                      backgroundColor: '#ffcc80', // Darker orange on hover
+                      boxShadow: 3, // Add shadow
+                    },
                   }}
                 >
                   <Typography variant="subtitle1" color="textSecondary">

@@ -4,11 +4,14 @@ import com.SerenityBuilders.SerenityAI.Entity.PrivacySettingsEntity;
 import com.SerenityBuilders.SerenityAI.Service.PrivacySettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.NameNotFoundException;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/privacySettings")
@@ -19,9 +22,10 @@ public class PrivacySettingsController {
     private PrivacySettingsService privacySettingsService;
 
     @PostMapping("/post")
-    public ResponseEntity<PrivacySettingsEntity> postPrivacySettings(@RequestBody PrivacySettingsEntity privacySettings) {
+    public int postPrivacySettings(@RequestBody PrivacySettingsEntity privacySettings) {
         PrivacySettingsEntity savedSettings = privacySettingsService.savePrivacySettings(privacySettings);
-        return new ResponseEntity<>(savedSettings, HttpStatus.CREATED);
+        System.out.println("Settings saved at ID: "+ savedSettings.getPrivacyId());
+        return savedSettings.getPrivacyId();
     }
 
     @GetMapping("/get")

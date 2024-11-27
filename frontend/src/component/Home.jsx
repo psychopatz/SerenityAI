@@ -89,7 +89,7 @@ const Title = styled(Typography)(({ theme }) => ({
 
 const Quote = styled(Typography)(({ theme }) => ({
   fontSize: "1.3rem",
-  color: "#a29bfe",
+  color: "#ffffff",
   fontStyle: "italic",
   fontFamily: "'Poppins', sans-serif",
   textAlign: "center",
@@ -101,7 +101,7 @@ const Title2 = styled(Typography)(({ theme }) => ({
   fontWeight: 900,
   fontFamily: "'Poppins', sans-serif",
   textAlign: "left",
-  background: "linear-gradient(120deg, #ffffff, #c095ee)",
+  background: "linear-gradient(120deg, #ffffff, #FF1818)",
   WebkitBackgroundClip: "text",
   WebkitTextFillColor: "transparent",
   marginBottom: theme.spacing(2),
@@ -142,14 +142,6 @@ const Home = () => {
         <Logo src={logo} alt="SAI Logo" sx={{marginBottom:"10px",}}/>
         <Title variant="h1">SERENITY AI</Title>
         <Quote noWrap>"Your Personal AI for Emotional Well-being"</Quote>
-        <MuiButton variant="contained" color="primary" onClick={toggleChatVisibility}>
-          {isChatVisible ? "Close Chat" : "Open Chat"}
-        </MuiButton>
-        <AnimatePresence>
-          {isChatVisible && (
-            <ChatboxIframe isVisible={isChatVisible} toggleChatVisibility={toggleChatVisibility} />
-          )}
-        </AnimatePresence> 
       </Box>
       <RightContainer>
   <TopRightContainer>
@@ -165,6 +157,32 @@ const Home = () => {
       difficulty tracking emotional patterns, lack of immediate coping strategies, and
       privacy concerns.
     </Description>
+    <Box sx={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+    <MuiButton variant="contained" color="primary" onClick={toggleChatVisibility}
+    sx={{
+      fontSize: '1.5rem',
+      padding: '1rem 2rem',
+      borderRadius: '0.5rem',
+      width: '220px',
+      height: '50px',
+      backgroundColor: 'transparent',
+      border: '2px solid #33CC33',
+      '&:hover': {
+        backgroundColor: '#33CC33', // neon green color
+        boxShadow: '0px 0px 10px #33CC33', // glow effect
+        transition: 'all 0.3s ease-in-out',
+      },
+      right: '365px',
+    }}
+  >
+          {isChatVisible ? "Close Chat" : "Get Started"}
+        </MuiButton>
+        <AnimatePresence>
+          {isChatVisible && (
+            <ChatboxIframe isVisible={isChatVisible} toggleChatVisibility={toggleChatVisibility} />
+          )}
+        </AnimatePresence> 
+    </Box>
   </BottomRightContainer>
 </RightContainer><LeftContainer></LeftContainer>
     </HomeContainer>

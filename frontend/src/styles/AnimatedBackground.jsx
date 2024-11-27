@@ -297,6 +297,7 @@ const AnimatedBackground = () => {
         height: '100%',
         zIndex: -1, // Ensure the background is behind other content
         overflow: 'hidden',
+        filter: 'url(#blur)',
       }}
       xmlns="http://www.w3.org/2000/svg"
       viewBox={`0 0 ${windowSize.width} ${windowSize.height}`}

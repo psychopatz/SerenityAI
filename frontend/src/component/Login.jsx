@@ -80,10 +80,11 @@ const Login = ({ toggleToRegister }) => {
         alt="Hand Left"
         style={{
           position: 'absolute',
-          bottom: '15%',
-          left: '20%',
-          height: '1000px',
-          opacity: 0.8,
+          bottom: '30%',
+          left: '25%',
+          height: '700px',
+          width: 'auto',
+          opacity: 1.0,
         }}
       />
       <img
@@ -91,10 +92,11 @@ const Login = ({ toggleToRegister }) => {
         alt="Hand Right"
         style={{
           position: 'absolute',
-          top: '15%',
-          right: '30%',
-          height: '1000px',
-          opacity: 0.8,
+          top: '20%',
+          right: '32%',
+          height: '700px',
+          width: 'auto',
+          opacity: 1.0,
         }}
       />
 

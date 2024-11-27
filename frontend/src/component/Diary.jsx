@@ -81,9 +81,38 @@ const Diary = () => {
       justifyContent: 'center',
       margin: 'auto',
       textAlign: 'center',
+      opacity: 0, // Start hidden
+      transform: 'translateY(-100%)', // Start above the screen
+      animation: 'fallBounce 1.5s ease-out forwards', // Trigger the animation
+      '@keyframes fallBounce': {
+        '0%': {
+          opacity: 0,
+          transform: 'translateY(-100%)', // Start off-screen above
+        },
+        '60%': {
+          opacity: 1,
+          transform: 'translateY(30px)', // Bounce down past final position
+        },
+        '80%': {
+          transform: 'translateY(-15px)', // Bounce up slightly
+        },
+        '100%': {
+          opacity: 1,
+          transform: 'translateY(0)', // Settle at final position and remain visible
+        },
+      },
     }}
   >
-    
+    <Avatar
+      sx={{
+        width: 100,
+        height: 100,
+        marginBottom: 2,
+        boxShadow: 2,
+      }}
+      alt={`${currentUser?.firstName || 'User'} ${currentUser?.lastName || ''}`}
+      src={currentUser?.profilePicture || '/static/images/avatar.png'}
+    />
     <Typography variant="h6" gutterBottom>
       {`${currentUser?.firstName || 'First Name'} ${currentUser?.lastName || 'Last Name'}`}
     </Typography>
@@ -142,7 +171,7 @@ const Diary = () => {
                 borderRadius: 2,
                 opacity: 0,
                 transform: 'translateX(-100%)',
-                animation: `slideIn 1.5s ease ${index * 0.2}s forwards`,
+                animation: `slideIn 1.5s ease ${1.5 + index * 0.2}s forwards`, // Delay animation to start after profile
                 '@keyframes slideIn': {
                   from: {
                     opacity: 0,
@@ -172,7 +201,7 @@ const Diary = () => {
                 borderRadius: 2,
                 opacity: 0,
                 transform: 'translateX(-100%)',
-                animation: `slideIn 1.5s ease ${index * 0.2 + 0.1}s forwards`,
+                animation: `slideIn 1.5s ease ${1.7 + index * 0.2}s forwards`, // Slightly later than likes
                 '@keyframes slideIn': {
                   from: {
                     opacity: 0,
@@ -202,7 +231,7 @@ const Diary = () => {
                 borderRadius: 2,
                 opacity: 0,
                 transform: 'translateX(-100%)',
-                animation: `slideIn 1.5s ease ${index * 0.2 + 0.2}s forwards`,
+                animation: `slideIn 1.5s ease ${1.9 + index * 0.2}s forwards`, // Slightly later than dislikes
                 '@keyframes slideIn': {
                   from: {
                     opacity: 0,
@@ -232,7 +261,7 @@ const Diary = () => {
                 borderRadius: 2,
                 opacity: 0,
                 transform: 'translateX(-100%)',
-                animation: `slideIn 1.5s ease ${index * 0.2 + 0.3}s forwards`,
+                animation: `slideIn 1.5s ease ${2.1 + index * 0.2}s forwards`, // Slightly later than mood type
                 '@keyframes slideIn': {
                   from: {
                     opacity: 0,
@@ -261,6 +290,7 @@ const Diary = () => {
     )}
   </Box>
 </Box>
+
 
   );
 };

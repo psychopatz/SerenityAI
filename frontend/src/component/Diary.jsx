@@ -64,47 +64,50 @@ const Diary = () => {
       }}
     >
       {/* Profile Section */}
-      <Box
-        sx={{
-          width: '25%',
-          backgroundColor: '#fff9c4',
-          borderRadius: 2,
-          padding: 3,
-          boxShadow: 3,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Avatar
-          sx={{
-            width: 100,
-            height: 100,
-            marginBottom: 2,
-            boxShadow: 2,
-          }}
-          alt={`${currentUser?.firstName || 'User'} ${
-            currentUser?.lastName || ''
-          }`}
-          src={
-            currentUser?.profilePicture || '/static/images/avatar.png'
-          }
-        />
-        <Typography variant="h6" gutterBottom>
-          {`${currentUser?.firstName || 'First Name'} ${
-            currentUser?.lastName || 'Last Name'
-          }`}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          <strong>Gender:</strong> {currentUser?.gender || 'Not Provided'}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          <strong>Location:</strong> {currentUser?.location || 'Unknown'}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          <strong>Birthday:</strong> {currentUser?.dateOfBirth || 'Not Provided'}
-        </Typography>
-      </Box>
+<Box
+  sx={{
+    width: '25%',
+    backgroundColor: '#fff9c4',
+    borderRadius: 2,
+    padding: 3,
+    boxShadow: 3,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginTop: 'auto', // Pushes the profile section lower
+    alignSelf: 'flex-start', // Adjusts alignment within the parent
+  }}
+>
+  <Avatar
+    sx={{
+      width: 100,
+      height: 100,
+      marginBottom: 2,
+      boxShadow: 2,
+    }}
+    alt={`${currentUser?.firstName || 'User'} ${
+      currentUser?.lastName || ''
+    }`}
+    src={
+      currentUser?.profilePicture || '/static/images/avatar.png'
+    }
+  />
+  <Typography variant="h6" gutterBottom>
+    {`${currentUser?.firstName || 'First Name'} ${
+      currentUser?.lastName || 'Last Name'
+    }`}
+  </Typography>
+  <Typography variant="body2" color="text.secondary">
+    <strong>Gender:</strong> {currentUser?.gender || 'Not Provided'}
+  </Typography>
+  <Typography variant="body2" color="text.secondary">
+    <strong>Location:</strong> {currentUser?.location || 'Unknown'}
+  </Typography>
+  <Typography variant="body2" color="text.secondary">
+    <strong>Birthday:</strong> {currentUser?.dateOfBirth || 'Not Provided'}
+  </Typography>
+</Box>
+
 
       {/* Diary Section */}
       <Box sx={{ flex: 1 }}>

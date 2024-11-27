@@ -152,7 +152,7 @@ const Diary = () => {
                     padding: 2,
                     backgroundColor: '#e3f2fd',
                     borderRadius: 2,
-                    opacity: 0.0,
+                    opacity: 0.7,
                     transition: 'all 0.3s ease',
                     '&:hover': {
                       backgroundColor: '#bbdefb',
@@ -176,7 +176,7 @@ const Diary = () => {
                     padding: 2,
                     backgroundColor: '#ffccbc',
                     borderRadius: 2,
-                    opacity: 0.0,
+                    opacity: 0.7,
                     transition: 'all 0.3s ease',
                     '&:hover': {
                       backgroundColor: '#ffab91',
@@ -200,7 +200,7 @@ const Diary = () => {
                     padding: 2,
                     backgroundColor: '#dcedc8',
                     borderRadius: 2,
-                    opacity: 0.0,
+                    opacity: 0.7,
                     transition: 'all 0.3s ease',
                     '&:hover': {
                       backgroundColor: '#c5e1a5',
@@ -224,7 +224,7 @@ const Diary = () => {
                     padding: 2,
                     backgroundColor: '#ffe0b2',
                     borderRadius: 2,
-                    opacity: 0.0,
+                    opacity: 0.7,
                     transition: 'all 0.3s ease',
                     '&:hover': {
                       backgroundColor: '#ffcc80',

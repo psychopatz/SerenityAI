@@ -50,7 +50,6 @@ const Diary = () => {
   // Calculate counts
   const totalLikes = userMemories.reduce((acc, memory) => acc + (memory.likes?.length || 0), 0);
   const totalDislikes = userMemories.reduce((acc, memory) => acc + (memory.dislikes?.length || 0), 0);
-  const totalMemories = userMemories.length;
 
   if (loading) {
     return <p>Loading your diary...</p>;
@@ -83,16 +82,7 @@ const Diary = () => {
           alignSelf: 'flex-start',
         }}
       >
-        <Avatar
-          sx={{
-            width: 100,
-            height: 100,
-            marginBottom: 2,
-            boxShadow: 2,
-          }}
-          alt={`${currentUser?.firstName || 'User'} ${currentUser?.lastName || ''}`}
-          src={currentUser?.profilePicture || '/static/images/avatar.png'}
-        />
+      
         <Typography variant="h6" gutterBottom>
           {`${currentUser?.firstName || 'First Name'} ${currentUser?.lastName || 'Last Name'}`}
         </Typography>
@@ -114,9 +104,6 @@ const Diary = () => {
           </Typography>
           <Typography variant="body2">
             <strong>Total Dislikes:</strong> {totalDislikes}
-          </Typography>
-          <Typography variant="body2">
-            <strong>Total Memories:</strong> {totalMemories}
           </Typography>
         </Box>
       </Box>

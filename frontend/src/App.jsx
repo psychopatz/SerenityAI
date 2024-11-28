@@ -19,11 +19,10 @@ import Dashboard from "./component/Dashboard";
 import PageWrapper from './component/PageWrapper'; 
 import ChatboxIframe from "./component/ChatboxIframe";
 import Diary from "./component/Diary";
-import AboutUsPage from "./component/AbousUsPage";
-import Settings from "./component/Settings";
+
 
 // Define allowed paths
-const allowedPaths = ["/dashboard", "/profile", "/diary","/about"];
+const allowedPaths = ["/dashboard", "/profile", "/diary","/About"];
 
 // Styled Components
 const StyledComponents = {
@@ -63,6 +62,7 @@ const AnimatedRoutes = () => {
         <Route path="/chat" element={<PageWrapper><ChatInterface /></PageWrapper>} />
         <Route path="/dashboard" element={<PageWrapper><Dashboard /></PageWrapper>} />
         <Route path="/diary" element={<PageWrapper><Diary /></PageWrapper>} />
+        <Route path="/About" element={<PageWrapper><About /></PageWrapper>} />
         <Route path="/profile" element={<PageWrapper><Profile /></PageWrapper>} />
         <Route path="/AboutUs" element={<PageWrapper><AboutUsPage /></PageWrapper>} />
         <Route path="/settings" element={<PageWrapper><Settings /></PageWrapper>} />

@@ -1,0 +1,19 @@
+meta {
+  name: /post Create
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://localhost:8080/privacySettings/post
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "dataSharingConsent": true,
+      "emailNotificationConsent": false,
+      "profileVisibility": true
+  }
+}

@@ -177,11 +177,7 @@ const Home = () => {
   >
           {isChatVisible ? "Close Chat" : "Get Started"}
         </MuiButton>
-        <AnimatePresence>
-          {isChatVisible && (
-            <ChatboxIframe isVisible={isChatVisible} toggleChatVisibility={toggleChatVisibility} />
-          )}
-        </AnimatePresence> 
+        
     </Box>
   </BottomRightContainer>
 </RightContainer><LeftContainer></LeftContainer>

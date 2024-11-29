@@ -3,7 +3,7 @@ import StorageService from '../services/StorageService';
 import { Paper, Typography, Box } from '@mui/material';
 import Lottie from "lottie-react";
 import ProfileAnimation from '../assets/Profile.json';
-import HeartEmojiAnimation from '../assets/heartemoji.json';
+import HeartEmojiAnimation from '../assets/HeartEmoji.json';
 import DislikeAnimation from '../assets/DislikeAnimation.json';
 import { getAllMemories } from '../services/MemoryService';
 import dc from '../assets/amongus.mp3';

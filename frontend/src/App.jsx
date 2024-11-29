@@ -7,6 +7,9 @@ import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 
+
+import Baymax from "./assets/Baymax.json";
+import Lottie from "lottie-react";
 import Login from "./component/Auth";
 import ChatInterface from './component/ChatInterface';
 import Nav from './component/Nav';
@@ -141,6 +144,8 @@ const App = () => {
         isChatVisible={isChatVisible} 
         setIsChatVisible={setIsChatVisible} 
       />
+      <Lottie animationData={Baymax} loop={true} style={{ zIndex: "-1",width: "50%", marginLeft: "400px", position: "absolute", bottom: "90px",marginBottom: "-100px",  filter: "drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5))" }} />
+
     </Router>
   );
 };

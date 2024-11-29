@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Typography, Button, Card, CardMedia, CardContent, Grid, Avatar } from '@mui/material';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
+import { styled } from '@mui/system';
 import { motion } from 'framer-motion';
 
 const specialists = [
@@ -8,8 +9,8 @@ const specialists = [
     id: 1,
     name: 'John Michael I. Pogoy',
     degree: 'Appdev',
-    image: 'cat1.jpg',
-    bannerImage: 'cat1.jpg',
+    image: 'SAILogo.png',
+    bannerImage: 'SAILogo.png',
     age: 35,
     position: 'Senior Cardiologist',
     quote: 'Saving lives, one heartbeat at a time!',
@@ -18,7 +19,7 @@ const specialists = [
     id: 2,
     name: 'Shane Adrian C. Opinion',
     degree: 'Appdev',
-    image: 'cat2.jpg',
+    image: 'SAILogo.png',
     bannerImage: 'cat2.jpg',
     age: 40,
     position: 'Pediatric Specialist',
@@ -66,6 +67,74 @@ const specialists = [
   },
 ];
 
+// Styled components using Material-UI's styled API
+const PageContainer = styled(Box)(({ theme }) => ({
+  height: '100vh',
+  overflowY: 'auto',
+  backdropFilter: 'blur(5px)',
+
+}));
+
+const HeroSection = styled(Box)(({ theme }) => ({
+  maxWidth: 1200,
+  margin: 'auto',
+  padding: theme.spacing(4),
+  marginBottom: theme.spacing(4),
+  display: 'flex',
+  flexDirection: theme.breakpoints.down('md') ? 'column' : 'row',
+  alignItems: 'stretch',
+  backgroundColor: theme.palette.common.white,
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: theme.shadows[3],
+}));
+
+const BannerImageWrapper = styled(motion.div)({
+  flex: 3,
+  position: 'relative',
+  height: 450,
+});
+
+const BannerContent = styled(CardContent)(({ theme }) => ({
+  flex: 2,
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  padding: theme.spacing(4, 4, 3),
+}));
+
+const ControlsContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'center',
+  gap: theme.spacing(2),
+  marginBottom: theme.spacing(4),
+}));
+
+const TeamSection = styled(Box)(({ theme }) => ({
+  textAlign: 'center',
+  padding: theme.spacing(4, 2),
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: theme.shadows[3],
+}));
+
+const TeamCard = styled(Card)(({ theme }) => ({
+  textAlign: 'center',
+  cursor: 'pointer',
+  padding: theme.spacing(3),
+  transition: 'transform 0.3s',
+  '&:hover': {
+    transform: 'translateY(-5px)',
+    boxShadow: theme.shadows[4],
+  },
+}));
+
+const SpecialistAvatar = styled(Avatar)(({ theme }) => ({
+  width: 130,
+  height: 130,
+  marginBottom: theme.spacing(2),
+  margin: 'auto',
+  border: `3px solid ${theme.palette.primary.main}`,
+}));
+
 const AboutUsPage = () => {
   const [currentSpecialist, setCurrentSpecialist] = useState(0);
 
@@ -78,51 +147,25 @@ const AboutUsPage = () => {
   };
 
   return (
-    <Box >
+    <PageContainer>
       {/* Hero Section */}
-      <Box
-        sx={{
-          maxWidth: 1200,
-          mx: 'auto',
-          p: 4,
-          mb: 4,
-          display: 'flex',
-          flexDirection: { xs: 'column', md: 'row' },
-          alignItems: 'stretch',
-          backgroundColor: 'white',
-          borderRadius: 2,
-          boxShadow: 3,
-          overflow: 'hidden',
-        }}
-      >
-        {/* Banner */}
-        <motion.div
+      <HeroSection>
+        <BannerImageWrapper
           key={currentSpecialist}
           initial={{ opacity: 0, x: 100 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -100 }}
           transition={{ duration: 0.5 }}
-          style={{ flex: 3, position: 'relative', height: 450 }}
         >
           <CardMedia
             component="img"
             image={specialists[currentSpecialist].bannerImage}
             alt={specialists[currentSpecialist].name}
-            sx={{ height: '100%', width: '100%', objectFit: 'cover' }}
+            style={{ height: '100%', width: '100%', objectFit: 'cover' }}
           />
-        </motion.div>
+        </BannerImageWrapper>
 
-        {/* Banner Content */}
-        <CardContent
-          sx={{
-            flex: 2,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            px: 4,
-            py: 3,
-          }}
-        >
+        <BannerContent>
           <Typography variant="h4" sx={{ mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
             {specialists[currentSpecialist].name}
           </Typography>
@@ -138,54 +181,41 @@ const AboutUsPage = () => {
           <Typography variant="body2" sx={{ fontStyle: 'italic', mt: 2, color: 'text.secondary' }}>
             "{specialists[currentSpecialist].quote}"
           </Typography>
-        </CardContent>
-      </Box>
+        </BannerContent>
+      </HeroSection>
 
       {/* Controls */}
-      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 4 }}>
+      <ControlsContainer>
         <Button variant="contained" color="primary" onClick={prevSpecialist}>
           <ChevronLeft />
         </Button>
         <Button variant="contained" color="primary" onClick={nextSpecialist}>
           <ChevronRight />
         </Button>
-      </Box>
+      </ControlsContainer>
 
       {/* Team Section */}
-      <Box sx={{ textAlign: 'center', py: 4, px: 2,  borderRadius: 2, boxShadow: 3 }}>
+      <TeamSection>
         <Typography variant="h3" sx={{ mb: 4, color: 'secondary.main', fontWeight: 'bold' }}>
           Our Specialists
         </Typography>
         <Grid container spacing={3} justifyContent="center">
           {specialists.map((specialist) => (
             <Grid item xs={12} sm={6} md={4} key={specialist.id}>
-              <Card
-                onClick={() => setCurrentSpecialist(specialists.indexOf(specialist))}
-                sx={{
-                  textAlign: 'center',
-                  cursor: 'pointer',
-                  p: 3,
-                  '&:hover': { transform: 'translateY(-5px)', boxShadow: 4 },
-                  transition: 'transform 0.3s',
-                }}
-              >
-                <Avatar
-                  src={specialist.image}
-                  alt={specialist.name}
-                  sx={{ width: 130, height: 130, mb: 2, mx: 'auto', border: '3px solid', borderColor: 'primary.main' }}
-                />
+              <TeamCard onClick={() => setCurrentSpecialist(specialists.indexOf(specialist))}>
+                <SpecialistAvatar src={specialist.image} alt={specialist.name} />
                 <Typography variant="h6" sx={{ color: 'secondary.main', mb: 1 }}>
                   {specialist.name}
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                   {specialist.degree}
                 </Typography>
-              </Card>
+              </TeamCard>
             </Grid>
           ))}
         </Grid>
-      </Box>
-    </Box>
+      </TeamSection>
+    </PageContainer>
   );
 };
 

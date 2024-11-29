@@ -48,6 +48,7 @@ const GlobalStyle = () => (
       body: {
         margin: 0,
         overflow: 'hidden', // Hide scrollbars to prevent scrolling
+
       },
     }}
   />

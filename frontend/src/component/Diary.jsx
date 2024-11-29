@@ -1,27 +1,87 @@
 import React, { useState, useEffect } from 'react';
-import StorageService from '../services/StorageService';
+import { styled, keyframes } from '@mui/material/styles';
 import { Paper, Typography, Box } from '@mui/material';
 import Lottie from "lottie-react";
 import ProfileAnimation from '../assets/Profile.json';
 import HeartEmojiAnimation from '../assets/HeartEmoji.json';
 import DislikeAnimation from '../assets/DislikeAnimation.json';
 import { getAllMemories } from '../services/MemoryService';
+import StorageService from '../services/StorageService';
 import dc from '../assets/amongus.mp3';
 
+// Keyframes (if needed for animations)
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+// Styled Components
+const DiaryWrapper = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  padding: theme.spacing(3),
+  gap: theme.spacing(3),
+}));
+
+const ProfileSection = styled(Box)(({ theme }) => ({
+  width: '25%',
+  backgroundColor: '#fff9c4',
+  borderRadius: theme.shape.borderRadius,
+  padding: theme.spacing(3),
+  boxShadow: theme.shadows[3],
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  margin: 'auto',
+  textAlign: 'center',
+  marginTop: theme.spacing(8),
+  transform: 'translateY(50px)',
+  animation: `${fadeIn} 0.5s ease-in-out`,
+}));
+
+const ProfileAnimationWrapper = styled(Box)(({ theme }) => ({
+  marginBottom: theme.spacing(2),
+}));
+
+const Achievements = styled(Box)(({ theme }) => ({
+  marginTop: theme.spacing(3),
+}));
+
+const MemoriesSection = styled(Box)(({ theme }) => ({
+  flex: 1,
+}));
+
+const MemoryCard = styled(Paper)(({ theme }) => ({
+  margin: `${theme.spacing(2)} auto`,
+  padding: theme.spacing(3),
+  backgroundColor: 'transparent',
+  borderRadius: theme.shape.borderRadius,
+}));
+
+const InteractionSection = styled(Box)(({ theme, type }) => ({
+  padding: theme.spacing(2),
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: type === 'like' ? '#e3f2fd' : '#ffccbc',
+  transition: 'background-color 0.3s ease',
+}));
+
+// Main component
 const Diary = () => {
   const [userMemories, setUserMemories] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [hoveredAnimation, setHoveredAnimation] = useState(null); // Track the animation based on hover
+  const [hoveredAnimation, setHoveredAnimation] = useState(null);
 
   const storage = StorageService();
 
   // Preload sounds
   const soundLikes = new Audio(dc);
   const soundDislikes = new Audio(dc);
-  const soundMoodType = new Audio(dc);
-  const soundMemories = new Audio(dc);
 
   useEffect(() => {
     const fetchUserMemories = async () => {
@@ -65,48 +125,25 @@ const Diary = () => {
   }
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        padding: 3,
-        gap: 3,
-      }}
-    >
+    <DiaryWrapper>
       {/* Profile Section */}
-      <Box
-        sx={{
-          width: '25%',
-          backgroundColor: '#fff9c4',
-          borderRadius: 2,
-          padding: 3,
-          boxShadow: 3,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          margin: 'auto',
-          textAlign: 'center',
-          marginTop: 8, // Adjusts vertical spacing
-          transform: 'translateY(50px)', // Additional lowering effect
-        }}
-      >
-        {/* Toggle Between Animations */}
-        <Lottie
-          animationData={
-            hoveredAnimation === 'like'
-              ? HeartEmojiAnimation
-              : hoveredAnimation === 'dislike'
-              ? DislikeAnimation
-              : ProfileAnimation
-          }
-          style={{
-            height: 120, // Set a consistent height
-            width: 120,  // Set a consistent width
-            marginBottom: 16,
-          }}
-          loop={true}
-        />
-
+      <ProfileSection>
+        <ProfileAnimationWrapper>
+          <Lottie
+            animationData={
+              hoveredAnimation === 'like'
+                ? HeartEmojiAnimation
+                : hoveredAnimation === 'dislike'
+                ? DislikeAnimation
+                : ProfileAnimation
+            }
+            style={{
+              height: 120,
+              width: 120,
+            }}
+            loop
+          />
+        </ProfileAnimationWrapper>
         <Typography variant="h6" gutterBottom>
           {`${currentUser?.firstName || 'First Name'} ${currentUser?.lastName || 'Last Name'}`}
         </Typography>
@@ -119,9 +156,7 @@ const Diary = () => {
         <Typography variant="body2" color="text.secondary">
           <strong>Birthday:</strong> {currentUser?.dateOfBirth || 'Not Provided'}
         </Typography>
-
-        {/* Achievements Section */}
-        <Box sx={{ marginTop: 3 }}>
+        <Achievements>
           <Typography variant="h6">Achievements</Typography>
           <Typography variant="body2">
             <strong>Total Likes:</strong> {totalLikes}
@@ -129,26 +164,17 @@ const Diary = () => {
           <Typography variant="body2">
             <strong>Total Dislikes:</strong> {totalDislikes}
           </Typography>
-        </Box>
-      </Box>
+        </Achievements>
+      </ProfileSection>
 
       {/* Diary Section */}
-      <Box sx={{ flex: 1 }}>
+      <MemoriesSection>
         <Typography variant="h4" align="center" gutterBottom>
           My Memories
         </Typography>
         {userMemories.length > 0 ? (
-          userMemories.map((memory, index) => (
-            <Paper
-              key={memory.id}
-              elevation={0}
-              sx={{
-                margin: '16px auto',
-                padding: 3,
-                backgroundColor: 'transparent',
-                borderRadius: 2,
-              }}
-            >
+          userMemories.map((memory) => (
+            <MemoryCard key={memory.id} elevation={0}>
               <Typography variant="h6" gutterBottom>{`Memory ID: ${memory.id}`}</Typography>
               <Box
                 sx={{
@@ -158,12 +184,8 @@ const Diary = () => {
                 }}
               >
                 {/* Likes Section */}
-                <Box
-                  sx={{
-                    padding: 2,
-                    backgroundColor: '#e3f2fd',
-                    borderRadius: 2,
-                  }}
+                <InteractionSection
+                  type="like"
                   onMouseEnter={() => {
                     setHoveredAnimation('like');
                     soundLikes.play();
@@ -178,15 +200,11 @@ const Diary = () => {
                   <Typography variant="body2">
                     {memory.likes?.join(', ') || 'No likes'}
                   </Typography>
-                </Box>
+                </InteractionSection>
 
                 {/* Dislikes Section */}
-                <Box
-                  sx={{
-                    padding: 2,
-                    backgroundColor: '#ffccbc',
-                    borderRadius: 2,
-                  }}
+                <InteractionSection
+                  type="dislike"
                   onMouseEnter={() => {
                     setHoveredAnimation('dislike');
                     soundDislikes.play();
@@ -201,17 +219,15 @@ const Diary = () => {
                   <Typography variant="body2">
                     {memory.dislikes?.join(', ') || 'No dislikes'}
                   </Typography>
-                </Box>
-
-                {/* Add other sections like Mood Type, Memories here */}
+                </InteractionSection>
               </Box>
-            </Paper>
+            </MemoryCard>
           ))
         ) : (
           <Typography align="center">No memories found for this user.</Typography>
         )}
-      </Box>
-    </Box>
+      </MemoriesSection>
+    </DiaryWrapper>
   );
 };
 

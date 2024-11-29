@@ -28,6 +28,7 @@ const ChatbotBody = styled(Container)(({ theme, isSmallScreen }) => ({
   paddingTop: isSmallScreen ? '0px' : '64px',
   overflowX: 'hidden',
   maxWidth: '100% !important',
+  backdropFilter: 'blur(5px)',
 
 
   // Add a pseudo-element for the vignette effect

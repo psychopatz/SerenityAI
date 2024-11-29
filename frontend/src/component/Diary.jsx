@@ -7,6 +7,7 @@ import HeartEmojiAnimation from '../assets/HeartEmoji.json';
 import DislikeAnimation from '../assets/DislikeAnimation.json';
 import { getAllMemories } from '../services/MemoryService';
 import StorageService from '../services/StorageService';
+import Baymax from "../assets/Baymax.json";
 
 // Keyframes (if needed for animations)
 const fadeIn = keyframes`
@@ -21,12 +22,17 @@ const fadeIn = keyframes`
 // Styled Components
 const DiaryWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
-  padding: theme.spacing(3),
+  padding: theme.spacing(30),
   gap: theme.spacing(3),
+  backdropFilter: 'blur(5px)',
+  height: '',
+
+
+  
 }));
 
 const ProfileSection = styled(Box)(({ theme }) => ({
-  width: '25%',
+  width: '40%',
   backgroundColor: '#fff9c4',
   borderRadius: theme.shape.borderRadius,
   padding: theme.spacing(3),
@@ -34,12 +40,14 @@ const ProfileSection = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
+  height: '500px',
   justifyContent: 'center',
   margin: 'auto',
   textAlign: 'center',
-  marginTop: theme.spacing(8),
+  marginTop: theme.spacing(-10),
   transform: 'translateY(50px)',
   animation: `${fadeIn} 0.5s ease-in-out`,
+  marginLeft: '-200px',
 }));
 
 const ProfileAnimationWrapper = styled(Box)(({ theme }) => ({
@@ -122,6 +130,7 @@ const Diary = () => {
   }
 
   return (
+  
     <DiaryWrapper>
       {/* Profile Section */}
       <ProfileSection>
@@ -173,6 +182,7 @@ const Diary = () => {
           userMemories.map((memory) => (
             <MemoryCard key={memory.id} elevation={0}>
               <Typography variant="h6" gutterBottom>{`Memory ID: ${memory.id}`}</Typography>
+              
               <Box
                 sx={{
                   display: 'flex',

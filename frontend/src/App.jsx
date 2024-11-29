@@ -144,8 +144,7 @@ const App = () => {
         isChatVisible={isChatVisible} 
         setIsChatVisible={setIsChatVisible} 
       />
-      <Lottie animationData={Baymax} loop={true} style={{ zIndex: "-1",width: "50%", marginLeft: "400px", position: "absolute", bottom: "90px",marginBottom: "-100px",  filter: "drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5))" }} />
-
+      <Lottie animationData={Baymax} loop={true} style={{ zIndex: "-1",width: "50%", marginLeft: "510px", position: "absolute", bottom: "30px",marginBottom: "-100px",  filter: "drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5))" }} />
     </Router>
   );
 };

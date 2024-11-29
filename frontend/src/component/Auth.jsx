@@ -268,13 +268,14 @@ const Auth = () => {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            alignItems: 'flex-end',
+            alignItems: 'flex',
             padding: '30px',
             zIndex: 2,
             backgroundColor: '#ffffff',
+            
           }}
         >
-          <Typography variant="h4" fontWeight="bold" mb={3}>
+          <Typography variant="h4" fontWeight="bold" mb={3} >
             Sign In
           </Typography>
           {loginError && (

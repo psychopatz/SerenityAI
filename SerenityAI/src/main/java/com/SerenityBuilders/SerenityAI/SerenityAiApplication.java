@@ -11,4 +11,4 @@ public class 	SerenityAiApplication {
         System.out.println("Success api host on http://localhost:8080/");
     }
 
-}
+}   

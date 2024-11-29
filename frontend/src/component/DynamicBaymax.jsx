@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Baymax from '../assets/Baymax.json'; 
 import StorageService from '../services/StorageService'; 
+import { useLocation } from 'react-router-dom';
 
 const storage = StorageService();
 
@@ -20,9 +21,17 @@ const Container = styled(Box)(({ theme }) => ({
   },
 }));
 
+const floatAnimation = `
+  @keyframes float {
+    0% { transform: translatey(0px); }
+    50% { transform: translatey(-10px); }
+    100% { transform: translatey(0px); }
+  }
+`;
+
 const AnimationWrapper = styled(Box)(({ filterStyle }) => ({
+  animation: 'float 3s ease-in-out infinite',
   filter: filterStyle,
-  transition: 'filter 1s ease', // Smooth transition over 1 second
 }));
 
 const moodFilterMap = {
@@ -35,12 +44,21 @@ const moodFilterMap = {
 };
 
 const DynamicBaymax = () => {
-  // State to store current moodType
+
+  const location = useLocation();
+
+  // Define paths where DynamicBaymax should not be rendered
+  const excludedPaths = ['/', '/login', '/register', '/404'];
+
+  // Check if the current path is excluded
+  if (excludedPaths.includes(location.pathname)) {
+    return null;
+  }
+
   const [moodType, setMoodType] = useState(
-    storage.getSessionStorage('moodType') || 'happy' // Default to 'happy' if not set
+    storage.getSessionStorage('moodType') || 'happy' 
   );
 
-  // Ref to store the previous moodType for comparison
   const prevMoodTypeRef = useRef(moodType);
 
   // Function to retrieve moodType from sessionStorage
@@ -83,6 +101,7 @@ const DynamicBaymax = () => {
   return (
     <Container>
       <AnimationWrapper filterStyle={filterStyle}>
+        <style>{floatAnimation}</style>
         <Lottie
           animationData={memoizedAnimationData}
           loop={true}

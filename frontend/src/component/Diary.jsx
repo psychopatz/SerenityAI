@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import StorageService from '../services/StorageService';
-import { Paper, Typography, Box, Avatar } from '@mui/material';
+import { Paper, Typography, Box } from '@mui/material';
+import Lottie from "lottie-react";
+import ProfileAnimation from '../assets/Profile.json';
+import HeartEmojiAnimation from '../assets/heartemoji.json';
+import DislikeAnimation from '../assets/DislikeAnimation.json';
 import { getAllMemories } from '../services/MemoryService';
 import dc from '../assets/amongus.mp3';
 
@@ -9,6 +13,7 @@ const Diary = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [hoveredAnimation, setHoveredAnimation] = useState(null); // Track the animation based on hover
 
   const storage = StorageService();
 
@@ -81,38 +86,27 @@ const Diary = () => {
           justifyContent: 'center',
           margin: 'auto',
           textAlign: 'center',
-          opacity: 0, // Start hidden
-          transform: 'translateY(-100%)', // Start above the screen
-          animation: 'fallBounce 1.5s ease-out forwards', // Trigger the animation
-          '@keyframes fallBounce': {
-            '0%': {
-              opacity: 0,
-              transform: 'translateY(-100%)', // Start off-screen above
-            },
-            '60%': {
-              opacity: 1,
-              transform: 'translateY(30px)', // Bounce down past final position
-            },
-            '80%': {
-              transform: 'translateY(-15px)', // Bounce up slightly
-            },
-            '100%': {
-              opacity: 1,
-              transform: 'translateY(0)', // Settle at final position and remain visible
-            },
-          },
+          marginTop: 8, // Adjusts vertical spacing
+          transform: 'translateY(50px)', // Additional lowering effect
         }}
       >
-        <Avatar
-          sx={{
-            width: 100,
-            height: 100,
-            marginBottom: 2,
-            boxShadow: 2,
+        {/* Toggle Between Animations */}
+        <Lottie
+          animationData={
+            hoveredAnimation === 'like'
+              ? HeartEmojiAnimation
+              : hoveredAnimation === 'dislike'
+              ? DislikeAnimation
+              : ProfileAnimation
+          }
+          style={{
+            height: 120, // Set a consistent height
+            width: 120,  // Set a consistent width
+            marginBottom: 16,
           }}
-          alt={`${currentUser?.firstName || 'User'} ${currentUser?.lastName || ''}`}
-          src={currentUser?.profilePicture || '/static/images/avatar.png'}
+          loop={true}
         />
+
         <Typography variant="h6" gutterBottom>
           {`${currentUser?.firstName || 'First Name'} ${currentUser?.lastName || 'Last Name'}`}
         </Typography>
@@ -169,21 +163,14 @@ const Diary = () => {
                     padding: 2,
                     backgroundColor: '#e3f2fd',
                     borderRadius: 2,
-                    opacity: 0,
-                    transform: 'translateY(-100%)',
-                    animation: `dropIn 1s ease ${1.5 + index * 0.5}s forwards`,
-                    '@keyframes dropIn': {
-                      from: {
-                        opacity: 0,
-                        transform: 'translateY(-100%)',
-                      },
-                      to: {
-                        opacity: 1,
-                        transform: 'translateY(0)',
-                      },
-                    },
                   }}
-                  onMouseEnter={() => soundLikes.play()}
+                  onMouseEnter={() => {
+                    setHoveredAnimation('like');
+                    soundLikes.play();
+                  }}
+                  onMouseLeave={() => {
+                    setHoveredAnimation(null);
+                  }}
                 >
                   <Typography variant="subtitle1" color="primary">
                     Likes
@@ -199,21 +186,14 @@ const Diary = () => {
                     padding: 2,
                     backgroundColor: '#ffccbc',
                     borderRadius: 2,
-                    opacity: 0,
-                    transform: 'translateY(-100%)',
-                    animation: `dropIn 1s ease ${2 + index * 0.5}s forwards`,
-                    '@keyframes dropIn': {
-                      from: {
-                        opacity: 0,
-                        transform: 'translateY(-100%)',
-                      },
-                      to: {
-                        opacity: 1,
-                        transform: 'translateY(0)',
-                      },
-                    },
                   }}
-                  onMouseEnter={() => soundDislikes.play()}
+                  onMouseEnter={() => {
+                    setHoveredAnimation('dislike');
+                    soundDislikes.play();
+                  }}
+                  onMouseLeave={() => {
+                    setHoveredAnimation(null);
+                  }}
                 >
                   <Typography variant="subtitle1" color="secondary">
                     Dislikes
@@ -223,65 +203,7 @@ const Diary = () => {
                   </Typography>
                 </Box>
 
-                {/* Mood Type Section */}
-                <Box
-                  sx={{
-                    padding: 2,
-                    backgroundColor: '#dcedc8',
-                    borderRadius: 2,
-                    opacity: 0,
-                    transform: 'translateY(-100%)',
-                    animation: `dropIn 1s ease ${2.5 + index * 0.5}s forwards`,
-                    '@keyframes dropIn': {
-                      from: {
-                        opacity: 0,
-                        transform: 'translateY(-100%)',
-                      },
-                      to: {
-                        opacity: 1,
-                        transform: 'translateY(0)',
-                      },
-                    },
-                  }}
-                  onMouseEnter={() => soundMoodType.play()}
-                >
-                  <Typography variant="subtitle1" color="textPrimary">
-                    Mood Type
-                  </Typography>
-                  <Typography variant="body2">
-                    {memory.moodType || 'No mood type'}
-                  </Typography>
-                </Box>
-
-                {/* Memories Section */}
-                <Box
-                  sx={{
-                    padding: 2,
-                    backgroundColor: '#ffe0b2',
-                    borderRadius: 2,
-                    opacity: 0,
-                    transform: 'translateY(-100%)',
-                    animation: `dropIn 1s ease ${3 + index * 0.5}s forwards`,
-                    '@keyframes dropIn': {
-                      from: {
-                        opacity: 0,
-                        transform: 'translateY(-100%)',
-                      },
-                      to: {
-                        opacity: 1,
-                        transform: 'translateY(0)',
-                      },
-                    },
-                  }}
-                  onMouseEnter={() => soundMemories.play()}
-                >
-                  <Typography variant="subtitle1" color="textSecondary">
-                    Memories
-                  </Typography>
-                  <Typography variant="body2">
-                    {memory.memories?.join(', ') || 'No memories'}
-                  </Typography>
-                </Box>
+                {/* Add other sections like Mood Type, Memories here */}
               </Box>
             </Paper>
           ))

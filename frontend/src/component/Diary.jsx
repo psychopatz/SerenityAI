@@ -7,7 +7,6 @@ import HeartEmojiAnimation from '../assets/HeartEmoji.json';
 import DislikeAnimation from '../assets/DislikeAnimation.json';
 import { getAllMemories } from '../services/MemoryService';
 import StorageService from '../services/StorageService';
-import dc from '../assets/amongus.mp3';
 
 // Keyframes (if needed for animations)
 const fadeIn = keyframes`
@@ -80,8 +79,6 @@ const Diary = () => {
   const storage = StorageService();
 
   // Preload sounds
-  const soundLikes = new Audio(dc);
-  const soundDislikes = new Audio(dc);
 
   useEffect(() => {
     const fetchUserMemories = async () => {
@@ -188,7 +185,6 @@ const Diary = () => {
                   type="like"
                   onMouseEnter={() => {
                     setHoveredAnimation('like');
-                    soundLikes.play();
                   }}
                   onMouseLeave={() => {
                     setHoveredAnimation(null);
@@ -207,7 +203,6 @@ const Diary = () => {
                   type="dislike"
                   onMouseEnter={() => {
                     setHoveredAnimation('dislike');
-                    soundDislikes.play();
                   }}
                   onMouseLeave={() => {
                     setHoveredAnimation(null);

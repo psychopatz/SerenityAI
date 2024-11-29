@@ -18,6 +18,9 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import UserService from '../services/UserService';
 import StorageService from '../services/StorageService';
+import Baymax from "../assets/Baymax.json";
+import Lottie from "lottie-react";
+
 
 const Auth = () => {
   const [isPanelActive, setIsPanelActive] = useState(false);
@@ -345,7 +348,10 @@ const Auth = () => {
           }}
         >
           <Box textAlign="center" p={4}>
+          <Lottie animationData={Baymax} loop={true} style={{ width: "50%", marginLeft: "80px", position: "absolute", top: "90px",  filter: "drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5))" }} />
+
   {isPanelActive ? (
+    
     <>
       <Typography variant="h4" fontWeight="bold" mb={2}>
         Ready to Reconnect?

@@ -5,6 +5,8 @@ import { Link, useLocation, Outlet, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import logo from "../assets/SAILogo.png";
 import StorageService from "../services/StorageService";
+import Baymax from "../assets/Baymax.json";
+import Lottie from "lottie-react";
 
 const Nav = () => {
   const location = useLocation();
@@ -98,11 +100,7 @@ const Nav = () => {
       <AppBarStyled>
         <Toolbar>
           <Link to="/dashboard">
-            <img
-              src={logo}
-              alt="Logo"
-              style={{ height: "50px", marginRight: "10px" }}
-            />
+            <Lottie animationData={Baymax} style={{ width: "50px", height: "auto" }} />
           </Link>
           <Typography
             variant="h6"

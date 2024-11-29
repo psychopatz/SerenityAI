@@ -1,9 +1,12 @@
 import { Box, Button as MuiButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, color } from "framer-motion";
 import React, { useState } from "react";
 import logo from "../assets/SAILogo.png";
 import ChatboxIframe from "./ChatboxIframe";
+import Baymax from "../assets/Baymax.json";
+import Lottie from "lottie-react";
+import { useNavigate } from "react-router-dom";
 
 
 const HomeContainer = styled(Box)(({ theme }) => ({
@@ -34,7 +37,7 @@ const HomeContainer = styled(Box)(({ theme }) => ({
   position: "relative", // Changed to relative for better alignment
   right: 0, // Removed negative offset
   top: 0,
-  left: 300,
+  left: 400,
   bottom: 100,
   maxWidth: "100%", // Constrain content to parent width
   boxSizing: "border-box", // Include padding and borders in width calculations
@@ -63,51 +66,52 @@ const LeftContainer = styled(Box)(({ theme }) => ({
 
 
 
-const Logo = styled("img")(() => ({
-  width: "190px",
-  height: "auto",
-  marginTop: "-100px",
-  filter: "drop-shadow(0px 0px 8px rgba(100, 108, 255, 0.6))",
-  marginLeft: "100px",
-}));''
 
 const Title = styled(Typography)(({ theme }) => ({
-  fontSize: '3.8rem', // Font size
+  fontSize: '4.8rem', // Font size
   fontWeight: 700, // Bold text
-  marginLeft: '50px', // Left margin
-  marginTop: '-30px', // Adjust vertical position
-  width: '100%', // Ensure it takes up the full width
+  marginLeft: '10px', // Left margin
+  marginTop: '250px', // Adjust vertical position
+  width: '200%', // Ensure it takes up the full width
   marginBottom: theme.spacing(2), // Bottom margin from theme spacing
   fontFamily: "'Roboto', sans-serif", // Font family
   color: '#ffffff', // White text color
-
-  // Subtle black glow effect
   textShadow: '10px 4px 4px rgba(4, 4, 4, 0.4)', // Black glow effect around the text
+  '&:hover': {
+    color: '#000000',
+    textShadow: '0px 0px 10px #ffffff',
+    transition: 'all 0.3s ease-in-out',
+  },
+  
 }));
 
 
 
 const Quote = styled(Typography)(({ theme }) => ({
-  fontSize: "1.3rem",
+  fontSize: "1.9rem",
   color: "#ffffff",
   fontStyle: "italic",
   fontFamily: "'Poppins', sans-serif",
   textAlign: "center",
   transform: "translateX(50px)",
+  marginRight: "-270px",
 }));
 
 const Title2 = styled(Typography)(({ theme }) => ({
-  fontSize: "2.5rem", // Adjust font size for longer text
+  fontSize: "3.5rem", // Adjust font size for longer text
   fontWeight: 900,
-  fontFamily: "'Poppins', sans-serif",
+  fontFamily: "'roboto', sans-serif",
   textAlign: "left",
-  background: "linear-gradient(120deg, #ffffff, #FF1818)",
-  WebkitBackgroundClip: "text",
-  WebkitTextFillColor: "transparent",
+  color: "#ffffff",
   marginBottom: theme.spacing(2),
   maxWidth: "90%", // Make the width wider
   margin: "0 auto", // Center align
   textShadow: '0px 2px 2px rgba(4, 4, 4, 0.4)',
+  '&:hover': {
+    color: '#000000',
+    textShadow: '0px 0px 10px #ffffff',
+    transition: 'all 0.3s ease-in-out',
+  },
 }));
 
 const Description = styled(Box)(({ theme }) => ({
@@ -135,11 +139,13 @@ const Home = () => {
     setIsChatVisible((prev) => !prev);
   };
 
+  const navigate = useNavigate();
+
   return (
     <HomeContainer>
 
       <Box>
-        <Logo src={logo} alt="SAI Logo" sx={{marginBottom:"10px",}}/>
+        <Lottie animationData={Baymax} loop={true} style={{ width: "19%", marginLeft: "200px", position: "absolute", top: "200px",  filter: "drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5))" }} />
         <Title variant="h1">SERENITY AI</Title>
         <Quote noWrap>"Your Personal AI for Emotional Well-being"</Quote>
       </Box>
@@ -158,7 +164,7 @@ const Home = () => {
       privacy concerns.
     </Description>
     <Box sx={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-    <MuiButton variant="contained" color="primary" onClick={toggleChatVisibility}
+  <MuiButton variant="contained" color="primary"
     sx={{
       fontSize: '1.5rem',
       padding: '1rem 2rem',
@@ -174,11 +180,11 @@ const Home = () => {
       },
       right: '365px',
     }}
+    onClick={() => navigate('/login')}
   >
-          {isChatVisible ? "Close Chat" : "Get Started"}
-        </MuiButton>
-        
-    </Box>
+    Get Started
+  </MuiButton>
+</Box>
   </BottomRightContainer>
 </RightContainer><LeftContainer></LeftContainer>
     </HomeContainer>

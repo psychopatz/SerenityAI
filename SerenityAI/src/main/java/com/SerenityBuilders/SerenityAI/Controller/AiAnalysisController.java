@@ -88,7 +88,7 @@ import com.SerenityBuilders.SerenityAI.util.LlmUtil;
                         "1. **Likes**: Things the user expresses enjoyment or preference for.\n" +
                         "2. **Dislikes**: Things the user expresses displeasure or aversion toward.\n" +
                         "3. **Memories**: Recollections of specific events, moments, or experiences.\n" +
-                        "4. **MoodType**: This is what the user is feeling based on the input  like Happy, sad, angry, neutral\n" +
+                        "4. **MoodType**: This is what the user is feeling based on the input  like happy, sad, angry, worried, excited or  calm. use calm if you cant express it.\n" +
                         "\n" +
                         "For each input, output the analysis in the following JSON format:\n" +
                         "\n" +

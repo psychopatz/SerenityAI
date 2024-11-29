@@ -281,7 +281,9 @@ const ChatInterface = ({ isSmallScreen }) => {
       console.error('Error updating memory:', error);
       setError('Failed to update memory');
     }
+    storageService.setSessionStorage('moodType', updatedData.moodtype[0]);
   };
+  
 
   const handleSendMessage = async () => {
     if (!input.trim()) return;

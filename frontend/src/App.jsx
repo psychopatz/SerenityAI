@@ -7,9 +7,6 @@ import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 
-
-import Baymax from "./assets/Baymax.json";
-import Lottie from "lottie-react";
 import Login from "./component/Auth";
 import ChatInterface from './component/ChatInterface';
 import Nav from './component/Nav';
@@ -23,6 +20,7 @@ import ChatboxIframe from "./component/ChatboxIframe";
 import Diary from "./component/Diary";
 import About from "./component/AboutUsPage";
 import Settings  from "./component/Settings";
+import DynamicBaymax from "./component/DynamicBaymax";
 
 
 // Define allowed paths
@@ -114,6 +112,9 @@ const ChatboxContainer = ({ isChatVisible, setIsChatVisible }) => {
   // Determine if the current path is allowed
   const isAllowedPath = allowedPaths.includes(currentPath);
 
+
+
+
   return (
     isAllowedPath && (
       <>
@@ -144,7 +145,10 @@ const App = () => {
         isChatVisible={isChatVisible} 
         setIsChatVisible={setIsChatVisible} 
       />
-      <Lottie animationData={Baymax} loop={true} style={{ zIndex: "-1",width: "50%", marginLeft: "510px", position: "absolute", bottom: "30px",marginBottom: "-100px",  filter: "drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5))" }} />
+      <DynamicBaymax sx={{ 
+          }}/>
+
+
     </Router>
   );
 };

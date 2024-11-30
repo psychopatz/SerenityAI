@@ -127,21 +127,50 @@ public class UserService {
     
     public UserEntity updateUserByEmail(String email, UserEntity newUserDetails) throws NameNotFoundException {
         UserEntity user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new NameNotFoundException("User not found"));
-        
-        user.setFirstName(newUserDetails.getFirstName());
-        user.setLastName(newUserDetails.getLastName());
-        user.setDateOfBirth(newUserDetails.getDateOfBirth());
-        user.setGender(newUserDetails.getGender());
-        user.setLastLogin(newUserDetails.getLastLogin());
-        user.setLocation(newUserDetails.getLocation());
-        if (newUserDetails.getPassword() != null && !newUserDetails.getPassword().isEmpty()) {
-            user.setPassword(passwordEncoder.encode(newUserDetails.getPassword()));
+                .orElseThrow(() -> new NameNotFoundException("User " + email + " not found"));
+
+        // Update fields only if they are provided (not null)
+        if (newUserDetails.getFirstName() != null) {
+            user.setFirstName(newUserDetails.getFirstName());
         }
-        user.setMemoryID(newUserDetails.getMemoryID());
-        user.setPrivacy_id(newUserDetails.getPrivacy_id());
-    
-        return userRepository.save(user); // Save the updated user
+
+        if (newUserDetails.getLastName() != null) {
+            user.setLastName(newUserDetails.getLastName());
+        }
+
+        if (newUserDetails.getEmail() != null) {
+            user.setEmail(newUserDetails.getEmail());
+        }
+
+
+        if (newUserDetails.getDateOfBirth() != null) {
+            user.setDateOfBirth(newUserDetails.getDateOfBirth());
+        }
+
+        if (newUserDetails.getGender() != null) {
+            user.setGender(newUserDetails.getGender());
+        }
+
+        if (newUserDetails.getLastLogin() != null) {
+            user.setLastLogin(newUserDetails.getLastLogin());
+        }
+
+        if (newUserDetails.getLocation() != null) {
+            user.setLocation(newUserDetails.getLocation());
+        }
+
+        // Update memoryID only if it's provided and not zero (assuming 0 is invalid)
+        if (newUserDetails.getMemoryID() != 0 && newUserDetails.getMemoryID() != 0) {
+            user.setMemoryID(newUserDetails.getMemoryID());
+        }
+
+        // Update privacy_id only if it's provided and not zero (assuming 0 is invalid)
+        if (newUserDetails.getPrivacy_id() != 0 && newUserDetails.getPrivacy_id() != 0) {
+            user.setPrivacy_id(newUserDetails.getPrivacy_id());
+        }
+
+        // Save the updated user entity
+        return userRepository.save(user);
     }
     
 }

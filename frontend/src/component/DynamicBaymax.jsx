@@ -1,12 +1,21 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Lottie from 'lottie-react';
-import { styled } from '@mui/material/styles';
+import { styled, keyframes } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Baymax from '../assets/Baymax.json'; 
-import StorageService from '../services/StorageService'; 
-import { useLocation } from 'react-router-dom';
+import Baymax from '../assets/Baymax.json';
+import StorageService from '../services/StorageService';
 
 const storage = StorageService();
+
+// Create a floating animation keyframe
+const floatAnimation = keyframes`
+  0%, 100% {
+    transform: translateY(0) translateX(-50%);
+  }
+  50% {
+    transform: translateY(-20px) translateX(-50%);
+  }
+`;
 
 const Container = styled(Box)(({ theme }) => ({
   zIndex: -1,
@@ -16,22 +25,15 @@ const Container = styled(Box)(({ theme }) => ({
   left: '50%',
   transform: 'translateX(-50%)',
   marginBottom: '-100px',
+  animation: `${floatAnimation} 3s ease-in-out infinite`,
   [theme.breakpoints.down('sm')]: {
     width: '80%',
   },
 }));
 
-const floatAnimation = `
-  @keyframes float {
-    0% { transform: translatey(0px); }
-    50% { transform: translatey(-10px); }
-    100% { transform: translatey(0px); }
-  }
-`;
-
 const AnimationWrapper = styled(Box)(({ filterStyle }) => ({
-  animation: 'float 3s ease-in-out infinite',
   filter: filterStyle,
+  transition: 'filter 1s ease', // Smooth transition over 1 second
 }));
 
 const moodFilterMap = {
@@ -44,29 +46,19 @@ const moodFilterMap = {
 };
 
 const DynamicBaymax = () => {
-
-  const location = useLocation();
-
-  // Define paths where DynamicBaymax should not be rendered
-  const excludedPaths = ['/', '/login', '/register', '/404'];
-
-  // Check if the current path is excluded
-  if (excludedPaths.includes(location.pathname)) {
-    return null;
-  }
-
+  // State to store current moodType
   const [moodType, setMoodType] = useState(
-    storage.getSessionStorage('moodType') || 'happy' 
+    storage.getSessionStorage('moodType') || 'happy' // Default to 'happy' if not set
   );
-
+  // Ref to store the previous moodType for comparison
   const prevMoodTypeRef = useRef(moodType);
-
+  
   // Function to retrieve moodType from sessionStorage
   const getMoodTypeFromSession = () => {
     const mood = storage.getSessionStorage('moodType');
     return mood ? mood : 'happy';
   };
-
+  
   // Effect to poll for moodType changes in sessionStorage
   useEffect(() => {
     const pollingInterval = setInterval(() => {
@@ -81,13 +73,13 @@ const DynamicBaymax = () => {
         }
       }
     }, 500); // Check every 500ms
-
+    
     // Cleanup on unmount
     return () => {
       clearInterval(pollingInterval);
     };
   }, []);
-
+  
   // Construct the filter string based on moodType
   const filterStyle = `
     drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5))
@@ -95,13 +87,12 @@ const DynamicBaymax = () => {
     hue-rotate(${moodFilterMap[moodType].hueRotate}deg)
     saturate(${moodFilterMap[moodType].saturate}%)
   `;
-
+  
   const memoizedAnimationData = useMemo(() => Baymax, []);
-
+  
   return (
     <Container>
       <AnimationWrapper filterStyle={filterStyle}>
-        <style>{floatAnimation}</style>
         <Lottie
           animationData={memoizedAnimationData}
           loop={true}

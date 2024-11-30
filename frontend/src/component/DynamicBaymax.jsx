@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 import Lottie from 'lottie-react';
 import { styled, keyframes } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -46,10 +47,20 @@ const moodFilterMap = {
 };
 
 const DynamicBaymax = () => {
+  // Get current location
+  const location = useLocation();
+
+  // Routes where Baymax should not render
+  const excludedRoutes = ["/", "/login", "/register", "/404"];
+
+  // Check if current route is excluded
+  const shouldRender = !excludedRoutes.includes(location.pathname);
+
   // State to store current moodType
   const [moodType, setMoodType] = useState(
     storage.getSessionStorage('moodType') || 'happy' // Default to 'happy' if not set
   );
+  
   // Ref to store the previous moodType for comparison
   const prevMoodTypeRef = useRef(moodType);
   
@@ -90,6 +101,11 @@ const DynamicBaymax = () => {
   
   const memoizedAnimationData = useMemo(() => Baymax, []);
   
+  // Only render if not on excluded routes
+  if (!shouldRender) {
+    return null;
+  }
+
   return (
     <Container>
       <AnimationWrapper filterStyle={filterStyle}>

@@ -32,12 +32,21 @@ const UserService = {
     },
 
     updateProfile(email, user) {
-        console.log("Sending data to backend for update:", { email, ...user });
-        return axios.put(`${API_URL}/profile`, { email, ...user })
+        // Filter out the password if it's empty
+        const filteredUser = { ...user };
+        if (!filteredUser.password || filteredUser.password.trim() === "") {
+            delete filteredUser.password;
+        }
+    
+        console.log("Sending data to backend for update:", { email, ...filteredUser });
+    
+        // Send the filtered data
+        return axios
+            .put(`${API_URL}/profile`, { email, ...filteredUser })
             .then((response) => response.data)
             .catch(handleError);
     },
-
+    
     updateUserById(id, userData) { 
         console.log(`Updating user with ID: ${id} and data:`, userData); // Debugging log
         return axios.put(`${API_URL}/update/${id}`, userData) // Send userData in the PUT request

@@ -175,14 +175,9 @@ const Diary = () => {
 
       {/* Diary Section */}
       <MemoriesSection>
-        <Typography variant="h4" align="center" gutterBottom>
-          My Memories
-        </Typography>
         {userMemories.length > 0 ? (
           userMemories.map((memory) => (
-            <MemoryCard key={memory.id} elevation={0}>
-              <Typography variant="h6" gutterBottom>{`Memory ID: ${memory.id}`}</Typography>
-              
+            <MemoryCard key={memory.id} elevation={0}>              
               <Box
                 sx={{
                   display: 'flex',
@@ -224,6 +219,38 @@ const Diary = () => {
                   <Typography variant="body2">
                     {memory.dislikes?.join(', ') || 'No dislikes'}
                   </Typography>
+                </InteractionSection>
+                
+                {/* Mood Type Section*/}
+                <InteractionSection
+                  type="like"
+                  onMouseEnter={() => setHoveredAnimation('like')}
+                  onMouseLeave={() => setHoveredAnimation(null)}
+                >
+                  <Typography variant="subtitle1" color="primary">
+                    Current Mood
+                  </Typography>
+                  <Typography variant="body2">
+                    {memory.moodType || 'No mood data available'}
+                  </Typography>
+                </InteractionSection>
+
+                {/* Memories */}
+                <InteractionSection
+                  type="like"
+                  onMouseEnter={() => {
+                    setHoveredAnimation('like');
+                  }}
+                  onMouseLeave={() => {
+                    setHoveredAnimation(null);
+                  }}
+                >
+                  <Typography variant="subtitle1" color="primary">
+                    Memories
+                  </Typography>
+                  <Typography variant="body2">
+                    {memory.memories?.join(', ') || 'No memories'}
+                  </Typography> 
                 </InteractionSection>
               </Box>
             </MemoryCard>

@@ -21,7 +21,6 @@ import Diary from "./component/Diary";
 import About from "./component/AboutUsPage";
 import Settings  from "./component/Settings";
 import DynamicBaymax from "./component/DynamicBaymax";
-import TestMic from "./pages/TestMic";
 
 
 // Define allowed paths
@@ -67,7 +66,6 @@ const AnimatedRoutes = () => {
         <Route path="/profile" element={<PageWrapper><Profile /></PageWrapper>} />
         <Route path="/about" element={<PageWrapper><About /></PageWrapper>} />
         <Route path="/settings" element={<PageWrapper><Settings /></PageWrapper>} />
-        <Route path="/testmic" element={<PageWrapper><TestMic/></PageWrapper>} />
         <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
         <Route path="*" element={<PageWrapper><ErrorPage /></PageWrapper>} />
 

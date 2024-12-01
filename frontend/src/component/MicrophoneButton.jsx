@@ -5,9 +5,10 @@ import IconButton from '@mui/material/IconButton';
 import MicIcon from '@mui/icons-material/Mic';
 import Box from '@mui/material/Box';
 
-const AnimatedButton = styled(({ isRecording, ...other }) => <IconButton {...other} />)(({ theme, isRecording }) => ({
-  width: 60,
-  height: 60,
+const AnimatedButton = styled(({ isRecording, isSmallScreen, ...other }) => <IconButton {...other} />)(({ theme, isRecording, isSmallScreen }) => ({
+  width: isSmallScreen ? 40 : 60,
+  height: isSmallScreen ? 40 : 60,
+  marginLeft: isSmallScreen ? 5 : 10,
   transition: 'transform 0.3s ease-in-out',
   transform: isRecording ? 'scale(1.1)' : 'scale(1)',
   background: isRecording
@@ -22,10 +23,18 @@ const AnimatedButton = styled(({ isRecording, ...other }) => <IconButton {...oth
   color: theme.palette.common.white,
   '&:hover': {
     transform: 'scale(1.2)',
+    '& svg': {
+      animation: 'iconScale 0.5s infinite ease-in-out',
+    },
+  },
+  '@keyframes iconScale': {
+    '0%': { transform: 'scale(1)' },
+    '50%': { transform: 'scale(1.2)' },
+    '100%': { transform: 'scale(1)' },
   },
 }));
 
-const MicrophoneButton = ({ setInput }) => {
+const MicrophoneButton = ({ setInput, isSmallScreen }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [countdown, setCountdown] = useState(5);
 
@@ -95,7 +104,7 @@ const MicrophoneButton = ({ setInput }) => {
 
   return (
     <Box sx={{ textAlign: 'center' }}>
-      <AnimatedButton onClick={startRecording} disabled={isRecording} isRecording={isRecording}>
+      <AnimatedButton onClick={startRecording} disabled={isRecording} isRecording={isRecording} isSmallScreen={isSmallScreen}>
         {isRecording ? countdown : <MicIcon />}
       </AnimatedButton>
     </Box>

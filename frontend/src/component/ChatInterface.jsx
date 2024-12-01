@@ -427,7 +427,7 @@ const ChatInterface = ({ isSmallScreen }) => {
             variant="outlined"
             isSmallScreen={isSmallScreen} 
           />
-          <MicrophoneButton setInput={setInput} />
+          <MicrophoneButton setInput={setInput} isSmallScreen={isSmallScreen} />
     
 
     <SendButton

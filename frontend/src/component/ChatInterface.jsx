@@ -17,6 +17,7 @@ import { motion } from 'framer-motion';
 import smsSound from '../assets/sms.mp3';
 import { createMemory, updateMemoryById, getMemoryById } from '../services/MemoryService';
 import UserService from '../services/UserService';
+import MicrophoneButton from './MicrophoneButton';
 
 const ChatbotBody = styled(Container)(({ theme, isSmallScreen }) => ({
   position: 'relative', // Ensure the pseudo-element is positioned correctly
@@ -426,6 +427,7 @@ const ChatInterface = ({ isSmallScreen }) => {
             variant="outlined"
             isSmallScreen={isSmallScreen} 
           />
+          <MicrophoneButton setInput={setInput} />
     
 
     <SendButton

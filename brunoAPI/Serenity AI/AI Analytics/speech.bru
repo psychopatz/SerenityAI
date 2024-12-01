@@ -1,0 +1,15 @@
+meta {
+  name: /speech
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:8080/speech
+  body: multipartForm
+  auth: none
+}
+
+body:multipart-form {
+  audioFile: @file(AI Analytics/test.m4a)
+}

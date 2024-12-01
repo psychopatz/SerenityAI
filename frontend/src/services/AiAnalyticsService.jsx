@@ -68,3 +68,40 @@ export const getRecommendation = async (requestData) => {
     return null;
   }
 };
+
+export const transcribeSpeech = async (audioFile) => {
+  try {
+    const formData = new FormData();
+    formData.append('audioFile', audioFile);
+
+    const response = await axios.post('http://localhost:8080/speech', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    
+    if (response.status === 200 && response.data.text) {
+      console.log('Speech transcription successful');
+      console.log('Transcription:', response.data.text);
+      return response.data.text;
+    } else if (response.data.error) {
+      console.warn('Error in transcription:', response.data.error);
+      return null;
+    } else {
+      console.warn('Unexpected response format');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error in transcribeSpeech:', error.message);
+    if (error.response) {
+      console.error('Response data:', error.response.data);
+      console.error('Response status:', error.response.status);
+      console.error('Response headers:', error.response.headers);
+    } else if (error.request) {
+      console.error('Request data:', error.request);
+    } else {
+      console.error('Error message:', error.message);
+    }
+    return null;
+  }
+};

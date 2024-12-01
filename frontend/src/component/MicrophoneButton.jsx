@@ -10,14 +10,19 @@ const AnimatedButton = styled(({ isRecording, ...other }) => <IconButton {...oth
   height: 60,
   transition: 'transform 0.3s ease-in-out',
   transform: isRecording ? 'scale(1.1)' : 'scale(1)',
-  animation: isRecording ? 'pulse 1s infinite' : 'none',
-  '@keyframes pulse': {
+  background: isRecording
+    ? `radial-gradient(circle, rgba(255,0,0,0.8) 0%, rgba(255,0,0,0) 70%)`
+    : theme.palette.primary.main,
+  animation: isRecording ? 'pulseRed 1.5s infinite ease-in-out' : 'none',
+  '@keyframes pulseRed': {
     '0%': { transform: 'scale(1)' },
-    '50%': { transform: 'scale(1.2)' },
+    '50%': { transform: 'scale(1.2)', backgroundSize: '120%' },
     '100%': { transform: 'scale(1)' },
   },
-  backgroundColor: theme.palette.primary.main,
   color: theme.palette.common.white,
+  '&:hover': {
+    transform: 'scale(1.2)',
+  },
 }));
 
 const MicrophoneButton = ({ setInput }) => {

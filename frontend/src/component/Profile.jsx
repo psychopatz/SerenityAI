@@ -1,181 +1,204 @@
-import React, { useState, useEffect } from 'react';
-import { TextField, Button, Typography, Box, Alert, Paper } from '@mui/material';
-import { useNavigate } from 'react-router-dom';  // Import useNavigate for navigation
-import UserService from '../services/UserService';
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  styled,
+} from "@mui/material";
+import UserService from "../services/UserService"; // Import UserService
+
+// Import images for male and female avatars
+import MaleAvatar from "../assets/male-avatar.png";
+import FemaleAvatar from "../assets/female-avatar.png";
+import DefaultAvatar from "../assets/default-avatar.png";
+
+// Styled Components
+const ProfileContainer = styled(Box)(({ theme }) => ({
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  flexWrap: "wrap",
+  gap: theme.spacing(4),
+  padding: theme.spacing(4),
+  minHeight: "100vh",
+}));
+
+const ProfileCard = styled(Paper)(({ theme }) => ({
+  width: "300px",
+  padding: theme.spacing(3),
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: theme.shadows[3],
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  textAlign: "center",
+}));
+
+const DetailsCard = styled(Paper)(({ theme }) => ({
+  flex: 1,
+  maxWidth: "600px",
+  padding: theme.spacing(3),
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: theme.shadows[3],
+}));
+
+const Avatar = styled("img")(({ theme }) => ({
+  width: 120,
+  height: 120,
+  borderRadius: "50%",
+  marginBottom: theme.spacing(2),
+}));
+
+const Field = styled(Typography)(({ theme }) => ({
+  marginBottom: theme.spacing(1),
+  fontSize: theme.typography.body1.fontSize,
+  "& strong": {
+    fontWeight: theme.typography.fontWeightBold,
+  },
+}));
 
 const Profile = () => {
-    const [user, setUser] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        dateOfBirth: '',
-        gender: '',
-        location: '',
-        password: '',
-    });
-    const [error, setError] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
-    const [loading, setLoading] = useState(true);
-    
-    // Initialize navigate from useNavigate hook
-    const navigate = useNavigate();
+  const [userData, setUserData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    location: "",
+    gender: "",
+    dateOfBirth: "",
+  });
 
-    // Retrieve the logged-in user's email from localStorage (or sessionStorage)
-    const userEmail = localStorage.getItem('userEmail'); // Make sure to store this during login
+  const [isEditing, setIsEditing] = useState(false);
 
-    // Fetch user profile on component mount
-    useEffect(() => {
-        if (userEmail) {
-            UserService.getProfile(userEmail)
-                .then((data) => {
-                    setUser(data); // Set user data into the state
-                    setLoading(false);
-                })
-                .catch((err) => {
-                    setError('Failed to fetch profile');
-                    setLoading(false);
-                });
-        } else {
-            setError('No user is logged in');
-            setLoading(false);
-        }
-    }, [userEmail]);
-
-    // Handle input change
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setUser((prev) => ({ ...prev, [name]: value }));
-    };
-
-    // Handle profile update submission
-    const handleUpdateProfile = (e) => {
-        e.preventDefault();
-        setError('');
-        setSuccessMessage('');
-    
-        if (userEmail) {
-            console.log("Updating user with email:", userEmail); // Debugging log
-            UserService.updateUser(userEmail, user)
-                .then((updatedUser) => {
-                    console.log("Updated user:", updatedUser); // Log the updated user data
-                    setSuccessMessage('Profile updated successfully');
-                    setUser(updatedUser); // Update state with the new data
-                })
-                .catch((err) => {
-                    console.error("Error updating profile:", err); // Log error
-                    setError('Failed to update profile');
-                });
-        } else {
-            setError('No user is logged in');
-        }
-    };
-
-    // Handle logout functionality
-    const handleLogout = () => {
-        localStorage.removeItem('userEmail');
-        navigate('/login'); // Redirect to login page
-    };
-
-    if (loading) {
-        return <Typography>Loading...</Typography>;
+  useEffect(() => {
+    // Load user data from localStorage
+    const storedData = JSON.parse(localStorage.getItem("userdata"));
+    if (storedData) {
+      setUserData(storedData);
     }
+  }, []);
 
-    return (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-            <Paper elevation={4} sx={{ p: 4, maxWidth: 500, width: '100%', borderRadius: 3 }}>
-                <Typography variant="h4" align="center" gutterBottom>
-                    User Profile
-                </Typography>
-                <form onSubmit={handleUpdateProfile}>
-                    <TextField
-                        label="First Name"
-                        name="firstName"
-                        value={user.firstName}
-                        onChange={handleInputChange}
-                        fullWidth
-                        required
-                        sx={{ mb: 2 }}
-                    />
-                    <TextField
-                        label="Last Name"
-                        name="lastName"
-                        value={user.lastName}
-                        onChange={handleInputChange}
-                        fullWidth
-                        required
-                        sx={{ mb: 2 }}
-                    />
-                    <TextField
-                        label="Email"
-                        name="email"
-                        value={user.email}
-                        onChange={handleInputChange}
-                        fullWidth
-                        required
-                        disabled
-                        sx={{ mb: 2 }}
-                    />
-                    <TextField
-                        label="Date of Birth"
-                        type="date"
-                        name="dateOfBirth"
-                        value={user.dateOfBirth}
-                        onChange={handleInputChange}
-                        InputLabelProps={{ shrink: true }}
-                        fullWidth
-                        required
-                        sx={{ mb: 2 }}
-                    />
-                    <TextField
-                        label="Gender"
-                        name="gender"
-                        value={user.gender}
-                        onChange={handleInputChange}
-                        fullWidth
-                        required
-                        sx={{ mb: 2 }}
-                    />
-                    <TextField
-                        label="Location"
-                        name="location"
-                        value={user.location}
-                        onChange={handleInputChange}
-                        fullWidth
-                        required
-                        sx={{ mb: 2 }}
-                    />
-                    <TextField
-                        label="Password"
-                        type="password"
-                        name="password"
-                        value={user.password}
-                        onChange={handleInputChange}
-                        fullWidth
-                        required
-                        sx={{ mb: 2 }}
-                    />
-                    <Button type="submit" variant="contained" color="primary" fullWidth>
-                        Update Profile
-                    </Button>
-                </form>
+  const handleSave = async () => {
+    try {
+      const userDataToSend = { ...userData };
+      if (!userDataToSend.password || userDataToSend.password.trim() === "") {
+        delete userDataToSend.password;
+      }
+      const updatedData = await UserService.updateProfile(userData.email, userDataToSend);
+      localStorage.setItem("userdata", JSON.stringify(updatedData));
+      setUserData(updatedData);
+      setIsEditing(false);
+      alert("Profile updated successfully!");
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+      alert("An error occurred while updating your profile. Please try again.");
+    }
+  };
 
-                {error && <Alert severity="error" sx={{ mt: 3 }}>{error}</Alert>}
-                {successMessage && <Alert severity="success" sx={{ mt: 3 }}>{successMessage}</Alert>}
+  const getAvatar = () => {
+    if (userData.gender.toLowerCase() === "male") {
+      return MaleAvatar;
+    } else if (userData.gender.toLowerCase() === "female") {
+      return FemaleAvatar;
+    } else {
+      return DefaultAvatar;
+    }
+  };
 
-                {/* Logout Button */}
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleLogout}
-                    fullWidth
-                    sx={{ mt: 3 }}
-                >
-                    Logout
-                </Button>
-            </Paper>
-        </Box>
-    );
+  return (
+    <ProfileContainer>
+      {/* Left Profile Card */}
+      <ProfileCard>
+        <Avatar src={getAvatar()} alt="User Avatar" />
+        <Typography variant="h6" gutterBottom>
+          {`${userData.firstName || "First Name"} ${userData.lastName || "Last Name"}`}
+        </Typography>
+        <Typography variant="body2" color="textSecondary" gutterBottom>
+          {userData.location || "Location not provided"}
+        </Typography>
+      </ProfileCard>
+
+      {/* Right Details Card */}
+      <DetailsCard>
+        {isEditing ? (
+          <Box
+            component="form"
+            noValidate
+            autoComplete="off"
+            sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+          >
+            <TextField
+              label="First Name"
+              variant="outlined"
+              value={userData.firstName}
+              onChange={(e) => setUserData({ ...userData, firstName: e.target.value })}
+            />
+            <TextField
+              label="Last Name"
+              variant="outlined"
+              value={userData.lastName}
+              onChange={(e) => setUserData({ ...userData, lastName: e.target.value })}
+            />
+            <TextField
+              label="Email"
+              variant="outlined"
+              value={userData.email}
+              onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+            />
+            <TextField
+              label="Location"
+              variant="outlined"
+              value={userData.location}
+              onChange={(e) => setUserData({ ...userData, location: e.target.value })}
+            />
+            <TextField
+              label="Gender"
+              variant="outlined"
+              value={userData.gender}
+              onChange={(e) => setUserData({ ...userData, gender: e.target.value })}
+            />
+            <TextField
+              label="Birthday"
+              type="date"
+              variant="outlined"
+              InputLabelProps={{ shrink: true }}
+              value={userData.dateOfBirth}
+              onChange={(e) => setUserData({ ...userData, dateOfBirth: e.target.value })}
+            />
+            <Button variant="contained" color="primary" onClick={handleSave}>
+              Save
+            </Button>
+          </Box>
+        ) : (
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <Field>
+              <strong>First Name:</strong> {userData.firstName || "Not provided"}
+            </Field>
+            <Field>
+              <strong>Last Name:</strong> {userData.lastName || "Not provided"}
+            </Field>
+            <Field>
+              <strong>Email:</strong> {userData.email || "Not provided"}
+            </Field>
+            <Field>
+              <strong>Location:</strong> {userData.location || "Not provided"}
+            </Field>
+            <Field>
+              <strong>Gender:</strong> {userData.gender || "Not provided"}
+            </Field>
+            <Field>
+              <strong>Birthday:</strong> {userData.dateOfBirth || "Not provided"}
+            </Field>
+            <Button variant="outlined" color="primary" onClick={() => setIsEditing(true)}>
+              Edit
+            </Button>
+          </Box>
+        )}
+      </DetailsCard>
+    </ProfileContainer>
+  );
 };
 
 export default Profile;
-    

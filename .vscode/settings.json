@@ -1,4 +1,5 @@
 {
     "colorWheel.settings.workspaceColor": "hsl(128,35%,56%)",
-    "java.compile.nullAnalysis.mode": "automatic"
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Typography, Button, Card, CardMedia, CardContent, Grid, Avatar } from '@mui/material';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
-import { styled } from '@mui/system';
+import { styled, width } from '@mui/system';
 import { motion } from 'framer-motion';
 
 const specialists = [
@@ -9,8 +9,8 @@ const specialists = [
     id: 1,
     name: 'John Michael I. Pogoy',
     degree: 'Appdev/Electives',
-    image: 'SAILogo.png',
-    bannerImage: 'SAILogo.png',
+    image: 'CEO.jpg',
+    bannerImage: 'CEO.jpg',
     age: 35,
     position: 'Senior Cardiologist',
     quote: 'Saving lives, one heartbeat at a time!',
@@ -77,14 +77,14 @@ const PageContainer = styled(Box)(({ theme }) => ({
 }));
 
 const HeroSection = styled(Box)(({ theme }) => ({
-  maxWidth: 900,
+  maxWidth: 887,
   margin: 'auto',
   padding: theme.spacing(4),
   marginBottom: theme.spacing(4),
   display: 'flex',
   flexDirection: theme.breakpoints.down('md') ? 'column' : 'row',
   alignItems: 'stretch',
-  backgroundColor: theme.palette.common.white,
+   background: 'linear-gradient(45deg, #4e54c8,#b5008e)',
   borderRadius: theme.shape.borderRadius,
   boxShadow: theme.shadows[3],
 }));
@@ -92,8 +92,10 @@ const HeroSection = styled(Box)(({ theme }) => ({
 const BannerImageWrapper = styled(motion.div)({
   flex: 3,
   position: 'absolute',
-  height: 260,
-  marginLeft: "550px",
+  height: 321.6,
+  marginLeft: "541px",
+  marginTop: "-32px",
+  
 });
 
 const BannerContent = styled(CardContent)(({ theme }) => ({
@@ -126,7 +128,9 @@ const TeamCard = styled(Card)(({ theme }) => ({
   '&:hover': {
     transform: 'translateY(-5px)',
     boxShadow: theme.shadows[4],
+
   },
+  background: 'linear-gradient(45deg, #4e54c8,#b5008e)'
 }));
 
 const SpecialistAvatar = styled(Avatar)(({ theme }) => ({
@@ -168,19 +172,19 @@ const AboutUsPage = () => {
         </BannerImageWrapper>
 
         <BannerContent>
-          <Typography variant="h4" sx={{ mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
+          <Typography variant="h4" sx={{ mb: 2, fontWeight: 'bold', color: 'white' }}>
             {specialists[currentSpecialist].name}
           </Typography>
-          <Typography variant="subtitle1" sx={{ mb: 2, color: 'text.secondary' }}>
+          <Typography variant="subtitle1" sx={{ mb: 2, color: '#d7d7d7' }}>
             {specialists[currentSpecialist].degree}
           </Typography>
-          <Typography variant="body1" sx={{ mb: 1 }}>
+          <Typography variant="body1" sx={{ mb: 1, color: '#d7d7d7' }}>
             <strong>Age:</strong> {specialists[currentSpecialist].age}
           </Typography>
-          <Typography variant="body1" sx={{ mb: 1 }}>
+          <Typography variant="body1" sx={{ mb: 1, color: '#d7d7d7' }}>
             <strong>Position:</strong> {specialists[currentSpecialist].position}
           </Typography>
-          <Typography variant="body2" sx={{ fontStyle: 'italic', mt: 2, color: 'text.secondary' }}>
+          <Typography variant="body2" sx={{ fontStyle: 'italic', mt: 2, color: '#d7d7d7' }}>
             "{specialists[currentSpecialist].quote}"
           </Typography>
         </BannerContent>
@@ -198,7 +202,7 @@ const AboutUsPage = () => {
 
       {/* Team Section */}
       <TeamSection>
-        <Typography variant="h3" sx={{ mb: 4, color: 'secondary.main', fontWeight: 'bold' }}>
+        <Typography variant="h3" sx={{ mb: 4, color: '#de02ae', fontWeight: 'bold', filter: 'drop-shadow(-14px 6px 35px #6d0075)' }}>
           Our Specialists
         </Typography>
         <Grid container spacing={3} justifyContent="center">
@@ -206,10 +210,10 @@ const AboutUsPage = () => {
             <Grid item xs={12} sm={6} md={4} key={specialist.id}>
               <TeamCard onClick={() => setCurrentSpecialist(specialists.indexOf(specialist))}>
                 <SpecialistAvatar src={specialist.image} alt={specialist.name} />
-                <Typography variant="h6" sx={{ color: 'secondary.main', mb: 1 }}>
+                <Typography variant="h6" sx={{ color: '#d7d7d7', mb: 1 }}>
                   {specialist.name}
                 </Typography>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                <Typography variant="body2" sx={{ color: '#d7d7d7' }}>
                   {specialist.degree}
                 </Typography>
               </TeamCard>

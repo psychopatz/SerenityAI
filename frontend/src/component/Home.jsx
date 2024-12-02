@@ -149,6 +149,7 @@ const Home = () => {
         <Title variant="h1">SERENITY AI</Title>
         <Quote noWrap>"Your Personal AI for Emotional Well-being"</Quote>
       </Box>
+
       <RightContainer>
   <TopRightContainer>
     <Title2>

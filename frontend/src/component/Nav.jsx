@@ -92,11 +92,11 @@ const Nav = () => {
     transition: "transform 0.2s, background-color 0.2s",
     '&:hover': {
       transform: "scale(1.05)",
-      backgroundColor: "#0077b6",
+      backgroundColor:"#0077b6",
       color: "#ffffff",
     },
     '&.Mui-selected': {
-      backgroundColor: "#005f99",
+      background: 'linear-gradient(to right,#4e54c8, #960276)',
       color: "#0077b6",
       fontSize: "1.2rem",
       padding: "10px 18px",

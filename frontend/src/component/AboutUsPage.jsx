@@ -8,7 +8,7 @@ const specialists = [
   {
     id: 1,
     name: 'John Michael I. Pogoy',
-    degree: 'Appdev',
+    degree: 'Appdev/Electives',
     image: 'SAILogo.png',
     bannerImage: 'SAILogo.png',
     age: 35,
@@ -18,9 +18,9 @@ const specialists = [
   {
     id: 2,
     name: 'Shane Adrian C. Opinion',
-    degree: 'Appdev',
-    image: 'SAILogo.png',
-    bannerImage: 'cat2.jpg',
+    degree:  'Appdev/Electives',
+    image: 'Shane.jpg',
+    bannerImage: 'Shane.jpg',
     age: 40,
     position: 'Pediatric Specialist',
     quote: 'Caring for children, one smile at a time.',
@@ -28,9 +28,9 @@ const specialists = [
   {
     id: 3,
     name: 'Walter L. Canenda',
-    degree: 'Appdev',
-    image: 'cat3.jpg',
-    bannerImage: 'cat3.jpg',
+    degree:  'Appdev/Electives',
+    image: 'ErenWalter.png',
+    bannerImage: 'ErenWalter.png',
     age: 45,
     position: 'Lead Neurologist',
     quote: 'The brain is the most fascinating organ to work with.',
@@ -38,9 +38,9 @@ const specialists = [
   {
     id: 4,
     name: 'Patrick Romulo P. Cabiling',
-    degree: 'Appdev',
-    image: 'cat4.jpg',
-    bannerImage: 'cat4.jpg',
+    degree:  'Appdev/Electives',
+    image: 'Jrizz.jpg',
+    bannerImage: 'Jrizz.jpg',
     age: 38,
     position: 'Neurologist',
     quote: 'We treat the mind and body together.',
@@ -48,7 +48,7 @@ const specialists = [
   {
     id: 5,
     name: 'Patrick Oliver S. Bustamante',
-    degree: 'React',
+    degree: 'Electives',
     image: 'cat5.jpg',
     bannerImage: 'cat5.jpg',
     age: 50,
@@ -58,7 +58,7 @@ const specialists = [
   {
     id: 6,
     name: 'Lloyd Scott A. Cabido',
-    degree: 'React',
+    degree:  'Electives',
     image: 'cat6.jpg',
     bannerImage: 'cat6.jpg',
     age: 42,
@@ -72,11 +72,12 @@ const PageContainer = styled(Box)(({ theme }) => ({
   height: '100vh',
   overflowY: 'auto',
   backdropFilter: 'blur(5px)',
+  paddingTop: theme.spacing(15),
 
 }));
 
 const HeroSection = styled(Box)(({ theme }) => ({
-  maxWidth: 1200,
+  maxWidth: 900,
   margin: 'auto',
   padding: theme.spacing(4),
   marginBottom: theme.spacing(4),
@@ -90,8 +91,9 @@ const HeroSection = styled(Box)(({ theme }) => ({
 
 const BannerImageWrapper = styled(motion.div)({
   flex: 3,
-  position: 'relative',
-  height: 450,
+  position: 'absolute',
+  height: 260,
+  marginLeft: "550px",
 });
 
 const BannerContent = styled(CardContent)(({ theme }) => ({

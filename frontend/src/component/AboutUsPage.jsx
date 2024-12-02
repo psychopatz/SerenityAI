@@ -209,7 +209,7 @@ const AboutUsPage = () => {
           {specialists.map((specialist) => (
             <Grid item xs={12} sm={6} md={4} key={specialist.id}>
               <TeamCard onClick={() => setCurrentSpecialist(specialists.indexOf(specialist))}>
-                <SpecialistAvatar src={specialist.image} alt={specialist.name} />
+                <SpecialistAvatar src={specialist.image} alt={specialist.name} sx={{ bgcolor: 'white' }} />
                 <Typography variant="h6" sx={{ color: '#d7d7d7', mb: 1 }}>
                   {specialist.name}
                 </Typography>

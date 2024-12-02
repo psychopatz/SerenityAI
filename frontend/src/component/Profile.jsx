@@ -8,6 +8,8 @@ import {
   styled,
   Grid,
   Divider,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import UserService from "../services/UserService";
 import MaleAvatar from "../assets/male-avatar.png";
@@ -34,7 +36,7 @@ const DetailsCard = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(6),
   borderRadius: theme.shape.borderRadius * 2,
   boxShadow: "0px 6px 30px rgba(0, 0, 0, 0.15)",
-  background: "linear-gradient(145deg, #e3f2fd, #ffffff)", // Subtle gradient
+  background: "linear-gradient(145deg, #FFECA1, #98F5F9)", // Subtle gradient
   textAlign: "center",
 }));
 
@@ -44,7 +46,7 @@ const Avatar = styled("img")(({ theme }) => ({
   borderRadius: "50%",
   marginBottom: theme.spacing(3),
   objectFit: "cover",
-  border: "6px solid #fff",
+  border: "6px solid #E8E8E8",
   boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.2)",
 }));
 
@@ -78,6 +80,7 @@ const Profile = () => {
   });
 
   const [isEditing, setIsEditing] = useState(false);
+  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
 
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem("userdata"));
@@ -92,11 +95,15 @@ const Profile = () => {
       localStorage.setItem("userdata", JSON.stringify(updatedData));
       setUserData(updatedData);
       setIsEditing(false);
-      alert("Profile updated successfully!");
+      setSnackbar({ open: true, message: "Profile updated successfully!", severity: "success" });
     } catch (error) {
       console.error("Failed to update profile:", error);
-      alert("An error occurred while updating your profile. Please try again.");
+      setSnackbar({ open: true, message: "Failed to update profile. Please try again.", severity: "error" });
     }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
   };
 
   const getAvatar = () => {
@@ -206,6 +213,22 @@ const Profile = () => {
           </Box>
         )}
       </DetailsCard>
+
+      {/* Snackbar for Notifications */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </ProfileContainer>
   );
 };

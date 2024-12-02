@@ -50,7 +50,7 @@ const specialists = [
     name: 'Patrick Oliver S. Bustamante',
     degree: 'Electives',
     image: 'patrick.gif',
-    bannerImage: 'patrick.gif',
+    bannerImage: 'PatrickStatic.webp',
     age: "Doesnt Matter",
     position: 'Full Stack Developer',
     quote: 'Go to the World and multiply. I guess.',

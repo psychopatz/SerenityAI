@@ -154,7 +154,7 @@ const Nav = () => {
                 "0px 0px 5px rgba(255, 255, 255, 0.5)"
               ] }}
               transition={{ duration: 3, repeat: Infinity, repeatType: 'mirror' }}
-              style={{ marginLeft: "10px", color: "white", fontWeight: "bold", fontSize: "1.5rem" }}
+              style={{ marginLeft: "10px", color: "white", fontWeight: "bold", fontSize: "1.5rem", marginBottom: "5px" }}
             >
               SERENITY AI
             </motion.div>

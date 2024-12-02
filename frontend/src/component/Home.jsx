@@ -1,4 +1,4 @@
-import { Box, Button as MuiButton, Typography } from "@mui/material";
+import { Box, Card, Button as MuiButton, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { AnimatePresence, color } from "framer-motion";
 import React, { useState } from "react";

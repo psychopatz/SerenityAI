@@ -6,58 +6,67 @@ import {
   Button,
   Paper,
   styled,
+  Grid,
+  Divider,
+  Snackbar,
+  Alert,
 } from "@mui/material";
-import UserService from "../services/UserService"; // Import UserService
-
-// Import images for male and female avatars
+import UserService from "../services/UserService";
 import MaleAvatar from "../assets/male-avatar.png";
 import FemaleAvatar from "../assets/female-avatar.png";
 import DefaultAvatar from "../assets/default-avatar.png";
+import EmailIcon from "@mui/icons-material/Email";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import CakeIcon from "@mui/icons-material/Cake";
+import WcIcon from "@mui/icons-material/Wc";
 
 // Styled Components
 const ProfileContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  flexWrap: "wrap",
-  gap: theme.spacing(4),
-  padding: theme.spacing(4),
   minHeight: "100vh",
-}));
-
-const ProfileCard = styled(Paper)(({ theme }) => ({
-  width: "300px",
-  padding: theme.spacing(3),
-  borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[3],
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
-  textAlign: "center",
+  padding: theme.spacing(4),
+  backgroundColor: "transparent", // Ensure transparency
 }));
 
 const DetailsCard = styled(Paper)(({ theme }) => ({
-  flex: 1,
-  maxWidth: "600px",
-  padding: theme.spacing(3),
-  borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[3],
+  width: "100%",
+  maxWidth: "700px", // Wider card for better space usage
+  padding: theme.spacing(6),
+  borderRadius: theme.shape.borderRadius * 2,
+  boxShadow: "0px 6px 30px rgba(0, 0, 0, 0.15)",
+  background: "linear-gradient(145deg, #FFECA1, #98F5F9)", // Subtle gradient
+  textAlign: "center",
 }));
 
 const Avatar = styled("img")(({ theme }) => ({
-  width: 120,
-  height: 120,
+  width: 140,
+  height: 140,
   borderRadius: "50%",
-  marginBottom: theme.spacing(2),
+  marginBottom: theme.spacing(3),
+  objectFit: "cover",
+  border: "6px solid #E8E8E8",
+  boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.2)",
 }));
 
-const Field = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(1),
+const Field = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  gap: theme.spacing(1.5),
+  marginBottom: theme.spacing(3),
   fontSize: theme.typography.body1.fontSize,
   "& strong": {
     fontWeight: theme.typography.fontWeightBold,
   },
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  marginTop: theme.spacing(4),
+  padding: theme.spacing(1.5),
+  fontSize: "1.2rem",
+  fontWeight: 600,
+  borderRadius: theme.shape.borderRadius * 2,
 }));
 
 const Profile = () => {
@@ -71,9 +80,9 @@ const Profile = () => {
   });
 
   const [isEditing, setIsEditing] = useState(false);
+  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
 
   useEffect(() => {
-    // Load user data from localStorage
     const storedData = JSON.parse(localStorage.getItem("userdata"));
     if (storedData) {
       setUserData(storedData);
@@ -82,19 +91,19 @@ const Profile = () => {
 
   const handleSave = async () => {
     try {
-      const userDataToSend = { ...userData };
-      if (!userDataToSend.password || userDataToSend.password.trim() === "") {
-        delete userDataToSend.password;
-      }
-      const updatedData = await UserService.updateProfile(userData.email, userDataToSend);
+      const updatedData = await UserService.updateProfile(userData.email, userData);
       localStorage.setItem("userdata", JSON.stringify(updatedData));
       setUserData(updatedData);
       setIsEditing(false);
-      alert("Profile updated successfully!");
+      setSnackbar({ open: true, message: "Profile updated successfully!", severity: "success" });
     } catch (error) {
       console.error("Failed to update profile:", error);
-      alert("An error occurred while updating your profile. Please try again.");
+      setSnackbar({ open: true, message: "Failed to update profile. Please try again.", severity: "error" });
     }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
   };
 
   const getAvatar = () => {
@@ -109,55 +118,54 @@ const Profile = () => {
 
   return (
     <ProfileContainer>
-      {/* Left Profile Card */}
-      <ProfileCard>
+      <DetailsCard>
+        {/* Profile Picture */}
         <Avatar src={getAvatar()} alt="User Avatar" />
-        <Typography variant="h6" gutterBottom>
-          {`${userData.firstName || "First Name"} ${userData.lastName || "Last Name"}`}
+        <Typography variant="h4" fontWeight="bold" gutterBottom>
+          {`${userData.firstName || "First Name"} ${
+            userData.lastName || "Last Name"
+          }`}
         </Typography>
-        <Typography variant="body2" color="textSecondary" gutterBottom>
+        <Typography variant="subtitle1" color="textSecondary" gutterBottom>
           {userData.location || "Location not provided"}
         </Typography>
-      </ProfileCard>
-
-      {/* Right Details Card */}
-      <DetailsCard>
+        <Divider sx={{ margin: "20px auto", width: "80%" }} />
         {isEditing ? (
-          <Box
-            component="form"
-            noValidate
-            autoComplete="off"
-            sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-          >
+          <Box component="form" sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
             <TextField
               label="First Name"
               variant="outlined"
               value={userData.firstName}
               onChange={(e) => setUserData({ ...userData, firstName: e.target.value })}
+              fullWidth
             />
             <TextField
               label="Last Name"
               variant="outlined"
               value={userData.lastName}
               onChange={(e) => setUserData({ ...userData, lastName: e.target.value })}
+              fullWidth
             />
             <TextField
               label="Email"
               variant="outlined"
               value={userData.email}
               onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+              fullWidth
             />
             <TextField
               label="Location"
               variant="outlined"
               value={userData.location}
               onChange={(e) => setUserData({ ...userData, location: e.target.value })}
+              fullWidth
             />
             <TextField
               label="Gender"
               variant="outlined"
               value={userData.gender}
               onChange={(e) => setUserData({ ...userData, gender: e.target.value })}
+              fullWidth
             />
             <TextField
               label="Birthday"
@@ -166,37 +174,61 @@ const Profile = () => {
               InputLabelProps={{ shrink: true }}
               value={userData.dateOfBirth}
               onChange={(e) => setUserData({ ...userData, dateOfBirth: e.target.value })}
+              fullWidth
             />
-            <Button variant="contained" color="primary" onClick={handleSave}>
-              Save
-            </Button>
+            <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}>
+              <Button variant="contained" color="primary" onClick={handleSave}>
+                Save
+              </Button>
+              <Button variant="outlined" color="secondary" onClick={() => setIsEditing(false)}>
+                Cancel
+              </Button>
+            </Box>
           </Box>
         ) : (
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
             <Field>
-              <strong>First Name:</strong> {userData.firstName || "Not provided"}
-            </Field>
-            <Field>
-              <strong>Last Name:</strong> {userData.lastName || "Not provided"}
-            </Field>
-            <Field>
+              <EmailIcon color="primary" />
               <strong>Email:</strong> {userData.email || "Not provided"}
             </Field>
             <Field>
+              <LocationOnIcon color="primary" />
               <strong>Location:</strong> {userData.location || "Not provided"}
             </Field>
             <Field>
+              <WcIcon color="primary" />
               <strong>Gender:</strong> {userData.gender || "Not provided"}
             </Field>
             <Field>
+              <CakeIcon color="primary" />
               <strong>Birthday:</strong> {userData.dateOfBirth || "Not provided"}
             </Field>
-            <Button variant="outlined" color="primary" onClick={() => setIsEditing(true)}>
-              Edit
-            </Button>
+            <StyledButton
+              variant="contained"
+              color="primary"
+              onClick={() => setIsEditing(true)}
+            >
+              Edit Profile
+            </StyledButton>
           </Box>
         )}
       </DetailsCard>
+
+      {/* Snackbar for Notifications */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </ProfileContainer>
   );
 };

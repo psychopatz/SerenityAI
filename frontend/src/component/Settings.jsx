@@ -39,7 +39,7 @@ const SettingsContainer = styled(Box)(({ theme }) => ({
 const SettingsCard = styled(Card)(({ theme }) => ({
     borderRadius: theme.shape.borderRadius * 2,
     boxShadow: theme.shadows[3],
-    backgroundColor: '#ffffff',
+    background: "linear-gradient(145deg, #FFECA1, #98F5F9)",
     transition: 'box-shadow 0.3s ease-in-out',
     '&:hover': {
         boxShadow: theme.shadows[6]

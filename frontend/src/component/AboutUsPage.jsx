@@ -10,10 +10,10 @@ const specialists = [
     name: 'John Michael I. Pogoy',
     degree: 'Appdev/Electives',
     image: 'CEO.jpg',
-    bannerImage: 'CEO.jpg',
-    age: 35,
+    bannerImage: 'Pogoy.gif',
+    age: 21,
     position: 'Full Stack Developer',
-    quote: 'Saving lives, one heartbeat at a time!',
+    quote: 'Every 60 seconds, a minute passes.',
   },
   {
     id: 2,
@@ -30,17 +30,17 @@ const specialists = [
     name: 'Walter L. Canenda',
     degree:  'Appdev/Electives',
     image: 'ErenWalter.png',
-    bannerImage: 'ErenWalter.png',
-    age: 45,
+    bannerImage: 'erenwalter.gif',
+    age: 24,
     position: 'Full Stack Developer',
-    quote: 'The brain is the most fascinating organ to work with.',
+    quote: 'If I lose it all slip and fall, I will never look away.',
   },
   {
     id: 4,
     name: 'Patrick Romulo P. Cabiling',
     degree:  'Appdev/Electives',
     image: 'Jrizz.jpg',
-    bannerImage: 'Jrizz.jpg',
+    bannerImage: 'Jrizz.gif',
     age: 38,
     position: 'Full Stack Developer',
     quote: 'We treat the mind and body together.',
@@ -49,8 +49,8 @@ const specialists = [
     id: 5,
     name: 'Patrick Oliver S. Bustamante',
     degree: 'Electives',
-    image: 'patrick.gif',
-    bannerImage: 'PatrickStatic.webp',
+    image: 'PatrickStatic.webp',
+    bannerImage: 'patrick.gif',
     age: "Doesnt Matter",
     position: 'Full Stack Developer',
     quote: 'Go to the World and multiply. I guess.',
@@ -59,10 +59,10 @@ const specialists = [
     id: 6,
     name: 'Lloyd Scott A. Cabido',
     degree:  'Electives',
-    image: 'cat6.jpg',
-    bannerImage: 'cat6.jpg',
+    image: 'Cabido.jpg',
+    bannerImage: 'Cabido.jpg',
     age: 42,
-    position: 'Full Stack Developer',
+    position: 'Frontend Developer',
     quote: 'Understanding the brain is key to understanding health.',
   },
 ];
@@ -203,7 +203,7 @@ const AboutUsPage = () => {
       {/* Team Section */}
       <TeamSection>
         <Typography variant="h3" sx={{ mb: 4, color: '#de02ae', fontWeight: 'bold', filter: 'drop-shadow(-14px 6px 35px #6d0075)' }}>
-          Our Specialists
+          Serenity AI Team
         </Typography>
         <Grid container spacing={3} justifyContent="center">
           {specialists.map((specialist) => (

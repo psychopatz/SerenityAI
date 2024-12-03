@@ -195,7 +195,7 @@ const Diary = () => {
                 loop
               />
             </ProfileAnimationWrapper>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom fontWeight={'bold'}>
               {`${currentUser?.firstName || 'First Name'} ${currentUser?.lastName || 'Last Name'}`}
             </Typography>
             <Typography variant="body2" color="text.secondary">
@@ -208,7 +208,7 @@ const Diary = () => {
               <strong>Birthday:</strong> {currentUser?.dateOfBirth || 'Not Provided'}
             </Typography>
             <Achievements>
-              <Typography variant="h6">Achievements</Typography>
+              <Typography variant="h6" fontWeight={'bold'}>Achievements</Typography>
               <Typography variant="body2">
                 <strong>Total Likes:</strong> {totalLikes}
               </Typography>
@@ -238,7 +238,7 @@ const Diary = () => {
             onMouseEnter={() => setHoveredAnimation('like')}
             onMouseLeave={() => setHoveredAnimation(null)}
           >
-            <Typography variant="subtitle1" color="primary">
+            <Typography variant="subtitle1" color="black" fontWeight={"bold"}>
               Likes
             </Typography>
             <Typography variant="body2">
@@ -252,7 +252,7 @@ const Diary = () => {
             onMouseEnter={() => setHoveredAnimation('dislike')}
             onMouseLeave={() => setHoveredAnimation(null)}
           >
-            <Typography variant="subtitle1" color="secondary">
+            <Typography variant="subtitle1" color="black" fontWeight={"bold"}>
               Dislikes
             </Typography>
             <Typography variant="body2">
@@ -266,7 +266,7 @@ const Diary = () => {
             onMouseEnter={() => setHoveredAnimation('like')}
             onMouseLeave={() => setHoveredAnimation(null)}
           >
-            <Typography variant="subtitle1" color="primary">
+            <Typography variant="subtitle1" color="black" fontWeight="bold">
               Current Mood
             </Typography>
             <Typography variant="body2">
@@ -280,7 +280,7 @@ const Diary = () => {
             onMouseEnter={() => setHoveredAnimation('like')}
             onMouseLeave={() => setHoveredAnimation(null)}
           >
-            <Typography variant="subtitle1" color="primary">
+            <Typography variant="subtitle1" color="black" fontWeight="bold">
               Memories
             </Typography>
             <Typography variant="body2">

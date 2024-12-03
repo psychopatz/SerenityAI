@@ -25,7 +25,7 @@ const Container = styled(Box)(({ theme }) => ({
   bottom: '90px',
   left: '50%',
   transform: 'translateX(-50%)',
-  marginBottom: '-100px',
+  marginBottom: '-150px',
   animation: `${floatAnimation} 3s ease-in-out infinite`,
   [theme.breakpoints.down('sm')]: {
     width: '80%',
@@ -51,7 +51,9 @@ const DynamicBaymax = () => {
   const location = useLocation();
 
   // Routes where Baymax should not render
-  const excludedRoutes = ["/", "/login", "/register", "/404", "/profile"];
+  const excludedRoutes = ["/", "/login", "/register", "/404", "/profile", "/diary","/settings"];
+
+
 
   // Check if current route is excluded
   const shouldRender = !excludedRoutes.includes(location.pathname);

@@ -1,4 +1,3 @@
-// PageWrapper.js
 import React from "react";
 import { motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
@@ -6,22 +5,12 @@ import { useLocation } from "react-router-dom";
 const PageWrapper = ({ children }) => {
   const location = useLocation();
 
-  // Generate a random number to decide which animation to use
-  const randomEffect = React.useMemo(() => Math.random(), [location.pathname]);
-
-  // Define animation variants based on the random number
-  const variants =
-    randomEffect < 0.5
-      ? {
-          initial: { opacity: 0, scale: 0.8, rotate: 10 },
-          animate: { opacity: 1, scale: 1, rotate: 0 },
-          exit: { opacity: 0, scale: 0.8, rotate: -10 },
-        }
-      : {
-          initial: { opacity: 0, x: -200 },
-          animate: { opacity: 1, x: 0 },
-          exit: { opacity: 0, x: 200 },
-        };
+  // Define animation variants for a morphing effect
+  const variants = {
+    initial: { scale: 0.8, borderRadius: "50%" },
+    animate: { scale: 1, borderRadius: "0%" },
+    exit: { scale: 0.8, borderRadius: "50%" },
+  };
 
   // Adjust the transition for smoother animation
   const transition = {
@@ -33,7 +22,10 @@ const PageWrapper = ({ children }) => {
   return (
     <motion.div
       key={location.pathname} // Ensure re-render on route change
-      style={{ position: "relative", overflow: "hidden" }}
+      style={{
+        position: "relative",
+        overflow: "hidden",
+      }}
       initial="initial"
       animate="animate"
       exit="exit"

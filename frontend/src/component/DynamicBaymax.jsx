@@ -25,7 +25,7 @@ const Container = styled(Box)(({ theme }) => ({
   bottom: '90px',
   left: '50%',
   transform: 'translateX(-50%)',
-  marginBottom: '-150px',
+  marginBottom: '-100px',
   animation: `${floatAnimation} 3s ease-in-out infinite`,
   [theme.breakpoints.down('sm')]: {
     width: '80%',

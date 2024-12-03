@@ -26,6 +26,11 @@ public class UserService {
     // Create a new user with encoded password
     public UserEntity postUser(UserEntity user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        
+        // Set profilephoto_id and previousPhoto when creating a new user
+        user.setProfilephoto_id(user.getProfilephoto_id());
+        user.setPreviousPhoto(user.getPreviousPhoto());
+        
         return userRepository.save(user);
     }
 
@@ -81,6 +86,16 @@ public class UserService {
         // Update privacy_id only if it's provided and not zero (assuming 0 is invalid)
         if (newUserDetails.getPrivacy_id() != 0 && newUserDetails.getPrivacy_id() != 0) {
             user.setPrivacy_id(newUserDetails.getPrivacy_id());
+        }
+
+        // Update profilephoto_id only if it's provided and not zero (assuming 0 is invalid)
+        if (newUserDetails.getProfilephoto_id() != 0) {
+            user.setProfilephoto_id(newUserDetails.getProfilephoto_id());
+        }
+
+        // Update previousPhoto only if it's provided
+        if (newUserDetails.getPreviousPhoto() != null) {
+            user.setPreviousPhoto(newUserDetails.getPreviousPhoto());
         }
 
         // Save the updated user entity
@@ -169,9 +184,18 @@ public class UserService {
             user.setPrivacy_id(newUserDetails.getPrivacy_id());
         }
 
+        // Update profilephoto_id only if it's provided and not zero (assuming 0 is invalid)
+        if (newUserDetails.getProfilephoto_id() != 0) {
+            user.setProfilephoto_id(newUserDetails.getProfilephoto_id());
+        }
+
+        // Update previousPhoto only if it's provided
+        if (newUserDetails.getPreviousPhoto() != null) {
+            user.setPreviousPhoto(newUserDetails.getPreviousPhoto());
+        }
+
         // Save the updated user entity
         return userRepository.save(user);
     }
     
 }
-

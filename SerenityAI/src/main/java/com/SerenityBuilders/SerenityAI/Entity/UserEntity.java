@@ -46,11 +46,17 @@ public class UserEntity {
     @Column(name = "privacy_id")
     private int privacy_id;
 
+    @Column(name = "profilephoto_id")
+    private int profilephoto_id;
+
+    @Column(name = "previousPhoto")
+    private int[] previousPhoto;
+
     // Constructors
     public UserEntity() {}
 
     public UserEntity(int user_id, String firstName, String lastName, String email, String password,
-                      String dateOfBirth, String gender, String lastLogin, String location,int memoryID,int privacy_id) {
+                      String dateOfBirth, String gender, String lastLogin, String location, int memoryID, int privacy_id, int profilephoto_id, int[] previousPhoto) {
         this.user_id = user_id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -62,6 +68,8 @@ public class UserEntity {
         this.location = location;
         this.memoryID = memoryID;
         this.privacy_id = privacy_id;
+        this.profilephoto_id = profilephoto_id;
+        this.previousPhoto = previousPhoto;
     }
 
     // Getters and Setters
@@ -144,4 +152,20 @@ public class UserEntity {
     public void setPrivacy_id(int privacyId){this.privacy_id = privacyId;}
 
     public int getPrivacy_id(){return privacy_id;}
+
+    public int getProfilephoto_id() {
+        return profilephoto_id;
+    }
+
+    public void setProfilephoto_id(int profilephoto_id) {
+        this.profilephoto_id = profilephoto_id;
+    }
+
+    public int[] getPreviousPhoto() {
+        return previousPhoto;
+    }
+
+    public void setPreviousPhoto(int[] previousPhoto) {
+        this.previousPhoto = previousPhoto;
+    }
 }

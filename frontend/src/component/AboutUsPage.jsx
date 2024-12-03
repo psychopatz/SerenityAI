@@ -12,7 +12,7 @@ const specialists = [
     image: 'CEO.jpg',
     bannerImage: 'CEO.jpg',
     age: 35,
-    position: 'Senior Cardiologist',
+    position: 'Full Stack Developer',
     quote: 'Saving lives, one heartbeat at a time!',
   },
   {
@@ -21,9 +21,9 @@ const specialists = [
     degree:  'Appdev/Electives',
     image: 'Shane.jpg',
     bannerImage: 'Shane.jpg',
-    age: 40,
-    position: 'Pediatric Specialist',
-    quote: 'Caring for children, one smile at a time.',
+    age: 23,
+    position: 'Full Stack Developer',
+    quote: 'It is what it is.',
   },
   {
     id: 3,
@@ -32,7 +32,7 @@ const specialists = [
     image: 'ErenWalter.png',
     bannerImage: 'ErenWalter.png',
     age: 45,
-    position: 'Lead Neurologist',
+    position: 'Full Stack Developer',
     quote: 'The brain is the most fascinating organ to work with.',
   },
   {
@@ -42,7 +42,7 @@ const specialists = [
     image: 'Jrizz.jpg',
     bannerImage: 'Jrizz.jpg',
     age: 38,
-    position: 'Neurologist',
+    position: 'Full Stack Developer',
     quote: 'We treat the mind and body together.',
   },
   {
@@ -62,7 +62,7 @@ const specialists = [
     image: 'cat6.jpg',
     bannerImage: 'cat6.jpg',
     age: 42,
-    position: 'Neurologist',
+    position: 'Full Stack Developer',
     quote: 'Understanding the brain is key to understanding health.',
   },
 ];

@@ -10,6 +10,8 @@ import {
   Divider,
   Snackbar,
   Alert,
+  IconButton,
+  InputAdornment,
 } from "@mui/material";
 import UserService from "../services/UserService";
 import MaleAvatar from "../assets/male-avatar.png";
@@ -19,6 +21,8 @@ import EmailIcon from "@mui/icons-material/Email";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CakeIcon from "@mui/icons-material/Cake";
 import WcIcon from "@mui/icons-material/Wc";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 // Styled Components
 const ProfileContainer = styled(Box)(({ theme }) => ({
@@ -26,29 +30,29 @@ const ProfileContainer = styled(Box)(({ theme }) => ({
   justifyContent: "center",
   alignItems: "center",
   minHeight: "100vh",
-  padding: theme.spacing(2), // Reduced padding for better fit
+  padding: theme.spacing(2),
   backgroundColor: "transparent",
 }));
 
 const DetailsCard = styled(Paper)(({ theme }) => ({
-  width: "90%", 
+  width: "90%",
   maxWidth: "700px",
   padding: theme.spacing(4),
   borderRadius: theme.shape.borderRadius * 2,
-  boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)", 
-  background: "linear-gradient(145deg, #FFECA1, #98F5F9)", 
+  boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+  background: "linear-gradient(145deg, #FFECA1, #98F5F9)",
   display: "grid",
-  gridTemplateColumns: "1fr 1fr", // Two columns of equal width
+  gridTemplateColumns: "1fr 1fr",
   gap: theme.spacing(2),
-  alignItems: "center", // Center items vertically
-  textAlign: "left", // Align text to the left
+  alignItems: "center",
+  textAlign: "left",
   [theme.breakpoints.down("sm")]: {
-    gridTemplateColumns: "1fr", // Switch to single column for small screens
+    gridTemplateColumns: "1fr",
   },
 }));
 
 const AvatarContainer = styled(Box)(({ theme }) => ({
-  gridColumn: "span 2", // Avatar spans both columns
+  gridColumn: "span 2",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
@@ -67,14 +71,14 @@ const Field = styled(Box)(({ theme }) => ({
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
-  gridColumn: "span 2", // Button spans both columns
+  gridColumn: "span 2",
   marginTop: theme.spacing(3),
   padding: theme.spacing(1.5),
   fontSize: "1rem",
   fontWeight: 600,
   borderRadius: theme.shape.borderRadius,
 }));
-  
+
 const Avatar = styled("img")(({ theme }) => ({
   width: 140,
   height: 140,
@@ -95,10 +99,14 @@ const Profile = () => {
     dateOfBirth: "",
     password: "",
   });
-
-  const [confirmPassword, setConfirmPassword] = useState(""); // New state for confirm password
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
 
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem("userdata"));
@@ -107,31 +115,36 @@ const Profile = () => {
     }
   }, []);
 
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
   const handleSave = async () => {
-    // Ensure password and confirmPassword match if provided
     if (userData.password && confirmPassword) {
       if (userData.password !== confirmPassword) {
         setSnackbar({ open: true, message: "Passwords do not match!", severity: "error" });
         return;
       }
     } else {
-      // If password fields are empty, don't include password in the request
       delete userData.password;
     }
-  
+
     try {
       const updatedData = await UserService.updateProfile(userData.email, userData);
       localStorage.setItem("userdata", JSON.stringify(updatedData));
       setUserData(updatedData);
-      setConfirmPassword(""); // Clear confirm password
+      setConfirmPassword("");
       setIsEditing(false);
       setSnackbar({ open: true, message: "Profile updated successfully!", severity: "success" });
     } catch (error) {
       console.error("Failed to update profile:", error);
-      setSnackbar({ open: true, message: "Failed to update profile. Please try again.", severity: "error" });
+      setSnackbar({
+        open: true,
+        message: "Failed to update profile. Please try again.",
+        severity: "error",
+      });
     }
   };
-  
 
   const handleCloseSnackbar = () => {
     setSnackbar({ ...snackbar, open: false });
@@ -146,6 +159,7 @@ const Profile = () => {
       return DefaultAvatar;
     }
   };
+
 
   return (
     <ProfileContainer>
@@ -207,20 +221,37 @@ const Profile = () => {
             />
             <TextField
               label="Password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               variant="outlined"
               InputLabelProps={{ shrink: true }}
               onChange={(e) => setUserData({ ...userData, password: e.target.value })}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={togglePasswordVisibility} edge="end">
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
               fullWidth
-              
             />
             <TextField
               label="Confirm Password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               variant="outlined"
               InputLabelProps={{ shrink: true }}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={togglePasswordVisibility} edge="end">
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
               fullWidth
             />
             <Box sx={{ gridColumn: "span 2", display: "flex", justifyContent: "flex-end", gap: 2 }}>

@@ -20,7 +20,7 @@ const specialists = [
     name: 'Shane Adrian C. Opinion',
     degree:  'Appdev/Electives',
     image: 'Shane.jpg',
-    bannerImage: 'Shane.jpg',
+    bannerImage: 'oldman.gif',
     age: 23,
     position: 'Full Stack Developer',
     quote: 'It is what it is.',

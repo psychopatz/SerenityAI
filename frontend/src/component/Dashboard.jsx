@@ -229,6 +229,10 @@ const Dashboard = () => {
 
     setLoading(true);
     try {
+      if (!user.lastLogin) {
+        user.lastLogin = new Date().toISOString();
+        console.log(user.lastLogin);
+      }
       const requestData = createRequestData(user, memory);
       const response = await getRecommendation(requestData);
       const text = handleRecommendationResponse(response);

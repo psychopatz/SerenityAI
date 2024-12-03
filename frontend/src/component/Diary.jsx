@@ -90,7 +90,7 @@ const MemoriesSection = styled(Box)(({ theme }) => ({
 const MemoryCard = styled(Paper)(({ theme }) => ({
   margin: `${theme.spacing(2)} auto`,
   padding: theme.spacing(3),
-  borderRadius: theme.shape.borderRadius,
+  borderRadius: "30px",
 }));
 
 const InteractionSection = styled(Box)(({ theme, type }) => ({
@@ -108,7 +108,7 @@ const InteractionSection = styled(Box)(({ theme, type }) => ({
       : type === 'memories' 
       ? '#e0f7fa' 
       : '#ffffff', 
-  borderRadius: theme.shape.borderRadius,
+  borderRadius: "30px",
   fontFamily: 'Arial, sans-serif', 
   color: 
     type === 'like'

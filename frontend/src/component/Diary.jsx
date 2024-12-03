@@ -100,26 +100,26 @@ const InteractionSection = styled(Box)(({ theme, type }) => ({
   padding: theme.spacing(2),
   backgroundColor: 
     type === 'like' 
-      ? '#EB5B00' // Color for likes
+      ? '#EB5B00' 
       : type === 'dislike' 
-      ? '#6A669D' // Color for dislikes
+      ? '#6A669D' 
       : type === 'mood' 
-      ? '#d1c4e9' // Color for Current Mood
+      ? '#d1c4e9' 
       : type === 'memories' 
-      ? '#e0f7fa' // Color for Memories
-      : '#ffffff', // Default color
+      ? '#e0f7fa' 
+      : '#ffffff', 
   borderRadius: theme.shape.borderRadius,
-  fontFamily: 'Arial, sans-serif', // Set the font
+  fontFamily: 'Arial, sans-serif', 
   color: 
     type === 'like'
-      ? '#FFFFFF' // Font color for likes
+      ? '#FFFFFF' 
       : type === 'dislike'
-      ? '#FFFFFF' // Font color for dislikes
+      ? '#FFFFFF'
       : type === 'mood'
-      ? '#000000' // Font color for Current Mood
+      ? '#000000' 
       : type === 'memories'
-      ? '#004D40' // Font color for Memories
-      : '#000000', // Default font color
+      ? '#004D40'
+      : '#000000', 
 }));
 
 
@@ -222,78 +222,108 @@ const Diary = () => {
 
       {/* Memories Section */}
       <MemoriesSection>
-        {userMemories.length > 0 ? (
-          userMemories.map((memory) => (
-            <MemoryCard key={memory.id}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 2,
-                }}
-              >
-                {/* Likes Section */}
-                <InteractionSection
-                  type="like"
-                  onMouseEnter={() => setHoveredAnimation('like')}
-                  onMouseLeave={() => setHoveredAnimation(null)}
-                >
-                  <Typography variant="subtitle1" color="primary">
-                    Likes
-                  </Typography>
-                  <Typography variant="body2">
-                    {memory.likes?.join(', ') || 'No likes'}
-                  </Typography>
-                </InteractionSection>
+  {userMemories.length > 0 ? (
+    userMemories.map((memory) => (
+      <MemoryCard key={memory.id}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2,
+          }}
+        >
+          {/* Likes Section */}
+          <InteractionSection
+            type="like"
+            onMouseEnter={() => setHoveredAnimation('like')}
+            onMouseLeave={() => setHoveredAnimation(null)}
+          >
+            <Typography variant="subtitle1" color="primary">
+              Likes
+            </Typography>
+            <Typography variant="body2">
+              {memory.likes?.join(', ') || 'No likes'}
+            </Typography>
+          </InteractionSection>
 
-                {/* Dislikes Section */}
-                <InteractionSection
-                  type="dislike"
-                  onMouseEnter={() => setHoveredAnimation('dislike')}
-                  onMouseLeave={() => setHoveredAnimation(null)}
-                >
-                  <Typography variant="subtitle1" color="secondary">
-                    Dislikes
-                  </Typography>
-                  <Typography variant="body2">
-                    {memory.dislikes?.join(', ') || 'No dislikes'}
-                  </Typography>
-                </InteractionSection>
+          {/* Dislikes Section */}
+          <InteractionSection
+            type="dislike"
+            onMouseEnter={() => setHoveredAnimation('dislike')}
+            onMouseLeave={() => setHoveredAnimation(null)}
+          >
+            <Typography variant="subtitle1" color="secondary">
+              Dislikes
+            </Typography>
+            <Typography variant="body2">
+              {memory.dislikes?.join(', ') || 'No dislikes'}
+            </Typography>
+          </InteractionSection>
 
-                {/* Mood Type Section */}
-                <InteractionSection
-                  type="mood"
-                  onMouseEnter={() => setHoveredAnimation('like')}
-                  onMouseLeave={() => setHoveredAnimation(null)}
-                >
-                  <Typography variant="subtitle1" color="primary">
-                    Current Mood
-                  </Typography>
-                  <Typography variant="body2">
-                    {memory.moodType || 'No mood data available'}
-                  </Typography>
-                </InteractionSection>
+          {/* Mood Type Section */}
+          <InteractionSection
+            type="mood"
+            onMouseEnter={() => setHoveredAnimation('like')}
+            onMouseLeave={() => setHoveredAnimation(null)}
+          >
+            <Typography variant="subtitle1" color="primary">
+              Current Mood
+            </Typography>
+            <Typography variant="body2">
+              {memory.moodType || 'No mood data available'}
+            </Typography>
+          </InteractionSection>
 
-                {/* Memories */}
-                <InteractionSection
-                  type="memories"
-                  onMouseEnter={() => setHoveredAnimation('like')}
-                  onMouseLeave={() => setHoveredAnimation(null)}
-                >
-                  <Typography variant="subtitle1" color="primary">
-                    Memories
-                  </Typography>
-                  <Typography variant="body2">
-                    {memory.memories?.join(', ') || 'No memories'}
-                  </Typography>
-                </InteractionSection>
-              </Box>
-            </MemoryCard>
-          ))
-        ) : (
-          <Typography align="center">No memories found for this user.</Typography>
-        )}
-      </MemoriesSection>
+          {/* Memories */}
+          <InteractionSection
+            type="memories"
+            onMouseEnter={() => setHoveredAnimation('like')}
+            onMouseLeave={() => setHoveredAnimation(null)}
+          >
+            <Typography variant="subtitle1" color="primary">
+              Memories
+            </Typography>
+            <Typography variant="body2">
+              {memory.memories?.join(', ') || 'No memories'}
+            </Typography>
+          </InteractionSection>
+        </Box>
+      </MemoryCard>
+    ))
+  ) : (
+    <Box>
+      {/* Render empty sections when no memories exist */}
+      <InteractionSection type="like">
+        <Typography variant="subtitle1" color="primary">
+          Likes
+        </Typography>
+        <Typography variant="body2">No likes</Typography>
+      </InteractionSection>
+
+      <InteractionSection type="dislike">
+        <Typography variant="subtitle1" color="secondary">
+          Dislikes
+        </Typography>
+        <Typography variant="body2">No dislikes</Typography>
+      </InteractionSection>
+
+      <InteractionSection type="mood">
+        <Typography variant="subtitle1" color="primary">
+          Current Mood
+        </Typography>
+        <Typography variant="body2">No mood data available</Typography>
+      </InteractionSection>
+
+      <InteractionSection type="memories">
+        <Typography variant="subtitle1" color="primary">
+          Memories
+        </Typography>
+        <Typography variant="body2">No memories</Typography>
+      </InteractionSection>
+    </Box>
+  )}
+</MemoriesSection>
+
     </DiaryContainer>
   );
 };

@@ -26,20 +26,55 @@ const ProfileContainer = styled(Box)(({ theme }) => ({
   justifyContent: "center",
   alignItems: "center",
   minHeight: "100vh",
-  padding: theme.spacing(4),
-  backgroundColor: "transparent", // Ensure transparency
+  padding: theme.spacing(2), // Reduced padding for better fit
+  backgroundColor: "transparent",
 }));
 
 const DetailsCard = styled(Paper)(({ theme }) => ({
-  width: "100%",
-  maxWidth: "700px", // Wider card for better space usage
-  padding: theme.spacing(6),
+  width: "90%", 
+  maxWidth: "700px",
+  padding: theme.spacing(4),
   borderRadius: theme.shape.borderRadius * 2,
-  boxShadow: "0px 6px 30px rgba(0, 0, 0, 0.15)",
-  background: "linear-gradient(145deg, #FFECA1, #98F5F9)", // Subtle gradient
-  textAlign: "center",
+  boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)", 
+  background: "linear-gradient(145deg, #FFECA1, #98F5F9)", 
+  display: "grid",
+  gridTemplateColumns: "1fr 1fr", // Two columns of equal width
+  gap: theme.spacing(2),
+  alignItems: "center", // Center items vertically
+  textAlign: "left", // Align text to the left
+  [theme.breakpoints.down("sm")]: {
+    gridTemplateColumns: "1fr", // Switch to single column for small screens
+  },
 }));
 
+const AvatarContainer = styled(Box)(({ theme }) => ({
+  gridColumn: "span 2", // Avatar spans both columns
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  marginBottom: theme.spacing(3),
+}));
+
+const Field = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  gap: theme.spacing(1),
+  fontSize: theme.typography.body2.fontSize,
+  "& strong": {
+    fontWeight: theme.typography.fontWeightBold,
+  },
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  gridColumn: "span 2", // Button spans both columns
+  marginTop: theme.spacing(3),
+  padding: theme.spacing(1.5),
+  fontSize: "1rem",
+  fontWeight: 600,
+  borderRadius: theme.shape.borderRadius,
+}));
+  
 const Avatar = styled("img")(({ theme }) => ({
   width: 140,
   height: 140,
@@ -50,25 +85,6 @@ const Avatar = styled("img")(({ theme }) => ({
   boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.2)",
 }));
 
-const Field = styled(Box)(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  gap: theme.spacing(1.5),
-  marginBottom: theme.spacing(3),
-  fontSize: theme.typography.body1.fontSize,
-  "& strong": {
-    fontWeight: theme.typography.fontWeightBold,
-  },
-}));
-
-const StyledButton = styled(Button)(({ theme }) => ({
-  marginTop: theme.spacing(4),
-  padding: theme.spacing(1.5),
-  fontSize: "1.2rem",
-  fontWeight: 600,
-  borderRadius: theme.shape.borderRadius * 2,
-}));
-
 const Profile = () => {
   const [userData, setUserData] = useState({
     firstName: "",
@@ -77,8 +93,10 @@ const Profile = () => {
     location: "",
     gender: "",
     dateOfBirth: "",
+    password: "",
   });
 
+  const [confirmPassword, setConfirmPassword] = useState(""); // New state for confirm password
   const [isEditing, setIsEditing] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
 
@@ -90,10 +108,22 @@ const Profile = () => {
   }, []);
 
   const handleSave = async () => {
+    // Ensure password and confirmPassword match if provided
+    if (userData.password && confirmPassword) {
+      if (userData.password !== confirmPassword) {
+        setSnackbar({ open: true, message: "Passwords do not match!", severity: "error" });
+        return;
+      }
+    } else {
+      // If password fields are empty, don't include password in the request
+      delete userData.password;
+    }
+  
     try {
       const updatedData = await UserService.updateProfile(userData.email, userData);
       localStorage.setItem("userdata", JSON.stringify(updatedData));
       setUserData(updatedData);
+      setConfirmPassword(""); // Clear confirm password
       setIsEditing(false);
       setSnackbar({ open: true, message: "Profile updated successfully!", severity: "success" });
     } catch (error) {
@@ -101,6 +131,7 @@ const Profile = () => {
       setSnackbar({ open: true, message: "Failed to update profile. Please try again.", severity: "error" });
     }
   };
+  
 
   const handleCloseSnackbar = () => {
     setSnackbar({ ...snackbar, open: false });
@@ -119,19 +150,17 @@ const Profile = () => {
   return (
     <ProfileContainer>
       <DetailsCard>
-        {/* Profile Picture */}
-        <Avatar src={getAvatar()} alt="User Avatar" />
-        <Typography variant="h4" fontWeight="bold" gutterBottom>
-          {`${userData.firstName || "First Name"} ${
-            userData.lastName || "Last Name"
-          }`}
-        </Typography>
-        <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-          {userData.location || "Location not provided"}
-        </Typography>
-        <Divider sx={{ margin: "20px auto", width: "80%" }} />
+        {/* Avatar Section */}
+        <AvatarContainer>
+          <Avatar src={getAvatar()} alt="User Avatar" />
+          <Typography variant="h4" fontWeight="bold" gutterBottom>
+            {`${userData.firstName || "First Name"} ${userData.lastName || "Last Name"}`}
+          </Typography>
+        </AvatarContainer>
+  
+        {/* Conditional Rendering for Editing or Viewing */}
         {isEditing ? (
-          <Box component="form" sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+          <Box component="form" sx={{ gridColumn: "span 2", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
             <TextField
               label="First Name"
               variant="outlined"
@@ -176,7 +205,25 @@ const Profile = () => {
               onChange={(e) => setUserData({ ...userData, dateOfBirth: e.target.value })}
               fullWidth
             />
-            <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}>
+            <TextField
+              label="Password"
+              type="password"
+              variant="outlined"
+              InputLabelProps={{ shrink: true }}
+              onChange={(e) => setUserData({ ...userData, password: e.target.value })}
+              fullWidth
+              
+            />
+            <TextField
+              label="Confirm Password"
+              type="password"
+              variant="outlined"
+              InputLabelProps={{ shrink: true }}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              fullWidth
+            />
+            <Box sx={{ gridColumn: "span 2", display: "flex", justifyContent: "flex-end", gap: 2 }}>
               <Button variant="contained" color="primary" onClick={handleSave}>
                 Save
               </Button>
@@ -186,7 +233,8 @@ const Profile = () => {
             </Box>
           </Box>
         ) : (
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+          <>
+            {/* Profile Fields */}
             <Field>
               <EmailIcon color="primary" />
               <strong>Email:</strong> {userData.email || "Not provided"}
@@ -203,17 +251,20 @@ const Profile = () => {
               <CakeIcon color="primary" />
               <strong>Birthday:</strong> {userData.dateOfBirth || "Not provided"}
             </Field>
+  
+            {/* Edit Button */}
             <StyledButton
               variant="contained"
               color="primary"
               onClick={() => setIsEditing(true)}
+              sx={{ gridColumn: "span 2" }}
             >
               Edit Profile
             </StyledButton>
-          </Box>
+          </>
         )}
       </DetailsCard>
-
+  
       {/* Snackbar for Notifications */}
       <Snackbar
         open={snackbar.open}
@@ -231,6 +282,7 @@ const Profile = () => {
       </Snackbar>
     </ProfileContainer>
   );
+  
 };
 
 export default Profile;

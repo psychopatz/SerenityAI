@@ -156,7 +156,10 @@ public class UserService {
         if (newUserDetails.getEmail() != null) {
             user.setEmail(newUserDetails.getEmail());
         }
-
+        
+        if (newUserDetails.getPassword() != null && !newUserDetails.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(newUserDetails.getPassword()));
+        }
 
         if (newUserDetails.getDateOfBirth() != null) {
             user.setDateOfBirth(newUserDetails.getDateOfBirth());

@@ -29,30 +29,23 @@ const DiaryContainer = styled('div')({
   padding: '20px',
 });
 
-const MobileContainer = styled('div')({
-  width: '100%',
-  height: '100vh',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-});
-
 const Phone = styled('div')({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   width: '331px',
   height: '616px',
-  backgroundColor: '#1a1a58',
+  background: 'linear-gradient(45deg, #4caf50, #1a1a58)', // Add gradient
   borderRadius: '30px',
   padding: '10px',
 });
+
 
 const PhoneMirror = styled('div')({
   position: 'relative',
   width: '328px',
   height: '600px',
-  backgroundColor: 'rgb(26, 25, 25)',
+  backgroundColor: 'white',
   borderRadius: '30px',
   overflow: 'hidden',
   display: 'flex',
@@ -65,7 +58,6 @@ const ProfileSection = styled(Box)(({ theme }) => ({
   width: '90%',
   borderRadius: theme.shape.borderRadius,
   padding: theme.spacing(3),
-  boxShadow: theme.shadows[3],
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -82,18 +74,22 @@ const Achievements = styled(Box)(({ theme }) => ({
 }));
 
 const MemoriesSection = styled(Box)(({ theme }) => ({
-  flex: 1, // Allows this section to grow and take available space
-  maxWidth: '600px', // Optional: limits the max width
-  overflowY: 'auto', // Optional: adds scroll if content overflows
-  height: '90%', // Matches the height of the phone
+  flex: 1,
+  maxWidth: '600px',
+  overflowY: 'auto',
+  height: '90%',
   padding: theme.spacing(2),
   borderRadius: theme.shape.borderRadius,
+  flexDirection: 'column', // Arrange MemoryCards in a column
+  alignItems: 'flex-start', // Align cards to the left
+  marginTop: theme.spacing(25), // Add space above the section
 }));
+
+
 
 const MemoryCard = styled(Paper)(({ theme }) => ({
   margin: `${theme.spacing(2)} auto`,
   padding: theme.spacing(3),
-  backgroundColor: '#fff', // White background for cards
   borderRadius: theme.shape.borderRadius,
 }));
 
@@ -102,9 +98,30 @@ const InteractionSection = styled(Box)(({ theme, type }) => ({
   flexDirection: 'column',
   gap: theme.spacing(1),
   padding: theme.spacing(2),
-  backgroundColor: type === 'like' ? '#e0f7fa' : '#ffebee',
+  backgroundColor: 
+    type === 'like' 
+      ? '#EB5B00' // Color for likes
+      : type === 'dislike' 
+      ? '#6A669D' // Color for dislikes
+      : type === 'mood' 
+      ? '#d1c4e9' // Color for Current Mood
+      : type === 'memories' 
+      ? '#e0f7fa' // Color for Memories
+      : '#ffffff', // Default color
   borderRadius: theme.shape.borderRadius,
+  fontFamily: 'Arial, sans-serif', // Set the font
+  color: 
+    type === 'like'
+      ? '#FFFFFF' // Font color for likes
+      : type === 'dislike'
+      ? '#FFFFFF' // Font color for dislikes
+      : type === 'mood'
+      ? '#000000' // Font color for Current Mood
+      : type === 'memories'
+      ? '#004D40' // Font color for Memories
+      : '#000000', // Default font color
 }));
+
 
 // Main Diary Component
 const Diary = () => {
@@ -207,7 +224,7 @@ const Diary = () => {
       <MemoriesSection>
         {userMemories.length > 0 ? (
           userMemories.map((memory) => (
-            <MemoryCard key={memory.id} elevation={0}>
+            <MemoryCard key={memory.id}>
               <Box
                 sx={{
                   display: 'flex',
@@ -245,7 +262,7 @@ const Diary = () => {
 
                 {/* Mood Type Section */}
                 <InteractionSection
-                  type="like"
+                  type="mood"
                   onMouseEnter={() => setHoveredAnimation('like')}
                   onMouseLeave={() => setHoveredAnimation(null)}
                 >
@@ -259,7 +276,7 @@ const Diary = () => {
 
                 {/* Memories */}
                 <InteractionSection
-                  type="like"
+                  type="memories"
                   onMouseEnter={() => setHoveredAnimation('like')}
                   onMouseLeave={() => setHoveredAnimation(null)}
                 >

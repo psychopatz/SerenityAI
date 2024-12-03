@@ -15,6 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api")
 public class PhotoUploadController {
 
@@ -111,6 +112,17 @@ public class PhotoUploadController {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(metadataList);
+    }
+
+    @DeleteMapping("/photo/{id}")
+    public ResponseEntity<?> deletePhoto(@PathVariable Long id) {
+        Optional<Photo> photoOptional = photoRepository.findById(id);
+        if (photoOptional.isPresent()) {
+            photoRepository.deleteById(id);
+            return ResponseEntity.status(HttpStatus.OK).body("Photo deleted successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Photo not found");
+        }
     }
 
 }

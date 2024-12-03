@@ -21,7 +21,7 @@ import Diary from "./component/Diary";
 import About from "./component/AboutUsPage";
 import Settings  from "./component/Settings";
 import DynamicBaymax from "./component/DynamicBaymax";
-
+import ImageTest from './pages/ImageTest';
 
 // Define allowed paths
 const allowedPaths = ["/dashboard", "/profile", "/diary","/about"];
@@ -66,6 +66,7 @@ const AnimatedRoutes = () => {
         <Route path="/profile" element={<PageWrapper><Profile /></PageWrapper>} />
         <Route path="/about" element={<PageWrapper><About /></PageWrapper>} />
         <Route path="/settings" element={<PageWrapper><Settings /></PageWrapper>} />
+        <Route path="/image-test" element={<PageWrapper><ImageTest /></PageWrapper>} />
         <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
         <Route path="*" element={<PageWrapper><ErrorPage /></PageWrapper>} />
 

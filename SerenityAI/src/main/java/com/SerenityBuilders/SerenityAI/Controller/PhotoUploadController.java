@@ -11,8 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -23,9 +23,9 @@ public class PhotoUploadController {
 
     // Allowed image MIME types
     private static final List<String> ALLOWED_MIME_TYPES = Arrays.asList(
-        MediaType.IMAGE_JPEG_VALUE,
-        MediaType.IMAGE_PNG_VALUE,
-        MediaType.IMAGE_GIF_VALUE
+            MediaType.IMAGE_JPEG_VALUE,
+            MediaType.IMAGE_PNG_VALUE,
+            MediaType.IMAGE_GIF_VALUE
     );
 
     @Autowired
@@ -41,7 +41,7 @@ public class PhotoUploadController {
 
             if (file.getSize() > MAX_FILE_SIZE) {
                 return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
-                    .body("File size exceeds maximum limit of 5MB");
+                        .body("File size exceeds maximum limit of 5MB");
             }
 
             // Validate file type
@@ -61,16 +61,56 @@ public class PhotoUploadController {
 
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Error processing file: " + e.getMessage());
+                    .body("Error processing file: " + e.getMessage());
         }
     }
 
     @GetMapping("/photo/{id}")
     public ResponseEntity<byte[]> getPhoto(@PathVariable Long id) {
         return photoRepository.findById(id)
-            .map(photo -> ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(photo.getContentType()))
-                .body(photo.getData()))
-            .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+                .map(photo -> ResponseEntity.ok()
+                        .contentType(MediaType.parseMediaType(photo.getContentType()))
+                        .body(photo.getData()))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
+
+    @GetMapping("/photo/{id}/metadata")
+    public ResponseEntity<?> getPhotoMetadata(@PathVariable Long id) {
+        Optional<Map<String, Object>> metadataOptional = photoRepository.findById(id)
+                .map(photo -> {
+                    Map<String, Object> metadata = new HashMap<>();
+                    metadata.put("id", photo.getId());
+                    metadata.put("originalFileName", photo.getOriginalFileName());
+                    metadata.put("contentType", photo.getContentType());
+                    metadata.put("uploadTimestamp", photo.getUploadTimestamp());
+                    metadata.put("fileSize", photo.getData().length); // Size in bytes
+                    return metadata;
+                });
+
+        if (metadataOptional.isPresent()) {
+            return ResponseEntity.ok(metadataOptional.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Photo not found");
+        }
+    }
+
+
+
+    @GetMapping("/photos/metadata")
+    public ResponseEntity<List<Map<String, Object>>> getAllPhotoMetadata() {
+        List<Map<String, Object>> metadataList = photoRepository.findAll().stream()
+                .map((Photo photo) -> {
+                    Map<String, Object> metadata = new HashMap<>();
+                    metadata.put("id", photo.getId());
+                    metadata.put("originalFileName", photo.getOriginalFileName());
+                    metadata.put("contentType", photo.getContentType());
+                    metadata.put("uploadTimestamp", photo.getUploadTimestamp());
+                    metadata.put("fileSize", photo.getData().length); // Size in bytes
+                    return metadata;
+                })
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(metadataList);
+    }
+
 }

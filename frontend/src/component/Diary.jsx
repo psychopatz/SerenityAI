@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { styled, keyframes } from '@mui/material/styles';
-import { Paper, Typography, Box } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 import Lottie from "lottie-react";
 import ProfileAnimation from '../assets/Profile.json';
 import HeartEmojiAnimation from '../assets/HeartEmoji.json';
@@ -9,6 +9,8 @@ import { getAllMemories } from '../services/MemoryService';
 import StorageService from '../services/StorageService';
 import MemoriesAnimation from '../assets/Memories.json';
 import MoodTypeAnimation from '../assets/CurrentMood.json';
+import SwingingAnimation from '../assets/Swinging.json';
+import JammingAnimation from '../assets/JammingAnimation.json'
 // Keyframes for animations
 const fadeIn = keyframes`
   from {
@@ -104,6 +106,27 @@ const InteractionSection = styled(Box)(({ theme, type }) => ({
   borderRadius: "30px",
 }));
 
+const SwingingAnimationWrapper = styled(Box)({
+  position: 'absolute',
+  top: '50px', // Adjust this value for spacing from the top
+  left: '-20px', // Adjust this value for spacing from the right
+  zIndex: 10, // Ensure it appears above other elements
+  width: '500px', // Set width as per your design
+  height: '500px', // Set height as per your design
+});
+
+const JammingAnimationWrapper = styled(Box)({
+  position: 'absolute',
+  bottom: '0px', // Adjust this value for spacing from the top
+  right: '10px', // Adjust this value for spacing from the right
+  zIndex: 10, // Ensure it appears above other elements
+  width: '500px', // Set width as per your design
+  height: '500px', // Set height as per your design
+});
+
+
+
+
 
 // Main Diary Component
 const Diary = () => {
@@ -157,6 +180,12 @@ const Diary = () => {
 
   return (
     <DiaryContainer>
+      {/* Wow Animation */}
+      <SwingingAnimationWrapper>
+        <Lottie animationData={SwingingAnimation} loop style={{ width: '100%', height: '100%' }} />
+      </SwingingAnimationWrapper>
+
+      
       {/* Phone Section */}
       <Phone>
         <PhoneMirror>

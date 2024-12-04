@@ -158,6 +158,7 @@ const Dashboard = () => {
   });
 
   const handleRecommendationResponse = (response) => {
+    console.log("Response:",response);
     if (!response?.candidates?.[0]?.content?.parts) {
       console.error('Invalid recommendation response format.');
       return '';
@@ -177,7 +178,7 @@ const Dashboard = () => {
     }
   };
 
-  // Effects
+  // Greet User Via Date
   useEffect(() => {
     setGreeting(getTimeBasedGreeting());
   }, []);
@@ -229,11 +230,8 @@ const Dashboard = () => {
 
     setLoading(true);
     try {
-      if (!user.lastLogin) {
-        user.lastLogin = new Date().toISOString();
-        console.log(user.lastLogin);
-      }
       const requestData = createRequestData(user, memory);
+      console.log("Request Data:",requestData);
       const response = await getRecommendation(requestData);
       const text = handleRecommendationResponse(response);
 

@@ -21,7 +21,11 @@ const Nav = () => {
   // Retrieve user data from localStorage
   const userData = storage.getLocalStorage("userdata");
   const userInitial = userData?.firstName?.charAt(0) + userData?.lastName?.charAt(0) || "";
-  const userProfilePicture = userData?.profilePicture;
+  
+  const userProfilePicture = userData?.profilephoto_id 
+  ? `http://localhost:8080/api/photo/${userData.profilephoto_id}` 
+  : userData?.profilePicture;
+
 
   useEffect(() => {
     // Handle navigation logic

@@ -147,11 +147,43 @@ import com.SerenityBuilders.SerenityAI.util.LlmUtil;
 
                 // Get lastLogin date
                 String lastLoginStr = (String) userMap.get("lastLogin");
-                LocalDate lastLoginDate = LocalDate.parse(lastLoginStr);
+                LocalDate lastLoginDate = null;
 
-                // Calculate time elapsed since last login
-                long daysElapsed = calculateTimeElapse(lastLoginDate, today);
-                String formattedLastLogin = dateFormatter(lastLoginDate);
+                if (lastLoginStr != null && !lastLoginStr.isEmpty()) {
+                    lastLoginDate = LocalDate.parse(lastLoginStr);
+                }
+                // Initialize loginMessage
+                String loginMessage;
+
+                if (lastLoginDate == null) {
+                    // First time login
+                    loginMessage = "- This is the user's first login to SerenityAI, Welcome the user and ask question about what their gonna do.";
+                } else {
+                    // Calculate time elapsed since last login
+                    long daysElapsed = calculateTimeElapse(lastLoginDate, today);
+                    String formattedLastLogin = dateFormatter(lastLoginDate);
+
+                    // Determine the message based on days elapsed
+                    if(daysElapsed == 0){
+                        loginMessage = "- The user logged in earlier today.\n";
+                    } else if (daysElapsed == 1) {
+                        loginMessage = "- The user logged in yesterday.\n";
+                    } else if (daysElapsed < 7) {
+                        loginMessage = String.format(
+                                "- It's been only %d day(s) since the user's last login on %s.\n",
+                                daysElapsed, formattedLastLogin);
+                    } else if (daysElapsed > 30) {
+                        loginMessage = String.format(
+                                "- It's been %d days since the user's last login on %s. You missed the user!\n",
+                                daysElapsed, formattedLastLogin);
+                    } else {
+                        loginMessage = String.format(
+                                "- The user last logged in on %s, which was %d day(s) ago. You barely remembered the user.\n",
+                                formattedLastLogin, daysElapsed);
+                    }
+                }
+
+
 
                 // Create system instruction for generating recommendation
                 Map<String, Object> systemInstruction = new HashMap<>();
@@ -193,29 +225,6 @@ import com.SerenityBuilders.SerenityAI.util.LlmUtil;
                 }
                 if (memoryMap.containsKey("moodtype") && memoryMap.get("moodtype") != null) {
                     prompt.append("Mood: ").append(memoryMap.get("moodtype")).append("\n");
-                }
-
-                // Determine the message based on days elapsed
-                String loginMessage;
-                if(daysElapsed == 0){
-                    loginMessage = String.format(
-                            "- The user is logged in earlier\n");
-                } else if (daysElapsed == 1) {
-                    loginMessage = String.format(
-                            "- The user is logged in yesterday\n");
-
-                } else if (daysElapsed < 7) {
-                    loginMessage = String.format(
-                            "- It's been only %d day(s) since the users last logged in on %s.\n",
-                            daysElapsed, formattedLastLogin);
-                } else if (daysElapsed > 30) {
-                    loginMessage = String.format(
-                            "- It's been %d days since the user's last login on %s. You missed the user!\n",
-                            daysElapsed, formattedLastLogin);
-                } else {
-                    loginMessage = String.format(
-                            "- The user last logged in on %s, which was %d day(s) ago. You barely remembered the user\n",
-                            formattedLastLogin, daysElapsed);
                 }
 
 

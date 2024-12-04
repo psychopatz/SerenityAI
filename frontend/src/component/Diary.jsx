@@ -7,7 +7,8 @@ import HeartEmojiAnimation from '../assets/HeartEmoji.json';
 import DislikeAnimation from '../assets/DislikeAnimation.json';
 import { getAllMemories } from '../services/MemoryService';
 import StorageService from '../services/StorageService';
-
+import MemoriesAnimation from '../assets/Memories.json';
+import MoodTypeAnimation from '../assets/CurrentMood.json';
 // Keyframes for animations
 const fadeIn = keyframes`
   from {
@@ -45,7 +46,7 @@ const PhoneMirror = styled('div')({
   position: 'relative',
   width: '328px',
   height: '600px',
-  backgroundColor: 'white',
+  backgroundColor: '#ECEBDE',
   borderRadius: '30px',
   overflow: 'hidden',
   display: 'flex',
@@ -82,15 +83,7 @@ const MemoriesSection = styled(Box)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   flexDirection: 'column', // Arrange MemoryCards in a column
   alignItems: 'flex-start', // Align cards to the left
-  marginTop: theme.spacing(25), // Add space above the section
-}));
-
-
-
-const MemoryCard = styled(Paper)(({ theme }) => ({
-  margin: `${theme.spacing(2)} auto`,
-  padding: theme.spacing(3),
-  borderRadius: "30px",
+  marginTop: theme.spacing(33), // Add space above the section
 }));
 
 const InteractionSection = styled(Box)(({ theme, type }) => ({
@@ -109,17 +102,6 @@ const InteractionSection = styled(Box)(({ theme, type }) => ({
       ? '#e0f7fa' 
       : '#ffffff', 
   borderRadius: "30px",
-  fontFamily: 'Arial, sans-serif', 
-  color: 
-    type === 'like'
-      ? '#FFFFFF' 
-      : type === 'dislike'
-      ? '#FFFFFF'
-      : type === 'mood'
-      ? '#000000' 
-      : type === 'memories'
-      ? '#004D40'
-      : '#000000', 
 }));
 
 
@@ -186,6 +168,10 @@ const Diary = () => {
                     ? HeartEmojiAnimation
                     : hoveredAnimation === 'dislike'
                     ? DislikeAnimation
+                    : hoveredAnimation === 'moodtype'
+                    ? MoodTypeAnimation
+                    : hoveredAnimation === 'memories'
+                    ? MemoriesAnimation
                     : ProfileAnimation
                 }
                 style={{
@@ -224,7 +210,6 @@ const Diary = () => {
       <MemoriesSection>
   {userMemories.length > 0 ? (
     userMemories.map((memory) => (
-      <MemoryCard key={memory.id}>
         <Box
           sx={{
             display: 'flex',
@@ -263,7 +248,7 @@ const Diary = () => {
           {/* Mood Type Section */}
           <InteractionSection
             type="mood"
-            onMouseEnter={() => setHoveredAnimation('like')}
+            onMouseEnter={() => setHoveredAnimation('moodtype')}
             onMouseLeave={() => setHoveredAnimation(null)}
           >
             <Typography variant="subtitle1" color="black" fontWeight="bold">
@@ -277,7 +262,7 @@ const Diary = () => {
           {/* Memories */}
           <InteractionSection
             type="memories"
-            onMouseEnter={() => setHoveredAnimation('like')}
+            onMouseEnter={() => setHoveredAnimation('memories')}
             onMouseLeave={() => setHoveredAnimation(null)}
           >
             <Typography variant="subtitle1" color="black" fontWeight="bold">
@@ -288,38 +273,63 @@ const Diary = () => {
             </Typography>
           </InteractionSection>
         </Box>
-      </MemoryCard>
     ))
   ) : (
     <Box>
       {/* Render empty sections when no memories exist */}
-      <InteractionSection type="like">
-        <Typography variant="subtitle1" color="primary">
-          Likes
-        </Typography>
-        <Typography variant="body2">No likes</Typography>
-      </InteractionSection>
+      <InteractionSection
+            type="like"
+            onMouseEnter={() => setHoveredAnimation('like')}
+            onMouseLeave={() => setHoveredAnimation(null)}
+          >
+            <Typography variant="subtitle1" color="black" fontWeight={"bold"}>
+              Likes
+            </Typography>
+            <Typography variant="body2">
+             No likes
+            </Typography>
+          </InteractionSection>
 
-      <InteractionSection type="dislike">
-        <Typography variant="subtitle1" color="secondary">
-          Dislikes
-        </Typography>
-        <Typography variant="body2">No dislikes</Typography>
-      </InteractionSection>
+          <InteractionSection
+            type="dislike"
+            onMouseEnter={() => setHoveredAnimation('dislike')}
+            onMouseLeave={() => setHoveredAnimation(null)}
+          >
+            <Typography variant="subtitle1" color="black" fontWeight={"bold"}>
+              Dislikes
+            </Typography>
+            <Typography variant="body2">
+             No dislikes
+            </Typography>
+          </InteractionSection>
 
-      <InteractionSection type="mood">
-        <Typography variant="subtitle1" color="primary">
-          Current Mood
-        </Typography>
-        <Typography variant="body2">No mood data available</Typography>
-      </InteractionSection>
+          {/* Mood Type Section */}
+          <InteractionSection
+            type="mood"
+            onMouseEnter={() => setHoveredAnimation('moodtype')}
+            onMouseLeave={() => setHoveredAnimation(null)}
+          >
+            <Typography variant="subtitle1" color="black" fontWeight="bold">
+              Current Mood
+            </Typography>
+            <Typography variant="body2">
+              No mood data available
+            </Typography>
+          </InteractionSection>
 
-      <InteractionSection type="memories">
-        <Typography variant="subtitle1" color="primary">
-          Memories
-        </Typography>
-        <Typography variant="body2">No memories</Typography>
-      </InteractionSection>
+          {/* Memories */}
+          <InteractionSection
+            type="memories"
+            onMouseEnter={() => setHoveredAnimation('memories')}
+            onMouseLeave={() => setHoveredAnimation(null)}
+          >
+            <Typography variant="subtitle1" color="black" fontWeight="bold">
+              Memories
+            </Typography>
+            <Typography variant="body2">
+              No memories
+            </Typography>
+          </InteractionSection>
     </Box>
   )}
 </MemoriesSection>

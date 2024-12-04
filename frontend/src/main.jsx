@@ -5,12 +5,12 @@ import { theme, AppThemeProvider } from './styles/Themes.jsx'; // Ensure the pat
 import App from './App.jsx';
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  // <StrictMode>
     <ThemeProvider theme={theme}>
       <AppThemeProvider>
         <App />
       </AppThemeProvider>
     </ThemeProvider>
-  </StrictMode>
+
 );
 

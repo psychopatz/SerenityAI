@@ -51,7 +51,7 @@ const DynamicBaymax = () => {
   const location = useLocation();
 
   // Routes where Baymax should not render
-  const excludedRoutes = ["/", "/login", "/register", "/404", "/profile", "/diary","/settings"];
+  const excludedRoutes = ["/", "/login", "/register", "/404", "/profile", "/diary","/settings", "/about"];
 
 
 

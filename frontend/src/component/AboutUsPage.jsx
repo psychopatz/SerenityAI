@@ -50,10 +50,12 @@ const specialists = [
     name: 'Patrick Oliver S. Bustamante',
     degree: 'Electives',
     image: 'PatrickStatic.webp',
-    bannerImage: 'patrick.gif',
-    age: "Doesnt Matter",
+    bannerImage: 'Patrick.gif',
+    get age() {
+      return Math.floor(Math.random() * (100 - 10 + 1)) + 10; // Dynamically compute age on access
+    },
     position: 'Full Stack Developer',
-    quote: 'Go to the World and multiply. I guess.',
+    quote: JSON.parse(localStorage.getItem("userdata")).firstName ? "Batig nawong si " + JSON.parse(localStorage.getItem("userdata")).firstName + "!! Hahahaha" : "",
   },
   {
     id: 6,
@@ -66,6 +68,7 @@ const specialists = [
     quote: 'Understanding the brain is key to understanding health.',
   },
 ];
+
 
 // Styled components using Material-UI's styled API
 const PageContainer = styled(Box)(({ theme }) => ({

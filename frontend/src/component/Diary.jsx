@@ -46,7 +46,7 @@ const PhoneMirror = styled('div')({
   position: 'relative',
   width: '328px',
   height: '600px',
-  backgroundColor: 'white',
+  backgroundColor: '#ECEBDE',
   borderRadius: '30px',
   overflow: 'hidden',
   display: 'flex',
@@ -83,7 +83,7 @@ const MemoriesSection = styled(Box)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   flexDirection: 'column', // Arrange MemoryCards in a column
   alignItems: 'flex-start', // Align cards to the left
-  marginTop: theme.spacing(25), // Add space above the section
+  marginTop: theme.spacing(33), // Add space above the section
 }));
 
 const InteractionSection = styled(Box)(({ theme, type }) => ({
@@ -102,7 +102,6 @@ const InteractionSection = styled(Box)(({ theme, type }) => ({
       ? '#e0f7fa' 
       : '#ffffff', 
   borderRadius: "30px",
- 
 }));
 
 

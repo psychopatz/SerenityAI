@@ -206,7 +206,7 @@ const AboutUsPage = () => {
 
       {/* Team Section */}
       <TeamSection>
-        <Typography variant="h3" sx={{ mb: 4, color: '#de02ae', fontWeight: 'bold', filter: 'drop-shadow(-14px 6px 35px #6d0075)' }}>
+        <Typography variant="h3" sx={{ mb: 4, color: '#ffffff', fontWeight: 'bold', filter: 'drop-shadow(-14px 6px 35px #6d0075)' }}>
           Serenity AI Team
         </Typography>
         <Grid container spacing={3} justifyContent="center">

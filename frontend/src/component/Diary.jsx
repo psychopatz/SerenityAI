@@ -108,20 +108,20 @@ const InteractionSection = styled(Box)(({ theme, type }) => ({
 
 const SwingingAnimationWrapper = styled(Box)({
   position: 'absolute',
-  top: '50px', // Adjust this value for spacing from the top
-  left: '-20px', // Adjust this value for spacing from the right
-  zIndex: 10, // Ensure it appears above other elements
-  width: '500px', // Set width as per your design
-  height: '500px', // Set height as per your design
+  top: '50px', 
+  left: '-20px', 
+  zIndex: 10, 
+  width: '500px', 
+  height: '500px', 
 });
 
 const JammingAnimationWrapper = styled(Box)({
   position: 'absolute',
-  bottom: '0px', // Adjust this value for spacing from the top
-  right: '10px', // Adjust this value for spacing from the right
-  zIndex: 10, // Ensure it appears above other elements
-  width: '500px', // Set width as per your design
-  height: '500px', // Set height as per your design
+  bottom: '0px', 
+  right: '10px', 
+  zIndex: 10, 
+  width: '500px', 
+  height: '500px', 
 });
 
 

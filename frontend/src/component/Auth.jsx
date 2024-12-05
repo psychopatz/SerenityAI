@@ -374,7 +374,7 @@ const Auth = () => {
         Go to Login
       </Button>
     </>
-  ) : (
+  ) : ( 
     <>
       <Typography variant="h4" fontWeight="bold" mb={2}>
         Welcome to SerenityAI!

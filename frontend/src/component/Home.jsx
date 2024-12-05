@@ -170,7 +170,7 @@ const Home = () => {
       fontSize: '1.5rem',
       padding: '1rem 2rem',
       borderRadius: '0.5rem',
-      width: '220px',
+      width: '270px',
       height: '50px',
       backgroundColor: 'transparent',
       border: '2px solid #33CC33',

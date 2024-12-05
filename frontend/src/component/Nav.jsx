@@ -53,7 +53,6 @@ const Nav = () => {
   ];
 
   const menuItems = [
-    { label: "Settings", path: "/settings" },
     { label: "Profile", path: "/profile" },
     { label: "Logout", path: "/logout" },
   ];

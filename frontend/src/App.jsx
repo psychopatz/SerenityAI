@@ -69,7 +69,6 @@ const AnimatedRoutes = () => {
         <Route path="/image-test" element={<PageWrapper><ImageTest /></PageWrapper>} />
         <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
         <Route path="*" element={<PageWrapper><ErrorPage /></PageWrapper>} />
-
       </Routes>
     </AnimatePresence>
   );

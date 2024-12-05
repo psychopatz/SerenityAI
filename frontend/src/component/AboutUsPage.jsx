@@ -50,12 +50,13 @@ const specialists = [
     name: 'Patrick Oliver S. Bustamante',
     degree: 'Electives',
     image: 'PatrickStatic.webp',
-    bannerImage: 'Patrick.gif',
+    bannerImage: 'patrick.gif',
     get age() {
       return Math.floor(Math.random() * (100 - 10 + 1)) + 10; // Dynamically compute age on access
     },
     position: 'Full Stack Developer',
-    quote: JSON.parse(localStorage.getItem("userdata")).firstName ? "Batig nawong si " + JSON.parse(localStorage.getItem("userdata")).firstName + "!! Hahahaha" : "",
+    quote: 'Go ahead and multiply!!',
+    // quote: JSON.parse(localStorage.getItem("userdata")).firstName ? "Batig nawong si " + JSON.parse(localStorage.getItem("userdata")).firstName + "!! Hahahaha" : "",
   },
   {
     id: 6,

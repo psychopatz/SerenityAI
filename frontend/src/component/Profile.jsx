@@ -203,7 +203,15 @@ const Profile = () => {
 
   const handleSave = async () => {
     try {
-      await UserService.updateUserById(userData.user_id, userData);
+      await UserService.updateUserById(userData.user_id, {
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        email: userData.email,
+        location: userData.location,
+        gender: userData.gender,
+        birthday: userData.birthday,
+        profilephoto_id: userData.profilephoto_id,
+      });
       storageService.setLocalStorage("userdata", userData);
 
       setIsEditing(false);
